@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>بحث أعضاء هيئة التدريس</title>
 
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
+  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
@@ -150,6 +153,10 @@
       <p class="mt-3 text-xs text-white/55">
         ملاحظة: النسخ التلقائي يعمل أفضل على HTTPS، وتم توفير طريقة بديلة عند الحاجة.
       </p>
+
+      <div class="mt-4 text-center text-xs text-white/50">
+        تم التصميم بواسطة <span class="font-black text-white/70">الرصاصي</span>
+      </div>
     </section>
   </div>
 
@@ -164,7 +171,7 @@
 
     // Helpers
     const norm = (s) => (s ?? "").toString().trim().toLowerCase();
-    const cleanEmail = (e) => (e ?? "").toString().trim().replace(/;+\s*$/, "").toLowerCase();
+    const cleanEmail = (e) => (e ?? "").toString().trim().replace(/;+/g, "").toLowerCase();
     const displayNA = (v) => {
       const x = (v ?? "").toString().trim();
       if (!x || x.toLowerCase() === "na") return "NA";
@@ -224,12 +231,55 @@
 
       for (const p of list){
         const email = cleanEmail(p.email);
-        const emailCell = email && email !== "na"
-          ? `<a href="#" class="copy-email font-extrabold text-cyan-200 hover:text-cyan-100" data-email="${email}" title="اضغط لنسخ البريد">${email}</a>`
+        const hasEmail = email && email !== "na";
+        const emailCell = hasEmail
+          ? `<button type="button" class="copy-email font-extrabold text-cyan-200 hover:text-cyan-100 underline-offset-4 hover:underline" data-email="${email}" title="اضغط لنسخ البريد">${email}</button>`
           : `<span class="text-white/55">NA</span>`;
 
         const tr = document.createElement("tr");
+        tr.className = "hover:bg-white/[0.03] transition";
         tr.innerHTML = `
           <td class="px-4 py-4 text-sm text-right">
             <span class="inline-flex items-center gap-2">
-              <span class="chip px-3 py-1 rounded-full text-[11px] font-black text-white/75">${displayNA(p.rank
+              <span class="chip px-3 py-1 rounded-full text-[11px] font-black text-white/75">${displayNA(p.rank)}</span>
+              <span class="font-extrabold text-white/90">${displayNA(p.name)}</span>
+            </span>
+          </td>
+          <td class="px-4 py-4 text-sm text-right text-white/80">${displayNA(p.office)}</td>
+          <td class="px-4 py-4 text-sm text-right">${emailCell}</td>
+        `;
+        rowsEl.appendChild(tr);
+      }
+    }
+
+    function applyFilter(){
+      const q = norm(qEl.value);
+      const filtered = cleanedData.filter(p => !q || norm(p.name).includes(q));
+      render(filtered);
+    }
+
+    // Event delegation for copy
+    rowsEl.addEventListener("click", async (e) => {
+      const btn = e.target.closest(".copy-email");
+      if (!btn) return;
+
+      const email = (btn.dataset.email || "").trim();
+      if (!email) return;
+
+      const ok = await copyText(email);
+      showToast(ok ? "تم النسخ" : "تعذر النسخ");
+    });
+
+    qEl.addEventListener("input", applyFilter);
+
+    clearBtn.addEventListener("click", () => {
+      qEl.value = "";
+      applyFilter();
+      qEl.focus();
+    });
+
+    // Initial render
+    applyFilter();
+  </script>
+</body>
+</html>
