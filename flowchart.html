@@ -563,39 +563,61 @@ function loadProgress() {
 function initInteractions() {
   const cards = document.querySelectorAll('.card');
   const paths = document.querySelectorAll('path:not(defs path)');
-    
 
   cards.forEach(card => {
-    // نقرة واحدة للعرض والتمييز
+    let pressTimer;
+
+    // --- دعم الجوال (الضغط المطول للإكمال) ---
+    card.addEventListener('touchstart', (e) => {
+      // إذا ضغط المستخدم واستمر لمدة 600ms يعتبر المادة مكتملة
+      pressTimer = setTimeout(() => {
+        card.classList.toggle('completed');
+        saveProgress();
+        if (navigator.vibrate) navigator.vibrate(50); // اهتزاز خفيف للتأكيد
+      }, 600); 
+    });
+
+    card.addEventListener('touchend', () => {
+      clearTimeout(pressTimer); // إذا رفع إصبعه بسرعة لا يحسب إكمال
+    });
+
+    // --- دعم اللابتوب (نقرة مزدوجة للإكمال) ---
+    card.addEventListener('dblclick', (e) => {
+      e.stopPropagation();
+      card.classList.toggle('completed');
+      saveProgress();
+    });
+
+    // --- النقرة الواحدة (لعرض المسارات) ---
+    // تعمل على الجوال (نقرة سريعة) وعلى اللابتوب
     card.addEventListener('click', (e) => {
       e.stopPropagation();
       const cid = card.id;
+      
       if (card.classList.contains('selected')) {
         clearSelection();
         return;
       }
+      
       clearSelection();
       cards.forEach(c => c.classList.add('dimmed'));
       paths.forEach(p => p.classList.add('faded'));
       card.classList.remove('dimmed');
       card.classList.add('selected');
+      
       paths.forEach(p => {
         if (p.getAttribute('data-from') === cid || p.getAttribute('data-to') === cid) {
           p.classList.remove('faded');
           p.classList.add('active-path');
-          document.getElementById(p.getAttribute('data-from')).classList.remove('dimmed');
-          document.getElementById(p.getAttribute('data-to')).classList.remove('dimmed');
+          const fromNode = document.getElementById(p.getAttribute('data-from'));
+          const toNode = document.getElementById(p.getAttribute('data-to'));
+          if(fromNode) fromNode.classList.remove('dimmed');
+          if(toNode) toNode.classList.remove('dimmed');
         }
       });
     });
-
-    // نقرة مزدوجة لتتبع الإنجاز
-    card.addEventListener('dblclick', (e) => {
-      e.stopPropagation();
-      card.classList.toggle('completed');
-      saveProgress(); // حفظ الحالة
-    });
   });
+
   document.addEventListener('click', () => clearSelection());
 }
 
