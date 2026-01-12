@@ -177,6 +177,7 @@
       gap: 10px;
       z-index: 2000;
     }
+    
     .zoom-btn {
       width: 50px;
       height: 50px;
@@ -192,12 +193,23 @@
       align-items: center;
       justify-content: center;
     }
+    .name-glow {
+    animation: pulse-glow 3s infinite ease-in-out;
+}
+@keyframes pulse-glow {
+    0%, 100% { opacity: 0.6; transform: scale(0.98); }
+    50% { opacity: 1; transform: scale(1); }
+}
   </style>
 </head>
 <body>
 
 <header>
+  
   <h2 style="margin:0; font-weight:900; letter-spacing: 2px; color: #fff;">ELECTRICAL ENGINEERING STUDY PLAN</h2>
+<div style="font-size: 0.85rem; color: #fff; font-weight: 600; letter-spacing: 1px;">
+        Designed & Developed by <span style="color: #38bdf8; border-bottom: 1px solid rgba(56, 189, 248, 0.3);">AL-RASSASI</span>
+    </div>
   <div class="legend">
     <div class="legend-item"><div class="dot" style="background:var(--accent-blue)"></div> Prerequisite</div>
     <div class="legend-item"><div class="dot" style="background:var(--accent-yellow)"></div> Co-requisite</div>
@@ -243,7 +255,7 @@
       </div>
     </div>
     <div class="year-section">
-      <div class="year-sidebar"><span class="year-label">YEAR 2</span></div>
+      <div class="year-sidebar"><span class="year-label">SOPHOMORE</span></div>
       <div class="semesters-container">
         <div class="semester-row">
           <div class="sem-indicator">SEM 3</div>
@@ -273,7 +285,7 @@
     </div>
 
     <div class="year-section">
-      <div class="year-sidebar"><span class="year-label" style="color:var(--accent-green);">YEAR 3</span></div>
+      <div class="year-sidebar"><span class="year-label" style="color:var(--accent-green);">JUNIOR</span></div>
       <div class="semesters-container">
         <div class="semester-row">
           <div class="sem-indicator">SEM 5</div>
@@ -305,7 +317,7 @@
     </div>
 
     <div class="year-section">
-      <div class="year-sidebar"><span class="year-label" style="color:var(--accent-yellow);">YEAR 4</span></div>
+      <div class="year-sidebar"><span class="year-label" style="color:var(--accent-yellow);">SENIOR</span></div>
       <div class="semesters-container">
         <div class="semester-row">
           <div class="sem-indicator">SEM 7</div>
@@ -313,9 +325,9 @@
             <div class="card" id="EE400"><div class="code">EE 400</div><div class="name">Design Project II</div></div>
             <div class="card" id="EE401"><div class="code">EE 401</div><div class="name">EM Waves & App</div></div>
             <div class="card" id="EE402"><div class="code">EE 402</div><div class="name">EM Waves Lab</div></div>
-            <div class="card" id="EE_ELEC1"><div class="code">EE 4XX</div><div class="name">Elective I</div></div>
-            <div class="card" id="EE_ELEC2"><div class="code">EE 4XX</div><div class="name">Elective II</div></div>
-            <div class="card" id="EE_ELEC3"><div class="code">EE 4XX</div><div class="name">Elective III</div></div>
+            <div class="card" id="EE4xx_1"><div class="code">EE 4XX</div><div class="name">Elective I</div></div>
+            <div class="card" id="EE4xx_2"><div class="code">EE 4XX</div><div class="name">Elective II</div></div>
+            <div class="card" id="EE4xx_3"><div class="code">EE 4XX</div><div class="name">Elective III</div></div>
           </div>
         </div>
         <div class="semester-row">
