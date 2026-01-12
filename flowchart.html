@@ -574,7 +574,7 @@ function initInteractions() {
         card.classList.toggle('completed');
         saveProgress();
         if (navigator.vibrate) navigator.vibrate(50); // اهتزاز خفيف للتأكيد
-      }, 600); 
+      }, 1000); 
     });
 
     card.addEventListener('touchend', () => {
