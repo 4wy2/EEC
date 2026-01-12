@@ -565,46 +565,47 @@ function initInteractions() {
   const paths = document.querySelectorAll('path:not(defs path)');
 
   cards.forEach(card => {
-    let pressTimer;
-
-    // --- دعم الجوال (الضغط المطول للإكمال) ---
-    card.addEventListener('touchstart', (e) => {
-      // إذا ضغط المستخدم واستمر لمدة 600ms يعتبر المادة مكتملة
-      pressTimer = setTimeout(() => {
-        card.classList.toggle('completed');
-        saveProgress();
-        if (navigator.vibrate) navigator.vibrate(50); // اهتزاز خفيف للتأكيد
-      }, 1000); 
-    });
-
-    card.addEventListener('touchend', () => {
-      clearTimeout(pressTimer); // إذا رفع إصبعه بسرعة لا يحسب إكمال
-    });
-
-    // --- دعم اللابتوب (نقرة مزدوجة للإكمال) ---
+    
+    // --- (1) نظام اللابتوب: النقر المزدوج بالماوس ---
     card.addEventListener('dblclick', (e) => {
       e.stopPropagation();
       card.classList.toggle('completed');
       saveProgress();
+      console.log('تم التفعيل عبر اللابتوب (Double Click)');
     });
 
-    // --- النقرة الواحدة (لعرض المسارات) ---
-    // تعمل على الجوال (نقرة سريعة) وعلى اللابتوب
+    // --- (2) نظام الجوال والايباد: النقر المزدوج باللمس ---
+    let lastTap = 0;
+    card.addEventListener('touchstart', (e) => {
+      const currentTime = new Date().getTime();
+      const tapLength = currentTime - lastTap;
+      
+      if (tapLength < 300 && tapLength > 0) {
+        // تم اكتشاف نقرتين باللمس
+        e.preventDefault(); // منع الزوم الافتراضي للجوال
+        card.classList.toggle('completed');
+        saveProgress();
+        if (navigator.vibrate) navigator.vibrate(50); 
+      }
+      lastTap = currentTime;
+    });
+
+    // --- (3) نظام العرض (النقرة الواحدة): لجميع الأجهزة ---
     card.addEventListener('click', (e) => {
       e.stopPropagation();
       const cid = card.id;
-      
+
       if (card.classList.contains('selected')) {
         clearSelection();
         return;
       }
-      
+
       clearSelection();
       cards.forEach(c => c.classList.add('dimmed'));
       paths.forEach(p => p.classList.add('faded'));
       card.classList.remove('dimmed');
       card.classList.add('selected');
-      
+
       paths.forEach(p => {
         if (p.getAttribute('data-from') === cid || p.getAttribute('data-to') === cid) {
           p.classList.remove('faded');
@@ -620,7 +621,6 @@ function initInteractions() {
 
   document.addEventListener('click', () => clearSelection());
 }
-
 function clearSelection() {
   document.querySelectorAll('.card').forEach(c => c.classList.remove('dimmed', 'selected'));
   document.querySelectorAll('path').forEach(p => p.classList.remove('faded', 'active-path'));
