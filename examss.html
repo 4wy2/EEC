@@ -336,11 +336,6 @@
     const elSearchBtn = document.getElementById('searchBtn');
     const elRows = document.getElementById('rows');
 
-    // ===============================
-    // ✅ LocalStorage Key (لكل صفحة مفتاح مستقل)
-    // ===============================
-    const STORAGE_KEY = "lastStudentId_" + location.pathname;
-
     // Helpers: Arabic digits -> English digits
     function convertArabicToEnglishNumbers(str) {
       const arabic = '٠١٢٣٤٥٦٧٨٩';
@@ -460,9 +455,6 @@
         return;
       }
 
-      // ✅ احفظ آخر رقم ناجح/مُدخل (قبل جلب البيانات)
-      localStorage.setItem(STORAGE_KEY, String(idNum));
-
       renderEmpty('جاري البحث...');
 
       try {
@@ -506,13 +498,6 @@
     // Init
     (function init(){
       renderEmpty('ابدأ بإدخال الرقم الأكاديمي للبحث.');
-
-      // ✅ عند فتح الصفحة: رجّع آخر بحث تلقائياً
-      const last = localStorage.getItem(STORAGE_KEY);
-      if (last) {
-        elStudentId.value = last;
-        doSearch();
-      }
     })();
   </script>
 </body>
