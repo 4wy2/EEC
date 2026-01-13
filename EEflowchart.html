@@ -70,23 +70,24 @@
       flex-direction: column;
     }
 
+    /* --- تعديل السنوات --- */
     .year-section { display: flex; margin-bottom: 80px; }
     .year-sidebar {
       width: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(180deg, rgba(56, 189, 248, 0.05), transparent);
-      border-right: 2px solid var(--accent-blue);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
+      border-right: 3px solid #333; /* سيتم تغيير اللون في HTML */
       flex-shrink: 0;
     }
     .year-label {
       writing-mode: vertical-rl;
       transform: rotate(180deg);
       font-weight: 900;
-      color: var(--accent-blue);
-      letter-spacing: 3px;
-      font-size: 1.1rem;
+      letter-spacing: 5px;
+      font-size: 1.2rem;
+      transition: all 0.3s;
     }
 
     .semesters-container {
@@ -96,15 +97,28 @@
       gap: 75px; 
     }
 
-    .semester-row { display: flex; align-items: center; padding-left: 30px; }
+    /* --- تعديل السمسترات --- */
+    .semester-row { 
+        display: flex; 
+        align-items: center; 
+        padding-left: 30px; 
+        transition: all 0.3s ease;
+    }
     .sem-indicator {
-      width: 90px;
+      width: 100px;
       font-size: 0.75rem;
-      font-weight: 700;
+      font-weight: 800;
       text-transform: uppercase;
       flex-shrink: 0;
+      color: var(--text-muted); /* لون موحد هادئ */
       border-left: 2px solid rgba(255,255,255,0.05);
-      padding-left: 10px;
+      padding-left: 15px;
+      letter-spacing: 2px;
+      transition: all 0.3s ease;
+    }
+    .semester-row:hover .sem-indicator {
+        color: var(--text-main);
+        border-left-color: rgba(255,255,255,0.3);
     }
 
     .course-list { display: flex; gap: 50px; }
@@ -134,7 +148,6 @@
         background: #1e293b;
     }
 
-    /* كلاس الإنجاز الجديد */
     .card.completed {
       border-color: var(--accent-green) !important;
       background: rgba(34, 197, 94, 0.2) !important;
@@ -151,7 +164,7 @@
     }
     .card.completed .code { color: var(--accent-green) !important; }
 
-    .card.dimmed { opacity: 0.15; filter: grayscale(0.8); }
+    .card.dimmed { opacity: 0.2; filter: grayscale(0.5); }
     
     .code { font-family: 'JetBrains Mono'; font-size: 0.85rem; color: var(--accent-blue); font-weight: 800; pointer-events: none; }
     .name { font-size: 0.6rem; color: #cbd5e1; margin-top: 5px; font-weight: 600; line-height: 1.2; padding: 0 8px; pointer-events: none; }
@@ -193,13 +206,6 @@
       align-items: center;
       justify-content: center;
     }
-    .name-glow {
-    animation: pulse-glow 3s infinite ease-in-out;
-}
-@keyframes pulse-glow {
-    0%, 100% { opacity: 0.6; transform: scale(0.98); }
-    50% { opacity: 1; transform: scale(1); }
-}
   </style>
 </head>
 <body>
@@ -228,7 +234,7 @@
     <svg id="svg-canvas"></svg>
 
     <div class="year-section">
-      <div class="year-sidebar"><span class="year-label">FRESHMAN</span></div>
+      <div class="year-sidebar"><span class="year-label" style="color:var(--text-main)";">FRESHMAN</span></div>
       <div class="semesters-container">
         <div class="semester-row">
           <div class="sem-indicator">SEM 1</div>
@@ -255,7 +261,7 @@
       </div>
     </div>
     <div class="year-section">
-      <div class="year-sidebar"><span class="year-label">SOPHOMORE</span></div>
+      <div class="year-sidebar"><span class="year-label" style="color:var(--accent-blue)";">SOPHOMORE</span></div>
       <div class="semesters-container">
         <div class="semester-row">
           <div class="sem-indicator">SEM 3</div>
