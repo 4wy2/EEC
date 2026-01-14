@@ -3,179 +3,265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M. ALRASASI | Engineering Ethos</title>
+    <title>MOHAMMED ALRASASI | Engineering Vision</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;400;700;900&family=Syncopate:wght@400;700&family=Inter:wght@200;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
     <style>
-        body { 
-            background-color: #000; 
-            color: #fff; 
+        :root { --brand: #3b82f6; }
+        body {
             font-family: 'Cairo', sans-serif;
-            -webkit-font-smoothing: antialiased;
+            background-color: #020202;
+            color: #ffffff;
             overflow-x: hidden;
-            position: relative;
-        }
-        .sync-font { font-family: 'Syncopate', sans-serif; letter-spacing: 0.1em; }
-        .inter-font { font-family: 'Inter', sans-serif; }
-
-        .text-glow {
-            text-shadow: 0 0 15px rgba(79, 70, 229, 0.6), 0 0 30px rgba(79, 70, 229, 0.4);
-            transition: text-shadow 0.3s ease;
         }
 
-        /* تأثير الشبكة الخلفية المتحركة */
-        .animated-grid {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: gridPan 60s linear infinite;
-            opacity: 0.1;
-            z-index: -1;
-        }
-        @keyframes gridPan {
-            from { background-position: 0 0; }
-            to { background-position: 50px 50px; }
-        }
+        .eng-font { font-family: 'Space Grotesk', sans-serif; }
 
-        /* تأثير الخطوط الرقمية */
-        .digital-lines {
-            position: absolute;
-            width: 100%; height: 100%;
-            top: 0; left: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        .digital-line {
-            position: absolute;
-            background: linear-gradient(to bottom, transparent, #06B6D4, transparent);
-            width: 1px;
+        /* حاوية الجزيئات في الخلفية */
+        #particles-js {
+            position: fixed;
+            width: 100%;
             height: 100%;
-            opacity: 0.05;
-            animation: digitalLineFlow 15s linear infinite;
+            z-index: 0;
+            top: 0; left: 0;
         }
-        @keyframes digitalLineFlow {
-            0% { transform: translateX(0); opacity: 0.05; }
-            50% { opacity: 0.1; }
-            100% { transform: translateX(100vw); opacity: 0.05; }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 12vw, 9rem);
+            font-weight: 700;
+            line-height: 0.8;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* تأثير الزجاج المتطور */
+        .glass-box {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 2.5rem;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-box:hover {
+            border-color: var(--brand);
+            background: rgba(59, 130, 246, 0.04);
+            transform: translateY(-10px) scale(1.01);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(59, 130, 246, 0.1);
+        }
+
+        .highlight-stroke {
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
+            color: transparent;
+            transition: all 0.5s ease;
         }
         
-        .digital-line:nth-child(1) { left: 10%; animation-delay: 0s; }
-        .digital-line:nth-child(2) { left: 25%; animation-delay: 5s; }
-        .digital-line:nth-child(3) { left: 40%; animation-delay: 10s; }
-        .digital-line:nth-child(4) { left: 55%; animation-delay: 2s; }
-        .digital-line:nth-child(5) { left: 70%; animation-delay: 7s; }
-        .digital-line:nth-child(6) { left: 85%; animation-delay: 12s; }
-
-        /* تأثير الزجاج الفخم */
-        .glass-panel-heavy {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
-        }
-        .glass-panel-heavy:hover { 
-            border-color: #4F46E5; 
-            background: rgba(79, 70, 229, 0.08);
-            transform: translateY(-5px);
-            box-shadow: 0 15px 50px rgba(79, 70, 229, 0.2);
+        .glass-box:hover .highlight-stroke {
+            -webkit-text-stroke: 1px var(--brand);
         }
 
-        /* انيميشن ظهور النصوص في البداية */
-        .fade-in {
-            opacity: 0;
-            animation: fadeIn 1.5s ease-out forwards;
+        /* تأثير الوهج خلف الاسم */
+        .glow-sphere {
+            position: absolute;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            z-index: 1;
+            filter: blur(50px);
+            pointer-events: none;
         }
-        .fade-in-delay-1 { animation-delay: 0.5s; }
-        .fade-in-delay-2 { animation-delay: 1s; }
-        .fade-in-delay-3 { animation-delay: 1.5s; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); filter: blur(5px); }
-            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        /* شريط التقدم العلوي */
+        .scroll-progress {
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: var(--brand);
+            z-index: 100; transition: width 0.1s;
         }
     </style>
 </head>
-<body class="selection:bg-indigo-500">
+<body class="selection:bg-blue-600">
 
-    <div class="animated-grid"></div>
-    <div class="digital-lines">
-        <div class="digital-line"></div>
-        <div class="digital-line"></div>
-        <div class="digital-line"></div>
-        <div class="digital-line"></div>
-        <div class="digital-line"></div>
-        <div class="digital-line"></div>
-    </div>
+    <div id="particles-js"></div>
+    <div class="scroll-progress" id="scrollBar"></div>
 
-    <main class="max-w-6xl mx-auto px-8 py-20 relative z-10">
+    <nav class="p-8 flex justify-between items-center relative z-50">
+        <div class="flex items-center gap-3">
+            <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+            <span class="eng-font text-[10px] font-bold tracking-[0.6em] uppercase opacity-40">Core_Active</span>
+        </div>
+        <div class="flex gap-8 items-center">
+            <a href="https://x.com/Rassasi_ee" target="_blank" class="text-white/20 hover:text-blue-500 transition-all scale-125"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="index.html" class="eng-font text-[11px] font-black border border-white/10 px-6 py-2 rounded-full hover:bg-blue-600 hover:border-blue-600 transition-all">EXIT_OS</a>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 relative z-10">
         
-        <header class="text-center py-40 mb-20">
-            <p class="sync-font text-sm text-indigo-400 mb-8 uppercase text-glow fade-in">SYSTEM INITIALIZED</p>
-            <h1 class="inter-font text-7xl md:text-[14rem] font-black leading-none m-0 p-0 text-white/90 fade-in fade-in-delay-1">
-                M. ALRASASI
-            </h1>
-            <p class="text-white/60 text-xl md:text-2xl mt-12 max-w-4xl mx-auto leading-relaxed fade-in fade-in-delay-2">
-                "أنا مهندس كهرباء أؤمن بأن الهندسة ليست وظيفة، بل <span class="font-bold text-indigo-400 text-glow">هوية فكرية</span> تُبنى على التحليل، الإبداع، وصناعة الحلول الذكية."
-            </p>
-        </header>
-
-        <section class="mb-40">
-            <h2 class="sync-font text-indigo-400 text-xl mb-12 uppercase text-glow fade-in fade-in-delay-3">// ETHOS PROTOCOL</h2>
-            <div class="grid md:grid-cols-2 gap-16 items-start">
-                <div class="glass-panel-heavy p-10 rounded-[3rem] fade-in fade-in-delay-3">
-                    <h3 class="text-3xl font-bold mb-6 border-r-4 border-indigo-500 pr-6">العمق الهندسي</h3>
-                    <p class="text-lg text-white/70 leading-relaxed">
-                        متخصص في الهندسة الكهربائية، شغفي يكمن في ربط الفيزياء بالطاقة، وتحويل النظريات المعقدة إلى أنظمة واقعية قوية. كل دائرة، كل نظام، هو تعبير عن فهم عميق للمبادئ الأساسية.
-                    </p>
-                </div>
-                <div class="glass-panel-heavy p-10 rounded-[3rem] fade-in fade-in-delay-3">
-                    <h3 class="text-3xl font-bold mb-6 border-r-4 border-cyan-500 pr-6">الفكر الرقمي</h3>
-                    <p class="text-lg text-white/70 leading-relaxed">
-                        أرى البرمجة كلغة عالمية أترجم بها تحديات الهندسة. أعمل على بناء الأنظمة الذكية ومنصات الويب المتطورة التي تبسط المفاهيم المعقدة وتخدم المهندسين والطلاب بكفاءة غير مسبوقة.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-40">
-            <h2 class="sync-font text-indigo-400 text-xl mb-12 uppercase text-glow fade-in"> // CORE COMPETENCIES</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="glass-panel-heavy p-8 rounded-[2.5rem] flex flex-col justify-center items-center text-center fade-in">
-                    <i class="fa-solid fa-bolt text-5xl text-cyan-400 mb-6 text-glow"></i>
-                    <h4 class="sync-font text-sm text-white/80 uppercase tracking-wide">POWER SYSTEMS</h4>
-                </div>
-                <div class="glass-panel-heavy p-8 rounded-[2.5rem] flex flex-col justify-center items-center text-center fade-in fade-in-delay-1">
-                    <i class="fa-solid fa-code text-5xl text-indigo-400 mb-6 text-glow"></i>
-                    <h4 class="sync-font text-sm text-white/80 uppercase tracking-wide">DIGITAL PLATFORMS</h4>
-                </div>
-                <div class="glass-panel-heavy p-8 rounded-[2.5rem] flex flex-col justify-center items-center text-center fade-in fade-in-delay-2">
-                    <i class="fa-solid fa-brain text-5xl text-white/70 mb-6 text-glow"></i>
-                    <h4 class="sync-font text-sm text-white/80 uppercase tracking-wide">SYSTEM LOGIC</h4>
-                </div>
-            </div>
-        </section>
-
-        <footer class="pt-20 text-center relative border-t border-white/10">
-            <p class="sync-font text-[10px] text-white/40 mb-8 uppercase tracking-widest fade-in">MISSION STATEMENT</p>
-            <h3 class="text-3xl md:text-5xl font-black leading-tight italic max-w-4xl mx-auto text-glow fade-in fade-in-delay-1">
-                "هدفي هو بناء منظومة معرفية هندسية تساعد المهندس على التفكير بوضوح، والعمل بثقة، وتحويل التعقيد إلى فرصة."
-            </h3>
+        <section class="min-h-screen flex flex-col justify-center relative">
+            <div class="glow-sphere top-1/4 right-0"></div>
             
-            <div class="mt-20 flex justify-center gap-10 text-white/30 fade-in fade-in-delay-2">
-                <a href="#" class="hover:text-indigo-400 transition-colors text-2xl"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a href="#" class="hover:text-indigo-400 transition-colors text-2xl"><i class="fa-brands fa-github"></i></a>
-                <a href="mailto:contact@engineer-ee.com" class="hover:text-cyan-400 transition-colors text-2xl"><i class="fa-solid fa-envelope"></i></a>
+            <div data-aos="fade-up" data-aos-duration="1500">
+                <p class="eng-font text-blue-500 font-bold text-xs tracking-[0.8em] mb-10 uppercase italic">Engineering Architecture</p>
+                
+                <h1 class="hero-title mb-12">
+                    MOHAMMED<br>
+                    <span class="highlight-stroke">ALRASASI</span>
+                </h1>
+                
+                <div class="max-w-3xl glass-box p-8 border-r-4 border-r-blue-600" data-aos="fade-right" data-aos-delay="400">
+                    <p class="text-2xl md:text-4xl font-light leading-snug">
+                        طالب هندسة كهربائية، مبرمج، ومؤسس منصة <span class="font-bold">Engineer-EE</span>. أدمج بين <span class="text-blue-400">صرامة الهندسة</span> و<span class="text-blue-400">مرونة البرمجة</span>.
+                    </p>
+                </div>
             </div>
-            <p class="inter-font text-[9px] text-white/20 mt-16 uppercase tracking-widest fade-in fade-in-delay-3">
-                &copy; 2026 M. ALRASASI - ARCHITECTING THE FUTURE
-            </p>
-        </footer>
+        </section>
+
+        <section class="grid lg:grid-cols-12 gap-16 py-32 items-center">
+            <div class="lg:col-span-5" data-aos="fade-left">
+                <span class="eng-font text-blue-500 text-[10px] font-bold tracking-[0.5em] mb-4 block">01 // STRATEGY</span>
+                <h2 class="text-5xl md:text-7xl font-900 leading-none tracking-tighter">تحويل التحديات <br> إلى ابتكار.</h2>
+            </div>
+            
+            <div class="lg:col-span-7 glass-box p-12 md:p-20 group" data-aos="fade-right">
+                <p class="text-2xl md:text-3xl leading-relaxed text-white/90 font-light mb-12">
+                    "لم يكن الهدف مجرد برمجة موقع، بل بناء <span class="text-blue-500 font-bold italic">بيئة هندسية متكاملة</span> تختصر المسافات."
+                </p>
+                <div class="h-px w-full bg-white/10 mb-12 group-hover:bg-blue-500 transition-colors"></div>
+                <p class="text-white/40 leading-relaxed text-lg italic">
+                    عبر منصة <span class="text-white">engineer-ee.com</span>، نسعى لجعل المسيرة الأكاديمية تجربة أكثر وضوحاً وإبداعاً لجيل المهندسين القادم.
+                </p>
+            </div>
+        </section>
+
+        <section class="py-20 overflow-hidden">
+            <div class="mb-20" data-aos="fade-up">
+                <span class="eng-font text-blue-500 text-[10px] font-bold tracking-[0.5em] block mb-4">02 // DEPLOYMENTS</span>
+                <h2 class="text-4xl md:text-6xl font-900 leading-none">أحدث <br> <span class="text-blue-500">الابتكارات.</span></h2>
+            </div>
+    
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                
+                <div class="tilt-card relative group cursor-pointer" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="absolute inset-0 bg-blue-600 blur-[80px] opacity-10 group-hover:opacity-30 transition duration-700"></div>
+                    <div class="relative bg-[#050505] border border-white/10 p-10 rounded-3xl h-full flex flex-col justify-between group-hover:border-blue-500/50 transition duration-500 overflow-hidden">
+                        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                        
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-8">
+                                <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/5 group-hover:bg-blue-500/20 group-hover:border-blue-500/50 transition">
+                                    <i class="fa-solid fa-microchip text-xl text-white/40 group-hover:text-blue-400 transition duration-500"></i>
+                                </div>
+                                <span class="eng-font text-[10px] border border-white/10 px-3 py-1 rounded-full text-white/40">V 1.0</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 group-hover:text-blue-400 transition">Smart Grid System</h3>
+                            <p class="text-white/40 text-sm leading-relaxed">نظام مراقبة واستهلاك الطاقة باستخدام إنترنت الأشياء (IoT) وتحليل البيانات، يهدف لتحسين كفاءة الشبكات.</p>
+                        </div>
+                        
+                        <div class="relative z-10 mt-8 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/20 group-hover:text-white transition delay-100">
+                            View Schema <i class="fa-solid fa-arrow-right ms-2 text-blue-500"></i>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="tilt-card relative group cursor-pointer" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="absolute inset-0 bg-blue-600 blur-[80px] opacity-10 group-hover:opacity-30 transition duration-700"></div>
+                    <div class="relative bg-[#050505] border border-white/10 p-10 rounded-3xl h-full flex flex-col justify-between group-hover:border-blue-500/50 transition duration-500 overflow-hidden">
+                         <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] opacity-0 group-hover:opacity-100 transition duration-500"></div>
+    
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-8">
+                                <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/5 group-hover:bg-blue-500/20 group-hover:border-blue-500/50 transition">
+                                    <i class="fa-solid fa-code-branch text-xl text-white/40 group-hover:text-blue-400 transition duration-500"></i>
+                                </div>
+                                <span class="eng-font text-[10px] border border-white/10 px-3 py-1 rounded-full text-white/40">BETA</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 group-hover:text-blue-400 transition">Engineer-EE Platform</h3>
+                            <p class="text-white/40 text-sm leading-relaxed">منصة الويب المركزية لطلاب الهندسة الكهربائية، مبنية بأحدث تقنيات الويب لتسهيل الوصول للمصادر.</p>
+                        </div>
+    
+                        <div class="relative z-10 mt-8 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/20 group-hover:text-white transition delay-100">
+                            Access Terminal <i class="fa-solid fa-arrow-right ms-2 text-blue-500"></i>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-40 mt-20">
+            <div class="glass-box p-12 text-center" data-aos="fade-up">
+                <div class="w-16 h-16 bg-blue-600/10 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:bg-blue-600 transition">
+                    <i class="fa-solid fa-bolt text-2xl text-blue-500"></i>
+                </div>
+                <h4 class="eng-font text-xl font-bold mb-4 uppercase tracking-widest">Power Logic</h4>
+                <p class="text-white/30 text-sm">تحليل الأنظمة الكهربائية بعقلية مبرمج تبحث عن الكفاءة.</p>
+            </div>
+            
+            <div class="glass-box p-12 text-center" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-16 h-16 bg-blue-600/10 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:bg-blue-600 transition">
+                    <i class="fa-solid fa-code text-2xl text-blue-500"></i>
+                </div>
+                <h4 class="eng-font text-xl font-bold mb-4 uppercase tracking-widest">Digital Dev</h4>
+                <p class="text-white/30 text-sm">بناء واجهات ومنصات تقنية تحاكي دقة المخططات الهندسية.</p>
+            </div>
+
+            <div class="glass-box p-12 text-center" data-aos="fade-up" data-aos-delay="400">
+                <div class="w-16 h-16 bg-blue-600/10 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:bg-blue-600 transition">
+                    <i class="fa-solid fa-brain text-2xl text-blue-500"></i>
+                </div>
+                <h4 class="eng-font text-xl font-bold mb-4 uppercase tracking-widest">Solution Arch</h4>
+                <p class="text-white/30 text-sm">ابتكار حلول للمشاكل الأكاديمية بأسلوب تقني منهجي.</p>
+            </div>
+        </section>
 
     </main>
 
+    <footer class="py-32 border-t border-white/5 text-center relative overflow-hidden">
+        <div class="glow-sphere bottom-[-200px] left-1/2 -translate-x-1/2"></div>
+        <div data-aos="zoom-in">
+            <h2 class="hero-title opacity-10 mb-8">ALRASASI</h2>
+            <p class="text-[10px] eng-font font-bold tracking-[1em] uppercase text-blue-500 mb-12">Built for the future</p>
+            <p class="text-[8px] opacity-20 uppercase tracking-widest">M. ALRASASI © 2026 // ALL RIGHTS RESERVED</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+    <script>
+        AOS.init({ duration: 1200, once: true });
+
+        // شريط التقدم العلوي
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("scrollBar").style.width = scrolled + "%";
+        };
+
+        // إعداد الجزيئات الخلفية
+        particlesJS('particles-js', {
+            "particles": {
+                "number": { "value": 80 },
+                "color": { "value": "#3b82f6" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.2 },
+                "size": { "value": 2 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#3b82f6", "opacity": 0.1, "width": 1 },
+                "move": { "enable": true, "speed": 2 }
+            },
+            "interactivity": {
+                "events": { "onhover": { "enable": true, "mode": "grab" } },
+                "modes": { "grab": { "distance": 200, "line_linked": { "opacity": 0.5 } } }
+            }
+        });
+    </script>
 </body>
 </html>
