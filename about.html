@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M. ALRASASI | Engineering Ethos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;400;700;900&family=Syncopate:wght@400;700&family=Inter:wght@200;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { 
+            background-color: #000; 
+            color: #fff; 
+            font-family: 'Cairo', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            position: relative;
+        }
+        .sync-font { font-family: 'Syncopate', sans-serif; letter-spacing: 0.1em; }
+        .inter-font { font-family: 'Inter', sans-serif; }
+
+        .text-glow {
+            text-shadow: 0 0 15px rgba(79, 70, 229, 0.6), 0 0 30px rgba(79, 70, 229, 0.4);
+            transition: text-shadow 0.3s ease;
+        }
+
+        /* تأثير الشبكة الخلفية المتحركة */
+        .animated-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridPan 60s linear infinite;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        @keyframes gridPan {
+            from { background-position: 0 0; }
+            to { background-position: 50px 50px; }
+        }
+
+        /* تأثير الخطوط الرقمية */
+        .digital-lines {
+            position: absolute;
+            width: 100%; height: 100%;
+            top: 0; left: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .digital-line {
+            position: absolute;
+            background: linear-gradient(to bottom, transparent, #06B6D4, transparent);
+            width: 1px;
+            height: 100%;
+            opacity: 0.05;
+            animation: digitalLineFlow 15s linear infinite;
+        }
+        @keyframes digitalLineFlow {
+            0% { transform: translateX(0); opacity: 0.05; }
+            50% { opacity: 0.1; }
+            100% { transform: translateX(100vw); opacity: 0.05; }
+        }
+        
+        .digital-line:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .digital-line:nth-child(2) { left: 25%; animation-delay: 5s; }
+        .digital-line:nth-child(3) { left: 40%; animation-delay: 10s; }
+        .digital-line:nth-child(4) { left: 55%; animation-delay: 2s; }
+        .digital-line:nth-child(5) { left: 70%; animation-delay: 7s; }
+        .digital-line:nth-child(6) { left: 85%; animation-delay: 12s; }
+
+        /* تأثير الزجاج الفخم */
+        .glass-panel-heavy {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+        .glass-panel-heavy:hover { 
+            border-color: #4F46E5; 
+            background: rgba(79, 70, 229, 0.08);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(79, 70, 229, 0.2);
+        }
+
+        /* انيميشن ظهور النصوص في البداية */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out forwards;
+        }
+        .fade-in-delay-1 { animation-delay: 0.5s; }
+        .fade-in-delay-2 { animation-delay: 1s; }
+        .fade-in-delay-3 { animation-delay: 1.5s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); filter: blur(5px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+    </style>
+</head>
+<body class="selection:bg-indigo-500">
+
+    <div class="animated-grid"></div>
+    <div class="digital-lines">
+        <div class="digital-line"></div>
+        <div class="digital-line"></div>
+        <div class="digital-line"></div>
+        <div class="digital-line"></div>
+        <div class="digital-line"></div>
+        <div class="digital-line"></div>
+    </div>
+
+    <main class="max-w-6xl mx-auto px-8 py-20 relative z-10">
+        
+        <header class="text-center py-40 mb-20">
+            <p class="sync-font text-sm text-indigo-400 mb-8 uppercase text-glow fade-in">SYSTEM INITIALIZED</p>
+            <h1 class="inter-font text-7xl md:text-[14rem] font-black leading-none m-0 p-0 text-white/90 fade-in fade-in-delay-1">
+                M. ALRASASI
+            </h1>
+            <p class="text-white/60 text-xl md:text-2xl mt-12 max-w-4xl mx-auto leading-relaxed fade-in fade-in-delay-2">
+                "أنا مهندس كهرباء أؤمن بأن الهندسة ليست وظيفة، بل <span class="font-bold text-indigo-400 text-glow">هوية فكرية</span> تُبنى على التحليل، الإبداع، وصناعة الحلول الذكية."
+            </p>
+        </header>
+
+        <section class="mb-40">
+            <h2 class="sync-font text-indigo-400 text-xl mb-12 uppercase text-glow fade-in fade-in-delay-3">// ETHOS PROTOCOL</h2>
+            <div class="grid md:grid-cols-2 gap-16 items-start">
+                <div class="glass-panel-heavy p-10 rounded-[3rem] fade-in fade-in-delay-3">
+                    <h3 class="text-3xl font-bold mb-6 border-r-4 border-indigo-500 pr-6">العمق الهندسي</h3>
+                    <p class="text-lg text-white/70 leading-relaxed">
+                        متخصص في الهندسة الكهربائية، شغفي يكمن في ربط الفيزياء بالطاقة، وتحويل النظريات المعقدة إلى أنظمة واقعية قوية. كل دائرة، كل نظام، هو تعبير عن فهم عميق للمبادئ الأساسية.
+                    </p>
+                </div>
+                <div class="glass-panel-heavy p-10 rounded-[3rem] fade-in fade-in-delay-3">
+                    <h3 class="text-3xl font-bold mb-6 border-r-4 border-cyan-500 pr-6">الفكر الرقمي</h3>
+                    <p class="text-lg text-white/70 leading-relaxed">
+                        أرى البرمجة كلغة عالمية أترجم بها تحديات الهندسة. أعمل على بناء الأنظمة الذكية ومنصات الويب المتطورة التي تبسط المفاهيم المعقدة وتخدم المهندسين والطلاب بكفاءة غير مسبوقة.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-40">
+            <h2 class="sync-font text-indigo-400 text-xl mb-12 uppercase text-glow fade-in"> // CORE COMPETENCIES</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass-panel-heavy p-8 rounded-[2.5rem] flex flex-col justify-center items-center text-center fade-in">
+                    <i class="fa-solid fa-bolt text-5xl text-cyan-400 mb-6 text-glow"></i>
+                    <h4 class="sync-font text-sm text-white/80 uppercase tracking-wide">POWER SYSTEMS</h4>
+                </div>
+                <div class="glass-panel-heavy p-8 rounded-[2.5rem] flex flex-col justify-center items-center text-center fade-in fade-in-delay-1">
+                    <i class="fa-solid fa-code text-5xl text-indigo-400 mb-6 text-glow"></i>
+                    <h4 class="sync-font text-sm text-white/80 uppercase tracking-wide">DIGITAL PLATFORMS</h4>
+                </div>
+                <div class="glass-panel-heavy p-8 rounded-[2.5rem] flex flex-col justify-center items-center text-center fade-in fade-in-delay-2">
+                    <i class="fa-solid fa-brain text-5xl text-white/70 mb-6 text-glow"></i>
+                    <h4 class="sync-font text-sm text-white/80 uppercase tracking-wide">SYSTEM LOGIC</h4>
+                </div>
+            </div>
+        </section>
+
+        <footer class="pt-20 text-center relative border-t border-white/10">
+            <p class="sync-font text-[10px] text-white/40 mb-8 uppercase tracking-widest fade-in">MISSION STATEMENT</p>
+            <h3 class="text-3xl md:text-5xl font-black leading-tight italic max-w-4xl mx-auto text-glow fade-in fade-in-delay-1">
+                "هدفي هو بناء منظومة معرفية هندسية تساعد المهندس على التفكير بوضوح، والعمل بثقة، وتحويل التعقيد إلى فرصة."
+            </h3>
+            
+            <div class="mt-20 flex justify-center gap-10 text-white/30 fade-in fade-in-delay-2">
+                <a href="#" class="hover:text-indigo-400 transition-colors text-2xl"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#" class="hover:text-indigo-400 transition-colors text-2xl"><i class="fa-brands fa-github"></i></a>
+                <a href="mailto:contact@engineer-ee.com" class="hover:text-cyan-400 transition-colors text-2xl"><i class="fa-solid fa-envelope"></i></a>
+            </div>
+            <p class="inter-font text-[9px] text-white/20 mt-16 uppercase tracking-widest fade-in fade-in-delay-3">
+                &copy; 2026 M. ALRASASI - ARCHITECTING THE FUTURE
+            </p>
+        </footer>
+
+    </main>
+
+</body>
+</html>
