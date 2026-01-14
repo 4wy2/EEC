@@ -9,257 +9,396 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    :root{
-      --bg0:#060714; --bg1:#0B1026; --stroke: rgba(255,255,255,.08);
-      --brand:#4F46E5; --brand2:#06B6D4; --text: rgba(255,255,255,.92);
+    :root {
+      --bg-dark: #050505;
+      --grid-line: rgba(255, 255, 255, 0.05);
+      --primary: #3b82f6; /* أزرق كهربائي */
+      --accent: #eab308;  /* أصفر تحذيري */
+      --text-main: #e2e8f0;
+      --card-bg: #0f172a;
     }
-    body{
-      font-family:'Cairo', sans-serif;
-      background:
-        radial-gradient(900px 380px at 20% 10%, rgba(79,70,229,.25), transparent 60%),
-        radial-gradient(800px 340px at 80% 25%, rgba(6,182,212,.18), transparent 55%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
-      color: var(--text);
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: var(--bg-dark);
+      /* خلفية شبكية هندسية */
+      background-image: 
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 30px 30px;
+      color: var(--text-main);
       min-height: 100vh;
+      overflow-x: hidden;
     }
-    .glass{ background: rgba(15,23,42,.72); backdrop-filter: blur(10px); border: 1px solid var(--stroke); }
-    .btn-brand{
-      background: linear-gradient(135deg, rgba(79,70,229,1) 0%, rgba(6,182,212,1) 100%);
-      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+
+    /* تغيير تصميم الكروت لتبدو كلوحات تحكم */
+    .tech-card {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+      position: relative;
     }
-    .btn-brand:hover{ transform: translateY(-2px); box-shadow: 0 18px 40px rgba(79,70,229,.22); filter: brightness(1.02); }
-    .btn-ghost{ border: 1px solid var(--stroke); background: rgba(255,255,255,0.02); transition: background .18s ease, transform .18s ease; }
-    .btn-ghost:hover{ background: rgba(255,255,255,0.06); transform: translateY(-1px); }
-    .no-scroll{ overflow:hidden; }
+
+    /* إضافة زوايا تقنية للكروت */
+    .tech-card::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: -1px;
+      width: 10px; height: 10px;
+      border-top: 2px solid var(--primary);
+      border-left: 2px solid var(--primary);
+    }
+    .tech-card::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; right: -1px;
+      width: 10px; height: 10px;
+      border-bottom: 2px solid var(--primary);
+      border-right: 2px solid var(--primary);
+    }
+
+    /* الأزرار الأساسية */
+    .btn-brand {
+      background: var(--primary);
+      color: white;
+      border: 1px solid var(--primary);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      font-family: 'Share Tech Mono', 'Cairo', sans-serif; /* خط تقني للأرقام والإنجليزية */
+    }
+    .btn-brand:hover {
+      background: transparent;
+      color: var(--primary);
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* الأزرار الثانوية */
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(234, 179, 8, 0.05);
+    }
+
+    /* تنسيق خاص للأيقونات */
+    .icon-glow {
+      filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.6));
+    }
+
+    /* تنسيق السايدبار */
+    aside.glass {
+      background: #0f172a !important;
+      border-left: 2px solid var(--primary) !important;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+    }
+
+    /* أنيميشن */
+    @keyframes pulse-border {
+      0% { border-color: rgba(59, 130, 246, 0.3); }
+      50% { border-color: rgba(59, 130, 246, 0.8); }
+      100% { border-color: rgba(59, 130, 246, 0.3); }
+    }
+    .animate-pulse-border {
+      animation: pulse-border 2s infinite;
+    }
+
+    @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .animate-scale { animation: scaleIn 0.3s ease-out forwards; }
+    
+    /* Input Styling */
+    input[type="text"] {
+        background: #050505 !important;
+        border: 1px solid #334155 !important;
+        color: white !important;
+    }
+    input[type="text"]:focus {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
   </style>
 </head>
 
-
 <body class="flex flex-col overflow-x-hidden">
 
-  <!-- Overlay -->
-  <div id="overlay" class="fixed inset-0 bg-black/60 hidden z-40" aria-hidden="true"></div>
+  <div id="overlay" class="fixed inset-0 bg-black/80 hidden z-40 backdrop-blur-sm transition-all" aria-hidden="true"></div>
 
-  <!-- Sidebar -->
   <aside id="sidebar"
-    class="fixed top-0 right-0 h-full w-80 max-w-[85vw] translate-x-full transition-transform duration-200 z-50 glass p-6"
+    class="fixed top-0 right-0 h-full w-80 max-w-[85vw] translate-x-full transition-transform duration-300 z-50 glass flex flex-col border-l border-white/10"
     role="dialog" aria-modal="true" aria-labelledby="sidebarTitle">
-    <div class="flex items-center justify-between mb-6">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl flex items-center justify-center glass">
-          <i class="fa-solid fa-bolt text-cyan-300" aria-hidden="true"></i>
+    
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-10 border-b border-white/10 pb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-none bg-blue-500/10 border border-blue-500 flex items-center justify-center">
+            <i class="fa-solid fa-bolt text-blue-400 text-lg icon-glow" aria-hidden="true"></i>
+          </div>
+          <div class="text-right">
+            <h2 id="sidebarTitle" class="text-lg font-bold text-white tracking-wide">لوحة التحكم</h2>
+            <p class="text-[10px] text-blue-400 font-mono uppercase tracking-widest">System v2.0</p>
+          </div>
         </div>
-        <div class="text-right">
-          <h2 id="sidebarTitle" class="text-lg font-extrabold">بوابة اللجنة العلمية</h2>
-          <p class="text-xs text-white/60">Electrical Engineering Club</p>
-        </div>
+
+        <button id="closeSidebar" class="w-8 h-8 flex items-center justify-center hover:text-red-400 transition-colors" aria-label="إغلاق القائمة">
+          <i class="fa-solid fa-xmark text-lg" aria-hidden="true"></i>
+        </button>
       </div>
 
-      <button id="closeSidebar" class="w-10 h-10 rounded-2xl btn-ghost" aria-label="إغلاق القائمة">
-        <i class="fa-solid fa-xmark text-lg" aria-hidden="true"></i>
-      </button>
+      <nav class="space-y-2">
+        <a href="#home" class="flex items-center gap-3 px-4 py-3 border-r-2 border-transparent hover:border-blue-500 hover:bg-white/5 transition group">
+          <i class="fa-solid fa-house text-slate-400 group-hover:text-blue-400 w-5 text-center transition-colors"></i>
+          <span class="text-sm font-semibold text-slate-300 group-hover:text-white">الرئيسية</span>
+        </a>
+
+        <a href="faculty.html" class="flex items-center gap-3 px-4 py-3 border-r-2 border-transparent hover:border-blue-500 hover:bg-white/5 transition group">
+          <i class="fa-solid fa-user-tie text-slate-400 group-hover:text-blue-400 w-5 text-center transition-colors"></i>
+          <span class="text-sm font-semibold text-slate-300 group-hover:text-white">بحث هيئة التدريس</span>
+        </a>
+
+        <a href="EEflowchart.html" class="flex items-center gap-3 px-4 py-3 border-r-2 border-transparent hover:border-blue-500 hover:bg-white/5 transition group">
+          <i class="fa-solid fa-diagram-project text-slate-400 group-hover:text-blue-400 w-5 text-center transition-colors"></i>
+          <span class="text-sm font-semibold text-slate-300 group-hover:text-white">EE Flowchart</span>
+        </a>
+        <a href="examss.html" class="flex items-center gap-3 px-4 py-3 border-r-2 border-transparent hover:border-blue-500 hover:bg-white/5 transition group">
+          <i class="fa-solid fa-calendar-check text-slate-400 group-hover:text-blue-400 w-5 text-center transition-colors"></i>
+          <span class="text-sm font-semibold text-slate-300 group-hover:text-white">جدول الإختبارات</span>
+        </a>
+
+        <div class="py-4"><div class="h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent"></div></div>
+
+        <a href="https://jic.blackboard.com" target="_blank" rel="noopener noreferrer"
+          class="flex items-center gap-3 px-4 py-3 border border-slate-700/50 rounded-lg hover:border-blue-500/50 transition group bg-black/20">
+          <i class="fa-solid fa-graduation-cap text-yellow-500/80 group-hover:text-yellow-400 w-5 text-center"></i>
+          <span class="text-sm font-medium">البلاك بورد</span>
+        </a>
+
+        <a href="https://edugate.rcjy.edu.sa/jyup/init" target="_blank" rel="noopener noreferrer"
+          class="flex items-center gap-3 px-4 py-3 border border-slate-700/50 rounded-lg hover:border-blue-500/50 transition group bg-black/20">
+          <i class="fa-solid fa-globe text-yellow-500/80 group-hover:text-yellow-400 w-5 text-center"></i>
+          <span class="text-sm font-medium">الايدوقيت</span>
+        </a>
+      </nav>
     </div>
 
-    <nav class="space-y-2">
-      <a href="#home" class="block px-4 py-3 rounded-2xl hover:bg-white/5 transition">
-        <i class="fa-solid fa-house ms-2 text-indigo-300" aria-hidden="true"></i> الرئيسية
-      </a>
-      <a href="#plans" class="block px-4 py-3 rounded-2xl hover:bg-white/5 transition">
-        <i class="fa-solid fa-list-check ms-2 text-indigo-300" aria-hidden="true"></i> التخصصات والخطط
-      </a>
-      <a href="#resources" class="block px-4 py-3 rounded-2xl hover:bg-white/5 transition">
-        <i class="fa-solid fa-folder-open ms-2 text-indigo-300" aria-hidden="true"></i> ملفات ومراجع EE
-      </a>
-
-      <!-- رابط الصفحة المنفصلة -->
-      <a href="faculty.html" class="block px-4 py-3 rounded-2xl hover:bg-white/5 transition">
-        <i class="fa-solid fa-users ms-2 text-indigo-300" aria-hidden="true"></i> بحث هيئة التدريس
-      </a>
-      
-      <a href="examss.html" class="block px-4 py-3 rounded-2xl hover:bg-white/5 transition">
-        <i class="fa-solid fa-magnifying-glass ms-2 text-indigo-300" aria-hidden="true"></i> جدول الإختبارات
-      </a>
-      <a href="majors.html" class="block px-4 py-3 rounded-2xl hover:bg-white/5 transition">
-        <i class="fa-solid fa-magnifying-glass ms-2 text-indigo-300" aria-hidden="true"></i> التخصصات والخطط الدراسية
-      </a>
-      <a href="EEflowchart.html" class="block px-4 py-3 rounded-2xl hover:bg-white/5 transition">
-        <i class="fa-solid fa-magnifying-glass ms-2 text-indigo-300" aria-hidden="true"></i> EE Flowchart
-      </a>
-
-      <hr class="border-white/10 my-4">
-
-      <a href="https://jic.blackboard.com" target="_blank" rel="noopener noreferrer"
-        class="block px-4 py-3 rounded-2xl hover:bg-white/5 transition">
-        <i class="fa-solid fa-graduation-cap ms-2 text-cyan-300" aria-hidden="true"></i> البلاك بورد
-      </a>
-      <a href="https://edugate.rcjy.edu.sa/jyup/init" target="_blank" rel="noopener noreferrer"
-        class="block px-4 py-3 rounded-2xl hover:bg-white/5 transition">
-        <i class="fa-solid fa-globe ms-2 text-cyan-300" aria-hidden="true"></i> الايدوقيت
-      </a>
-    </nav>
+   <div class="mt-auto p-4 border-t border-slate-800 bg-black/40">
+    <a href="about.html" class="flex items-center gap-3 group">
+      <div class="w-8 h-8 bg-slate-800 flex items-center justify-center border border-slate-700">
+        <i class="fa-solid fa-code text-[10px] text-blue-400"></i>
+      </div>
+      <div class="flex flex-col">
+        <span class="text-[12px] font-bold text-slate-300">الرصاصي</span>
+        <span class="text-[8px] font-mono text-slate-500 uppercase tracking-widest">DEV MODE</span>
+      </div>
+    </a>
+  </div>
   </aside>
 
-  <!-- Header -->
-  <header id="home" class="px-6 pt-6">
-    <div class="flex justify-between items-center">
-      <button id="openSidebar"
-        class="w-11 h-11 rounded-2xl btn-ghost flex items-center justify-center"
-        aria-label="فتح القائمة" aria-expanded="false">
-        <i class="fa-solid fa-bars text-lg" aria-hidden="true"></i>
-      </button>
-
-      <div class="flex items-center gap-3">
-        <div class="text-right">
-          <h1 class="text-lg font-extrabold">بوابة اللجنة العلمية</h1>
-          <p class="text-xs text-white/60">Electrical Engineering Club</p>
+  <header id="home" class="px-6 pt-6 relative">
+    <div class="flex justify-between items-center max-w-5xl mx-auto mb-8">
+      <button id="openSidebar" class="w-10 h-10 border border-slate-700 hover:bg-slate-800 transition flex items-center justify-center text-slate-300"><i class="fa-solid fa-bars"></i></button>
+      <div class="flex items-center gap-3 text-right">
+        <div>
+          <h1 class="text-lg font-bold text-white uppercase tracking-wider">بوابة اللجنة العلمية</h1>
+          <p class="text-[10px] text-blue-500 font-mono tracking-widest">EE-CLUB-SYSTEM</p>
         </div>
-        <div class="w-11 h-11 rounded-2xl flex items-center justify-center"
-          style="background: linear-gradient(135deg, rgba(79,70,229,.28), rgba(6,182,212,.18)); border:1px solid rgba(255,255,255,.08);">
-          <i class="fa-solid fa-bolt text-cyan-300" aria-hidden="true"></i>
-        </div>
+        <div class="w-10 h-10 border border-blue-500/50 flex items-center justify-center bg-blue-900/10 animate-pulse-border"><i class="fa-solid fa-bolt text-blue-400"></i></div>
       </div>
     </div>
-
-    <div class="mt-8 glass rounded-[2.25rem] p-7 md:p-10">
-      <div class="flex flex-col items-center text-center">
-        <h2 class="text-4xl md:text-3xl font-black leading-tight"> اللجنة العلمية</h2>
-        <p class="mt-3 max-w-xl text-sm md:text-base text-white/70 leading-7">
-          مبادرة علمية تهدف إلى دعم طلاب قسم الهندسة الكهربائية، وتسهيل الوصول للمنصات الأكاديمية والمصادر التعليمية.
-        </p>
-
-        
-      </div>
+    
+    <div class="tech-card rounded-lg p-8 md:p-12 text-center max-w-5xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-black leading-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400">اللجنة العلمية</h2>
+        <div class="h-1 w-20 bg-blue-500 mx-auto my-4"></div>
+        <p class="max-w-xl mx-auto text-sm text-slate-400 leading-7 font-medium">النظام المركزي لدعم طلاب الهندسة الكهربائية. الوصول السريع للمصادر والمعلومات.</p>
     </div>
   </header>
 
-<main class="px-4 sm:px-6 pb-10">
-  <div class="max-w-5xl mx-auto">
+  <main class="px-4 sm:px-6 pb-10">
+    <div class="max-w-5xl mx-auto">
 
-    <section id="plans" class="mt-8 glass rounded-[2.25rem] p-6 sm:p-8 text-center">
-      
-      <!-- العنوان -->
-      <h3 class="text-2xl sm:text-3xl font-black">
-        التخصصات والخطط الدراسية
-      </h3>
+      <section id="plans" class="mt-8 tech-card rounded-lg p-6 sm:p-8 text-center">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-[10px] px-3 py-1 uppercase tracking-widest font-bold text-black font-mono">Quick Access</div>
+        <h3 class="text-xl font-bold text-white mb-6">الوصول السريع</h3>
+        <div class="w-full max-w-md mx-auto space-y-3">
+          <div class="flex gap-3">
+            <a href="https://jic.blackboard.com" target="_blank" class="btn-brand w-1/2 py-3 text-sm font-bold flex items-center justify-center gap-2 rounded-sm"><i class="fa-solid fa-graduation-cap"></i> Blackboard</a>
+            <a href="https://edugate.rcjy.edu.sa/jyup/init" target="_blank" class="btn-brand w-1/2 py-3 text-sm font-bold flex items-center justify-center gap-2 rounded-sm"><i class="fa-solid fa-globe"></i> Edugate</a>
+          </div>
+          <a href="faculty.html" class="btn-brand block py-3 text-base font-bold rounded-sm border-dashed"><i class="fa-solid fa-magnifying-glass ms-2"></i> دليل هيئة التدريس</a>
+        </div>
+      </section>
 
-      <p class="mt-2 text-sm sm:text-base text-white/70">
-        روابط سريعة للمنصات والخدمات الأكاديمية
-      </p>
+      <section class="mt-6 border border-dashed border-slate-700 bg-slate-900/30 rounded-lg p-8 text-center relative overflow-hidden group">
+        <div class="relative z-10">
+            <h3 class="text-xl font-bold mb-2 text-white">مركز المساهمة</h3>
+            <p class="text-xs text-slate-500 mb-6 font-mono">UPLOAD_STATUS: <span class="text-green-500">ACTIVE</span></p>
+            <div class="flex justify-center">
+                <button onclick="openUploadModal()" class="bg-slate-800 border border-slate-600 text-white py-3 px-8 flex items-center gap-4 hover:border-blue-500 hover:text-blue-400 transition-all rounded-sm">
+                    <div class="flex items-center justify-center">
+                        <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+                    </div>
+                    <div class="text-right">
+                        <span class="block font-bold text-sm leading-none mb-1">رفع ملف جديد</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+      </section>
 
-      <div class="mt-7 w-full max-w-md mx-auto space-y-4">
-
-        <!-- البلاك بورد + الايدوقيت جنب بعض -->
-        <div class="flex gap-3">
-          <a href="https://jic.blackboard.com" target="_blank" rel="noopener noreferrer"
-            class="btn-brand w-1/2 py-3 rounded-2xl font-extrabold text-sm shadow-lg flex items-center justify-center gap-2">
-            <i class="fa-solid fa-graduation-cap"></i>
-            البلاك بورد
-          </a>
-
-          <a href="https://edugate.rcjy.edu.sa/jyup/init" target="_blank" rel="noopener noreferrer"
-            class="btn-brand w-1/2 py-3 rounded-2xl font-extrabold text-sm shadow-lg flex items-center justify-center gap-2">
-            <i class="fa-solid fa-globe"></i>
-            الايدوقيت
-          </a>
+      <section id="resources" class="mt-6 tech-card rounded-lg p-6 sm:p-8 text-right">
+        <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
+          <div>
+            <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-database ms-2 text-blue-500"></i>قاعدة البيانات</h3>
+          </div>
+          <span class="text-[9px] bg-blue-900/30 text-blue-400 px-2 py-1 border border-blue-500/30 font-mono">SYNCING...</span>
         </div>
 
-        <!-- زر البحث في النص -->
-        <div class="flex justify-center">
-          <a href="faculty.html"
-            class="btn-brand w-full sm:w-2/3 py-3 sm:py-4 rounded-2xl font-black text-base shadow-lg flex items-center justify-center gap-2">
-            <i class="fa-solid fa-users"></i>
-            بحث هيئة التدريس
-          </a>
-        </div>
-        <div class="flex justify-center">
-          <a href="majors.html"
-            class="btn-brand w-full sm:w-2/3 py-3 sm:py-4 rounded-2xl font-black text-base shadow-lg flex items-center justify-center gap-2">
-            <i class="fa-solid fa-users"></i>
-            التخصصات والخطط الدراسية
-          </a>
+        <div class="grid grid-cols-2 gap-3">
+          
+          <div class="border border-slate-800 bg-black/40 p-4 flex flex-col sm:flex-row items-center justify-between opacity-60 cursor-not-allowed gap-2 text-center sm:text-right hover:border-slate-600 transition">
+            <span class="font-bold text-[12px] sm:text-sm text-slate-400">
+              <i class="fa-solid fa-folder mb-2 sm:mb-0 sm:ms-2 block sm:inline text-slate-600"></i> مكتبة المواد
+            </span>
+            <span class="text-[9px] font-mono text-yellow-600 border border-yellow-900/50 px-1">SOON</span>
+          </div>
+
+          <div class="border border-slate-800 bg-black/40 p-4 flex flex-col sm:flex-row items-center justify-between opacity-60 cursor-not-allowed gap-2 text-center sm:text-right hover:border-slate-600 transition">
+            <span class="font-bold text-[12px] sm:text-sm text-slate-400">
+              <i class="fa-solid fa-file-pdf mb-2 sm:mb-0 sm:ms-2 block sm:inline text-slate-600"></i> ملخصات
+            </span>
+            <span class="text-[9px] font-mono text-yellow-600 border border-yellow-900/50 px-1">SOON</span>
+          </div>
+
+          <div class="border border-slate-800 bg-black/40 p-4 flex flex-col sm:flex-row items-center justify-between opacity-60 cursor-not-allowed gap-2 text-center sm:text-right hover:border-slate-600 transition">
+            <span class="font-bold text-[12px] sm:text-sm text-slate-400">
+              <i class="fa-solid fa-box-archive mb-2 sm:mb-0 sm:ms-2 block sm:inline text-slate-600"></i> اختبارات
+            </span>
+            <span class="text-[9px] font-mono text-yellow-600 border border-yellow-900/50 px-1">SOON</span>
+          </div>
+
+          <div class="border border-slate-800 bg-black/40 p-4 flex flex-col sm:flex-row items-center justify-between opacity-60 cursor-not-allowed gap-2 text-center sm:text-right hover:border-slate-600 transition">
+            <span class="font-bold text-[12px] sm:text-sm text-slate-400">
+              <i class="fa-solid fa-lightbulb mb-2 sm:mb-0 sm:ms-2 block sm:inline text-slate-600"></i> تجارب
+            </span>
+            <span class="text-[9px] font-mono text-yellow-600 border border-yellow-900/50 px-1">SOON</span>
+          </div>
+
         </div>
 
+        <p class="mt-6 text-center text-[10px] text-slate-600 font-mono tracking-wide">
+          // SYSTEM AWAITING USER INPUTS...
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <div id="uploadModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
+    <div class="tech-card w-full max-w-lg rounded-none p-1 border-2 border-blue-900 relative shadow-2xl">
+      <div class="bg-slate-900 p-8">
+        <button onclick="closeUploadModal()" class="absolute top-4 left-4 text-slate-500 hover:text-red-500 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+        
+        <div id="formContent">
+            <div class="text-right mb-6 border-b border-slate-700 pb-4">
+                <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-upload ms-2 text-blue-500"></i>بيانات المصدر</h3>
+                <p class="text-[10px] text-slate-400 font-mono mt-1">SECURE UPLOAD PROTOCOL</p>
+            </div>
+
+            <form name="ee-submissions" method="POST" data-netlify="true" enctype="multipart/form-data" id="eeSourceForm" class="space-y-4 text-right">
+              <input type="hidden" name="form-name" value="ee-submissions" />
+              <div>
+                  <label class="text-xs text-slate-400 mb-1 block">Subject Name</label>
+                  <input type="text" name="subject" required class="w-full px-4 py-3 text-sm focus:outline-none rounded-sm" placeholder="اسم المادة (E.g. EE201)">
+              </div>
+              <div>
+                  <label class="text-xs text-slate-400 mb-1 block">Description / Link</label>
+                  <input type="text" name="note" class="w-full px-4 py-3 text-sm focus:outline-none rounded-sm" placeholder="ملاحظة أو رابط خارجي">
+              </div>
+              
+              <div class="border border-dashed border-slate-600 bg-slate-800/50 p-6 text-center hover:border-blue-500 transition cursor-pointer relative group">
+                <i class="fa-solid fa-file-import text-2xl text-slate-500 mb-2 group-hover:text-white transition"></i>
+                <input type="file" name="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                <p class="text-xs text-slate-400">Click to Select File</p>
+              </div>
+
+              <button type="submit" class="btn-brand w-full py-4 font-bold text-sm tracking-widest mt-4">INITIALIZE UPLOAD</button>
+            </form>
+        </div>
+
+        <div id="successUi" class="hidden text-center py-10 animate-scale">
+            <div class="w-16 h-16 border-2 border-green-500 rounded-full flex items-center justify-center mx-auto mb-4 bg-green-900/20">
+                <i class="fa-solid fa-check text-2xl text-green-500"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white">تم استلام البيانات</h3>
+            <p class="text-xs text-slate-400 mt-2 font-mono">TRANSACTION COMPLETE</p>
+            <button onclick="closeUploadModal()" class="mt-8 text-blue-400 underline text-xs hover:text-white">RETURN TO SYSTEM</button>
+        </div>
       </div>
-    </section>
-
-    <section id="resources" class="mt-6 glass rounded-[2.25rem] p-6 sm:p-8 text-right">
-      <h3 class="text-2xl font-black">ملفات ومراجع الـ EE</h3>
-      <p class="mt-2 text-sm text-white/70">بدّل الروابط التالية بروابطك الفعلية.</p>
-
-      <div class="mt-5 grid md:grid-cols-2 gap-3">
-        <a href="YOUR_RESOURCES_LINK_1" target="_blank" rel="noopener noreferrer"
-          class="btn-ghost rounded-2xl p-4 flex items-center justify-between">
-          <span class="font-extrabold text-sm">
-            <i class="fa-solid fa-folder ms-2 text-cyan-300"></i>
-            مكتبة مواد EE
-          </span>
-          <span class="text-xs text-white/60">فتح</span>
-        </a>
-
-        <a href="YOUR_RESOURCES_LINK_2" target="_blank" rel="noopener noreferrer"
-          class="btn-ghost rounded-2xl p-4 flex items-center justify-between">
-          <span class="font-extrabold text-sm">
-            <i class="fa-solid fa-file-pdf ms-2 text-cyan-300"></i>
-            ملخصات ومحاضرات
-          </span>
-          <span class="text-xs text-white/60">فتح</span>
-        </a>
-      </div>
-    </section>
-
+    </div>
   </div>
-</main>
 
+  <footer class="mt-12 py-8 border-t border-slate-800 bg-black">
+    <div class="max-w-5xl mx-auto px-6 flex flex-col items-center">
+      <div class="flex items-center gap-3 py-4 opacity-50 hover:opacity-100 transition duration-500">
+        <i class="fa-solid fa-microchip text-blue-500"></i>
+        <div class="flex flex-col text-right">
+             <span class="text-xs font-bold text-slate-300">ALRASASI</span>
+             <span class="text-[8px] font-mono text-slate-600">ENGINEERING DESIGN</span>
+        </div>
+      </div>
+      
+      <p class="text-[10px] font-mono text-slate-700 text-center mt-2">
+        &copy; 2026 SYSTEM. ALL RIGHTS RESERVED.
+      </p>
+      
+  </footer>
 
   <script>
+    // التحكم بالسايدبار
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
-    const openBtn = document.getElementById('openSidebar');
-    const closeBtn = document.getElementById('closeSidebar');
+    function openSidebar(){ sidebar.classList.remove('translate-x-full'); overlay.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+    function closeSidebar(){ sidebar.classList.add('translate-x-full'); overlay.classList.add('hidden'); document.body.style.overflow = 'auto'; }
+    
+    document.getElementById('openSidebar').onclick = openSidebar;
+    document.getElementById('closeSidebar').onclick = closeSidebar;
+    overlay.onclick = () => { closeSidebar(); closeUploadModal(); };
 
-    function openSidebar(){
-      sidebar.classList.remove('translate-x-full');
-      overlay.classList.remove('hidden');
-      document.body.classList.add('no-scroll');
-      openBtn.setAttribute('aria-expanded', 'true');
-    }
-    function closeSidebar(){
-      sidebar.classList.add('translate-x-full');
-      overlay.classList.add('hidden');
-      document.body.classList.remove('no-scroll');
-      openBtn.setAttribute('aria-expanded', 'false');
+    // التحكم بالنافذة المنبثقة
+    const uploadModal = document.getElementById('uploadModal');
+    function openUploadModal() { uploadModal.classList.remove('hidden'); uploadModal.classList.add('flex'); document.body.style.overflow = 'hidden'; }
+    function closeUploadModal() { 
+        uploadModal.classList.add('hidden'); 
+        uploadModal.classList.remove('flex'); 
+        document.body.style.overflow = 'auto';
+        // إعادة تهيئة الواجهة
+        document.getElementById("formContent").classList.remove("hidden");
+        document.getElementById("successUi").classList.add("hidden");
     }
 
-    openBtn.addEventListener('click', openSidebar);
-    closeBtn.addEventListener('click', closeSidebar);
-    overlay.addEventListener('click', closeSidebar);
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSidebar(); });
+    // إرسال الفورم AJAX (Netlify)
+    document.getElementById("eeSourceForm").onsubmit = function(e) {
+      e.preventDefault();
+      fetch("/", {
+        method: "POST",
+        body: new FormData(this)
+      })
+      .then(() => {
+        document.getElementById("formContent").classList.add("hidden");
+        document.getElementById("successUi").classList.remove("hidden");
+      })
+      .catch(() => alert("خطأ في الإرسال"));
+    };
+
+    document.onkeydown = (e) => { if (e.key === 'Escape') { closeSidebar(); closeUploadModal(); } };
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
