@@ -97,7 +97,7 @@
             </button>
           </div>
 
-          <div id="resultArea" class="mt-12 min-h-[100px] flex flex-col items-center gap-4"></div>
+          <div id="resultArea" class="mt-12 min-h-[100px] flex flex-col items-center gap-4 w-full"></div>
         </div>
       </section>
 
@@ -118,7 +118,7 @@
   </footer>
 
   <script>
-    // رابط الـ Worker الخاص بك
+    // رابط الـ Worker
     const cloudflareBaseUrl = "https://square-lab-a7a0.mohammed-rasasi.workers.dev/";
 
     async function handleSearch() {
@@ -136,37 +136,40 @@
       resultArea.innerHTML = `
         <div class="flex flex-col items-center animate-pulse">
             <div class="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mb-4"></div>
-            <span class="text-indigo-400 font-bold text-sm">جاري مراجعة الأرشيف الرقمي...</span>
+            <span class="text-indigo-400 font-bold text-sm">جاري فحص جميع مسارات الدورات...</span>
         </div>`;
 
-      // الرابط يطلب الملف من الـ Worker الذي بدوره يجلبه من R2
-      const fileUrl = `${cloudflareBaseUrl}${id}.pdf`;
-
       try {
-        const response = await fetch(fileUrl, { method: 'HEAD' });
+        // نطلب من الـ Worker قائمة الشهادات المرتبطة بهذا الرقم
+        const response = await fetch(`${cloudflareBaseUrl}${id}`);
 
         if (response.ok) {
-          resultArea.innerHTML = `
-            <div class="animate-scale w-full glass p-5 rounded-3xl border-green-500/20 flex items-center justify-between shadow-2xl shadow-green-500/5 shine-card">
-                <div class="flex items-center gap-4 text-right">
-                    <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400">
-                        <i class="fa-solid fa-file-pdf text-xl"></i>
-                    </div>
-                    <div class="z-10">
-                        <span class="block text-[10px] text-white/40 font-bold uppercase tracking-widest">Certificate Found</span>
-                        <h4 class="font-black text-white text-sm">شهادة حضور الدورة التدريبية</h4>
-                    </div>
-                </div>
-                <a href="${fileUrl}" target="_blank"
-                    class="z-10 h-12 px-6 bg-green-600 text-white rounded-xl font-black text-xs flex items-center justify-center hover:bg-green-500 transition-all shadow-lg shadow-green-500/20">
-                    عرض وتحميل PDF
-                </a>
-            </div>`;
+          const certificates = await response.json();
+          resultArea.innerHTML = ""; // مسح منطقة التحميل
+
+          certificates.forEach(cert => {
+            resultArea.innerHTML += `
+              <div class="animate-scale w-full glass p-6 rounded-3xl border-white/10 flex items-center justify-between shadow-xl mb-2 shine-card">
+                  <div class="flex items-center gap-4 text-right">
+                      <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+                          <i class="fa-solid fa-award text-2xl"></i>
+                      </div>
+                      <div>
+                          <span class="block text-[10px] text-indigo-400 font-black uppercase tracking-[0.2em] mb-1">دورة: ${cert.course}</span>
+                          <h4 class="font-black text-white text-base">شهادة حضور معتمدة</h4>
+                      </div>
+                  </div>
+                  <a href="${cert.url}" target="_blank"
+                      class="h-12 px-6 bg-indigo-600 text-white rounded-xl font-black text-xs flex items-center justify-center hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-500/20">
+                      تحميل PDF
+                  </a>
+              </div>`;
+          });
         } else {
-          showStatus('error', '❌ لم نجد أي شهادات مرتبطة بهذا الرقم حالياً.');
+          showStatus('error', '❌ لم نجد أي شهادات مسجلة بهذا الرقم في الأرشيف.');
         }
       } catch (err) {
-        showStatus('error', '⚠️ حدث خطأ في الاتصال. تأكد من إعدادات الـ Worker و CORS.');
+        showStatus('error', '⚠️ حدث خطأ في الاتصال بالسيرفر. يرجى المحاولة لاحقاً.');
       } finally {
         btn.disabled = false;
       }
@@ -175,7 +178,7 @@
     function showStatus(type, msg) {
       const colorClass = type === 'error' ? 'text-red-400 bg-red-400/10 border-red-400/20' : 'text-indigo-400 bg-indigo-400/10 border-indigo-400/20';
       resultArea.innerHTML = `
-        <div class="animate-scale flex items-center gap-3 ${colorClass} px-6 py-4 rounded-2xl border font-bold text-sm">
+        <div class="animate-scale flex items-center gap-3 ${colorClass} px-8 py-5 rounded-2xl border font-bold text-sm">
             ${msg}
         </div>`;
     }
