@@ -3,85 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة الشهادات الرقمية</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>بوابة الشهادات | نادي الهندسة الكهربائية</title>
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #060714; color: white; }
-        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-        .btn-brand { background: linear-gradient(135deg, #004a99, #008c45); }
+        :root {
+            --primary: #004a99;
+            --secondary: #008c45;
+            --bg: #f8f9fa;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            border-top: 5px solid var(--primary);
+        }
+        .logo-placeholder {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        h2 { margin-bottom: 10px; color: #333; }
+        p { color: #666; margin-bottom: 25px; font-size: 14px; }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--primary); outline: none; }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        button:hover:not(:disabled) { background: #003366; }
+        #status { margin-top: 20px; font-size: 15px; min-height: 25px; font-weight: 500; }
+        .error { color: #d9534f; }
+        .success { color: var(--secondary); }
+        .loading { color: #f0ad4e; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-6">
+<body>
 
-    <header class="mt-10 mb-10 text-center">
-        <h1 class="text-3xl font-black italic">بوابة الشهادات</h1>
-        <p class="text-blue-400 text-xs tracking-widest mt-2 uppercase">Scientific Committee Portal</p>
-    </header>
+<div class="card">
+    <div class="logo-placeholder">RCJY 🎓</div>
+    <h2>استخراج شهادة الحضور</h2>
+    <p>أدخل الرقم الأكاديمي المكون من 9 أرقام للحصول على شهادتك</p>
+    
+    <input type="text" id="studentId" placeholder="461XXXXXX" maxlength="9">
+    <button id="searchBtn" onclick="downloadCertificate()">بحث وتحميل الشهادة</button>
+    
+    <div id="status"></div>
+</div>
 
-    <main class="w-full max-w-lg glass rounded-[2.5rem] p-8 shadow-2xl">
-        <div class="space-y-6">
-            <h2 class="text-center font-bold">أدخل الرقم الأكاديمي</h2>
-            <input type="text" id="studentId" placeholder="461XXXXXX" 
-                   class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 text-center text-2xl font-bold focus:border-blue-500 outline-none">
-            
-            <button onclick="handleSearch()" id="searchBtn" 
-                    class="btn-brand w-full py-4 rounded-2xl font-black text-lg shadow-lg hover:opacity-90 transition">
-                بحث عن الشهادات
-            </button>
-        </div>
+<script>
+    // الرابط الخاص بك (تأكد من وجود / في النهاية)
+    const cloudflareBaseUrl = "https://solitary-truth-a4fa.mohammed-rasasi.workers.dev/";
 
-        <div id="results" class="mt-8 space-y-3"></div>
-    </main>
+    async function downloadCertificate() {
+        const idInput = document.getElementById('studentId');
+        const status = document.getElementById('status');
+        const btn = document.getElementById('searchBtn');
+        const id = idInput.value.trim();
 
-    <script>
-        // الرابط الصحيح من الصورة التي أرسلتها
-        const API_URL = "https://solitary-truth-a4fa.mohammed-rasasi.workers.dev/";
-
-        async function handleSearch() {
-            const id = document.getElementById('studentId').value.trim();
-            const resArea = document.getElementById('results');
-            const btn = document.getElementById('searchBtn');
-
-            if (!id) {
-                resArea.innerHTML = '<p class="text-red-400 text-center font-bold">يرجى كتابة الرقم</p>';
-                return;
-            }
-
-            btn.disabled = true;
-            resArea.innerHTML = '<p class="text-center animate-pulse">جاري البحث...</p>';
-
-            try {
-                // نطلب البيانات من الـ Worker
-                const response = await fetch(`${API_URL}?studentId=${id}`);
-                const data = await response.json();
-
-                if (data.success && data.count > 0) {
-                    resArea.innerHTML = `<p class="text-white/40 text-[10px] text-center mb-2 font-bold">تم العثور على ${data.count} شهادة</p>`;
-                    data.certificates.forEach(cert => {
-                        resArea.innerHTML += `
-                            <div class="glass p-4 rounded-2xl flex justify-between items-center border-blue-500/20">
-                                <div class="text-right">
-                                    <span class="text-blue-400 text-[10px] font-bold">${cert.courseName}</span>
-                                    <h4 class="text-sm font-bold text-white">شهادة معتمدة</h4>
-                                </div>
-                                <a href="${cert.downloadUrl}" target="_blank" class="bg-blue-600/20 p-3 rounded-xl text-blue-400">
-                                    <i class="fa-solid fa-download"></i>
-                                </a>
-                            </div>`;
-                    });
-                } else if (data.error) {
-                    resArea.innerHTML = `<p class="text-red-400 text-center text-xs italic">خطأ من السيرفر: ${data.error}</p>`;
-                } else {
-                    resArea.innerHTML = '<p class="text-center text-white/30 text-sm italic">لا توجد نتائج لهذا الرقم</p>';
-                }
-            } catch (err) {
-                resArea.innerHTML = `<p class="text-red-400 text-center text-xs">⚠️ عذراً، تأكد من إعدادات الـ Worker والـ CORS</p>`;
-            } finally {
-                btn.disabled = false;
-            }
+        if (id.length !== 9 || isNaN(id)) {
+            status.innerHTML = '<span class="error">❌ يرجى إدخال رقم أكاديمي صحيح (9 أرقام)</span>';
+            return;
         }
-    </script>
+
+        status.innerHTML = '<span class="loading">⏳ جاري البحث عن الشهادة...</span>';
+        btn.disabled = true;
+
+        // سنرسل الرقم للـ Worker وهو يتكفل بالبحث داخل المجلد
+        const apiUrl = `${cloudflareBaseUrl}?studentId=${id}`;
+
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            if (data.success && data.count > 0) {
+                status.innerHTML = '<span class="success">✅ تم العثور على الشهادة! جاري التحميل...</span>';
+                
+                // نأخذ رابط التحميل لأول شهادة يجدها (بما أن الأيدي فريد)
+                const downloadUrl = data.certificates[0].downloadUrl;
+
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.target = "_blank";
+                link.setAttribute('download', `${id}.pdf`);
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            } else {
+                status.innerHTML = '<span class="error">❌ عذراً، لا توجد شهادة لهذا الرقم. تأكد من الرقم المدخل.</span>';
+            }
+        } catch (error) {
+            console.error("Connection error:", error);
+            status.innerHTML = '<span class="error">⚠️ مشكلة في الاتصال بالسيرفر. تأكد من تفعيل CORS.</span>';
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    document.getElementById('studentId').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            downloadCertificate();
+        }
+    });
+</script>
+
 </body>
 </html>
