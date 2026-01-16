@@ -3,105 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة استخراج شهادات - نادي الهندسة الكهربائية</title>
+    <title>بوابة الشهادات | نادي الهندسة الكهربائية</title>
     <style>
         :root {
-            --primary-color: #004a99; /* لون رسمي أزرق */
-            --secondary-color: #f4f4f4;
-            --accent-color: #008c45; /* لون أخضر هيئة */
+            --primary: #004a99;
+            --secondary: #008c45;
+            --bg: #f8f9fa;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--secondary-color);
-            margin: 0;
+            background-color: var(--bg);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin: 0;
         }
-        .container {
+        .card {
             background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
             text-align: center;
-            width: 90%;
-            max-width: 500px;
+            border-top: 5px solid var(--primary);
         }
-        img.logo { width: 120px; margin-bottom: 1rem; }
-        h2 { color: var(--primary-color); margin-bottom: 0.5rem; }
-        p { color: #666; font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .logo-placeholder {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        h2 { margin-bottom: 10px; color: #333; }
+        p { color: #666; margin-bottom: 25px; font-size: 14px; }
         input {
-            width: 80%;
+            width: 100%;
             padding: 12px;
+            margin-bottom: 15px;
             border: 2px solid #ddd;
             border-radius: 8px;
-            font-size: 1rem;
-            margin-bottom: 1rem;
+            box-sizing: border-box;
+            font-size: 16px;
             text-align: center;
-        }
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
             transition: 0.3s;
         }
-        button:hover { background-color: #003366; }
-        #message { margin-top: 1rem; font-weight: bold; }
+        input:focus { border-color: var(--primary); outline: none; }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        button:hover { background: #003366; }
+        #status { margin-top: 20px; font-size: 14px; min-height: 20px; }
         .error { color: #d9534f; }
-        .success { color: var(--accent-color); }
+        .success { color: var(--secondary); }
+        .loading { color: #f0ad4e; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>شهادات دورة "أساسيات القيادة"</h2>
-    <p>برجاء إدخال الرقم الأكاديمي لتحميل شهادتك</p>
+<div class="card">
+    <div class="logo-placeholder">RCJY 🎓</div>
+    <h2>استخراج شهادة الحضور</h2>
+    <p>أدخل الرقم الأكاديمي المكون من 9 أرقام للحصول على شهادتك (دورة أساسيات القيادة)</p>
     
-    <input type="text" id="studentId" placeholder="مثال: 461401249" maxlength="9">
-    <br>
-    <button onclick="checkAndDownload()">بحث وتحميل الشهادة</button>
+    <input type="text" id="studentId" placeholder="461XXXXXX" maxlength="9">
+    <button onclick="downloadCertificate()">بحث وتحميل الشهادة</button>
     
-    <div id="message"></div>
+    <div id="status"></div>
 </div>
 
 <script>
-    function checkAndDownload() {
-        const studentId = document.getElementById('studentId').value.trim();
-        const messageDiv = document.getElementById('message');
-        
-        if (studentId.length < 9) {
-            messageDiv.innerHTML = '<span class="error">الرجاء إدخال رقم أكاديمي صحيح (9 أرقام)</span>';
+    // --- قـم بتغيير هذا الرابط إلى رابط الـ Cloudflare R2 الخاص بك ---
+  // التعديل الصحيح
+const cloudflareBaseUrl = "https://silent-limit-b55b.mohammed-rasasi.workers.dev/";
+    async function downloadCertificate() {
+        const idInput = document.getElementById('studentId');
+        const status = document.getElementById('status');
+        const id = idInput.value.trim();
+
+        // 1. التحقق من طول الرقم
+        if (id.length !== 9 || isNaN(id)) {
+            status.innerHTML = '<span class="error">❌ يرجى إدخال رقم أكاديمي صحيح مكون من 9 أرقام</span>';
             return;
         }
 
-        // مسار الملف المعتمد على الرقم الأكاديمي
-        const filePath = `certificates_by_id/${studentId}.pdf`;
+        status.innerHTML = '<span class="loading">⏳ جاري البحث عن الشهادة...</span>';
 
-        // محاولة جلب الملف للتأكد من وجوده (Fetch)
-        fetch(filePath, { method: 'HEAD' })
-        .then(res => {
-            if (res.ok) {
-                messageDiv.innerHTML = '<span class="success">تم العثور على الشهادة! جاري التحميل...</span>';
+        const fileUrl = `${cloudflareBaseUrl}${id}.pdf`;
+
+        try {
+            // 2. التحقق من وجود الملف في Cloudflare (HEAD Request)
+            const response = await fetch(fileUrl, { method: 'HEAD' });
+
+            if (response.ok) {
+                status.innerHTML = '<span class="success">✅ تم العثور على الشهادة، يبدأ التحميل الآن...</span>';
                 
-                // بدء التحميل
+                // 3. توجيه المستخدم لتحميل الملف
                 const link = document.createElement('a');
-                link.href = filePath;
-                link.download = `${studentId}.pdf`;
+                link.href = fileUrl;
+                link.setAttribute('download', `${id}.pdf`);
                 document.body.appendChild(link);
                 link.click();
-                document.body.removeChild(link);
+                link.remove();
             } else {
-                messageDiv.innerHTML = '<span class="error">عذراً، لم يتم العثور على شهادة لهذا الرقم. تأكد من الرقم أو تواصل مع النادي.</span>';
+                status.innerHTML = '<span class="error">❌ لم يتم العثور على شهادة لهذا الرقم. تأكد من صحته.</span>';
             }
-        })
-        .catch(err => {
-            messageDiv.innerHTML = '<span class="error">حدث خطأ في الاتصال، حاول مرة أخرى.</span>';
-        });
+        } catch (error) {
+            console.error(error);
+            // ملاحظة للمبرمج: إذا حدث خطأ CORS، سيذهب الكود هنا. 
+            // في حالة CORS، يمكنك استخدام window.location.href = fileUrl مباشرة كخيار بديل.
+            status.innerHTML = '<span class="error">⚠️ حدثت مشكلة في الاتصال. جاري محاولة التحميل المباشر...</span>';
+            setTimeout(() => window.location.href = fileUrl, 2000);
+        }
     }
 </script>
 
