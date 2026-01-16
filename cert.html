@@ -1,66 +1,109 @@
-export default {
-  async fetch(request, env) {
-    const headers = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET,OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-      "Cache-Control": "no-store",
-    };
-
-    try {
-      if (request.method === "OPTIONS") return new Response(null, { headers });
-
-      const url = new URL(request.url);
-      const studentId = (url.searchParams.get("studentId") || "").replace(/\D/g, "");
-
-      // مسار تحميل الملفات المباشر
-      if (url.pathname.startsWith("/download/")) {
-        const fileName = decodeURIComponent(url.pathname.replace("/download/", ""));
-        const fileObj = await env.CERTS_BUCKET.get(fileName);
-        
-        if (!fileObj) return new Response("File Not Found", { status: 404, headers });
-        
-        return new Response(fileObj.body, {
-          headers: {
-            ...headers,
-            "Content-Type": "application/pdf",
-            "Content-Disposition": `inline; filename="${fileName}"`
-          }
-        });
-      }
-
-      // البحث عن الشهادات
-      if (!studentId || studentId.length < 5) {
-        return json({ success: false, error: "Invalid ID" }, 400, headers);
-      }
-
-      const databaseObj = await env.CERTS_BUCKET.get("database.txt");
-      if (!databaseObj) return json({ success: false, error: "Database not found" }, 500, headers);
-
-      const content = await databaseObj.text();
-      const lines = content.split(/\r?\n/);
-      const foundCerts = [];
-
-      for (const line of lines) {
-        if (!line.trim()) continue;
-        const [id, courseName, fileName] = line.split(",").map(p => p.trim());
-        
-        if (id === studentId) {
-          foundCerts.push({ 
-            courseName, 
-            downloadUrl: `${url.origin}/download/${fileName}` 
-          });
-        }
-      }
-
-      return json({ success: true, count: foundCerts.length, certificates: foundCerts }, 200, headers);
-
-    } catch (e) {
-      return json({ success: false, error: e.message }, 500, headers);
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>بوابة الشهادات الرقمية | RCJY</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root { --brand: #004a99; --brand2: #008c45; }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: radial-gradient(circle at top right, rgba(0,74,153,0.1), #060714), #060714;
+      color: white; min-height: 100vh;
     }
-  }
-};
+    .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.08); }
+    .btn-gradient { background: linear-gradient(135deg, var(--brand), var(--brand2)); transition: 0.3s; }
+    .btn-gradient:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,74,153,0.4); }
+    @keyframes slideIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+    .animate-in { animation: slideIn 0.4s ease forwards; }
+  </style>
+</head>
+<body class="flex flex-col items-center p-6">
 
-function json(obj, status, headers) {
-  return new Response(JSON.stringify(obj), { status, headers: { ...headers, "Content-Type": "application/json" } });
-}
+  <header class="w-full max-w-2xl flex justify-between items-center mt-10 mb-12">
+    <div class="text-right">
+      <h1 class="text-2xl font-black tracking-tighter italic">بوابة الشهادات</h1>
+      <p class="text-[10px] text-white/30 uppercase tracking-[0.3em] font-bold">Scientific Committee Portal</p>
+    </div>
+    <div class="w-12 h-12 glass rounded-2xl flex items-center justify-center border-white/10 shadow-2xl">
+      <i class="fa-solid fa-award text-blue-400 text-xl"></i>
+    </div>
+  </header>
+
+  <main class="w-full max-w-xl">
+    <div class="glass rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative overflow-hidden">
+      <div class="relative z-10">
+        <h2 class="text-xl font-bold text-center mb-8">استعلام عن السجل التدريبي</h2>
+        <div class="space-y-4">
+          <input type="tel" id="studentId" maxlength="9" 
+            class="w-full bg-white/5 border border-white/10 rounded-2xl py-5 text-center text-2xl font-black tracking-[0.2em] focus:border-blue-500 outline-none transition-all placeholder:text-white/10"
+            placeholder="461XXXXXX">
+          <button id="searchBtn" onclick="handleSearch()" 
+            class="btn-gradient w-full py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 shadow-xl">
+            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+            <span>بحث عن الشهادات</span>
+          </button>
+        </div>
+        <div id="results" class="mt-10 space-y-4"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="mt-auto py-10 opacity-20 text-[10px] font-bold tracking-[0.5em] uppercase text-center">
+    Designed by Alrasasi &copy; 2026
+  </footer>
+
+  <script>
+    // تأكد من أن الرابط يبدأ بـ https وينتهي بدون سلاش إضافي
+    const API_URL = "https://solitary-truth-a4fa.mohammed-rasasi.workers.dev/";
+
+    async function handleSearch() {
+      const id = document.getElementById('studentId').value.trim();
+      const resArea = document.getElementById('results');
+      const btn = document.getElementById('searchBtn');
+
+      if (id.length < 5) {
+        resArea.innerHTML = `<p class="text-red-400 text-center font-bold animate-in">❌ يرجى إدخال رقم صحيح</p>`;
+        return;
+      }
+
+      btn.disabled = true;
+      resArea.innerHTML = `<div class="flex justify-center animate-pulse"><i class="fa-solid fa-spinner fa-spin text-blue-400 text-2xl py-4"></i></div>`;
+
+      try {
+        const response = await fetch(`${API_URL}?studentId=${id}`);
+        if (!response.ok) throw new Error('Server Error');
+        const data = await response.json();
+
+        if (data.success && data.count > 0) {
+          resArea.innerHTML = `<p class="text-white/40 text-[10px] uppercase font-bold text-center mb-2 animate-in">تم العثور على (${data.count}) شهادة</p>`;
+          data.certificates.forEach(cert => {
+            resArea.innerHTML += `
+              <div class="glass p-5 rounded-3xl border-blue-500/20 flex items-center justify-between animate-in shadow-xl hover:border-blue-500/40 transition-colors">
+                <div class="text-right">
+                  <span class="block text-[9px] text-blue-400 font-bold uppercase tracking-widest leading-none mb-1">${cert.courseName}</span>
+                  <h4 class="font-black text-sm text-white">شهادة حضور معتمدة</h4>
+                </div>
+                <a href="${cert.downloadUrl}" target="_blank" 
+                   class="w-12 h-12 bg-blue-600/20 text-blue-400 rounded-xl flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-lg border border-white/5">
+                  <i class="fa-solid fa-download"></i>
+                </a>
+              </div>`;
+          });
+        } else {
+          resArea.innerHTML = `<div class="text-center p-6 animate-in italic text-white/30 text-sm">لم نجد أي شهادات مرتبطة بهذا الرقم</div>`;
+        }
+      } catch (err) {
+        resArea.innerHTML = `<p class="text-red-400 text-center text-xs py-4">⚠️ خطأ في الاتصال بالسيرفر. تأكد من تفعيل CORS.</p>`;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    document.getElementById('studentId').addEventListener('keypress', e => { if(e.key === 'Enter') handleSearch(); });
+  </script>
+</body>
+</html>
