@@ -62,7 +62,7 @@
             transition: 0.3s;
         }
         button:hover { background: #003366; }
-        #status { margin-top: 20px; font-size: 14px; min-height: 20px; }
+        #status { margin-top: 20px; font-size: 15px; min-height: 25px; font-weight: 500; }
         .error { color: #d9534f; }
         .success { color: var(--secondary); }
         .loading { color: #f0ad4e; }
@@ -76,53 +76,62 @@
     <p>أدخل الرقم الأكاديمي المكون من 9 أرقام للحصول على شهادتك (دورة أساسيات القيادة)</p>
     
     <input type="text" id="studentId" placeholder="461XXXXXX" maxlength="9">
-    <button onclick="downloadCertificate()">بحث وتحميل الشهادة</button>
+    <button id="searchBtn" onclick="downloadCertificate()">بحث وتحميل الشهادة</button>
     
     <div id="status"></div>
 </div>
 
 <script>
-    // --- قـم بتغيير هذا الرابط إلى رابط الـ Cloudflare R2 الخاص بك ---
-  // التعديل الصحيح
-const cloudflareBaseUrl = "https://silent-limit-b55b.mohammed-rasasi.workers.dev/";
+    const cloudflareBaseUrl = "https://silent-limit-b55b.mohammed-rasasi.workers.dev/";
+
     async function downloadCertificate() {
         const idInput = document.getElementById('studentId');
         const status = document.getElementById('status');
+        const btn = document.getElementById('searchBtn');
         const id = idInput.value.trim();
 
-        // 1. التحقق من طول الرقم
+        // 1. فحص صحة المدخلات
         if (id.length !== 9 || isNaN(id)) {
-            status.innerHTML = '<span class="error">❌ يرجى إدخال رقم أكاديمي صحيح مكون من 9 أرقام</span>';
+            status.innerHTML = '<span class="error">❌ يرجى إدخال رقم أكاديمي صحيح (9 أرقام)</span>';
             return;
         }
 
-        status.innerHTML = '<span class="loading">⏳ جاري البحث عن الشهادة...</span>';
+        // 2. تحديث الحالة إلى "جاري البحث"
+        status.innerHTML = '<span class="loading">⏳ جاري البحث عن شهادتك...</span>';
+        btn.disabled = true; // تعطيل الزر مؤقتاً
 
         const fileUrl = `${cloudflareBaseUrl}${id}.pdf`;
 
         try {
-            // 2. التحقق من وجود الملف في Cloudflare (HEAD Request)
+            // 3. التحقق من وجود الملف
             const response = await fetch(fileUrl, { method: 'HEAD' });
 
             if (response.ok) {
-                status.innerHTML = '<span class="success">✅ تم العثور على الشهادة، يبدأ التحميل الآن...</span>';
+                status.innerHTML = '<span class="success">✅ تم العثور على الشهادة! جاري التحميل...</span>';
                 
-                // 3. توجيه المستخدم لتحميل الملف
+                // بدء التحميل
                 const link = document.createElement('a');
                 link.href = fileUrl;
-                link.setAttribute('download', `${id}.pdf`);
+                link.setAttribute('download', `Certificate_${id}.pdf`);
                 document.body.appendChild(link);
                 link.click();
                 link.remove();
             } else {
-                status.innerHTML = '<span class="error">❌ لم يتم العثور على شهادة لهذا الرقم. تأكد من صحته.</span>';
+                // في حال كان الرد 404 أو غيره
+                status.innerHTML = '<span class="error">❌ عذراً، لا توجد شهادة مرتبطة بهذا الرقم الأكاديمي.</span>';
             }
         } catch (error) {
-            console.error(error);
-            // ملاحظة للمبرمج: إذا حدث خطأ CORS، سيذهب الكود هنا. 
-            // في حالة CORS، يمكنك استخدام window.location.href = fileUrl مباشرة كخيار بديل.
-            status.innerHTML = '<span class="error">⚠️ حدثت مشكلة في الاتصال. جاري محاولة التحميل المباشر...</span>';
-            setTimeout(() => window.location.href = fileUrl, 2000);
+            // في حال وجود مشكلة في CORS أو الشبكة، نحاول التحميل المباشر كحل أخير
+            console.log("Network check failed, trying direct link...");
+            status.innerHTML = '<span class="loading">⏳ جاري جلب الملف من السيرفر...</span>';
+            
+            // محاولة توجيه المتصفح مباشرة للملف
+            setTimeout(() => {
+                window.location.href = fileUrl;
+                status.innerHTML = '<span class="success">🚀 تم توجيهك لرابط الملف المباشر.</span>';
+            }, 1000);
+        } finally {
+            btn.disabled = false; // إعادة تفعيل الزر
         }
     }
 </script>
