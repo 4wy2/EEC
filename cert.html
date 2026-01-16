@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة استخراج شهادات - نادي الهندسة الكهربائية</title>
+    <style>
+        :root {
+            --primary-color: #004a99; /* لون رسمي أزرق */
+            --secondary-color: #f4f4f4;
+            --accent-color: #008c45; /* لون أخضر هيئة */
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+        }
+        img.logo { width: 120px; margin-bottom: 1rem; }
+        h2 { color: var(--primary-color); margin-bottom: 0.5rem; }
+        p { color: #666; font-size: 0.9rem; margin-bottom: 1.5rem; }
+        input {
+            width: 80%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        button:hover { background-color: #003366; }
+        #message { margin-top: 1rem; font-weight: bold; }
+        .error { color: #d9534f; }
+        .success { color: var(--accent-color); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>شهادات دورة "أساسيات القيادة"</h2>
+    <p>برجاء إدخال الرقم الأكاديمي لتحميل شهادتك</p>
+    
+    <input type="text" id="studentId" placeholder="مثال: 461401249" maxlength="9">
+    <br>
+    <button onclick="checkAndDownload()">بحث وتحميل الشهادة</button>
+    
+    <div id="message"></div>
+</div>
+
+<script>
+    function checkAndDownload() {
+        const studentId = document.getElementById('studentId').value.trim();
+        const messageDiv = document.getElementById('message');
+        
+        if (studentId.length < 9) {
+            messageDiv.innerHTML = '<span class="error">الرجاء إدخال رقم أكاديمي صحيح (9 أرقام)</span>';
+            return;
+        }
+
+        // مسار الملف المعتمد على الرقم الأكاديمي
+        const filePath = `certificates_by_id/${studentId}.pdf`;
+
+        // محاولة جلب الملف للتأكد من وجوده (Fetch)
+        fetch(filePath, { method: 'HEAD' })
+        .then(res => {
+            if (res.ok) {
+                messageDiv.innerHTML = '<span class="success">تم العثور على الشهادة! جاري التحميل...</span>';
+                
+                // بدء التحميل
+                const link = document.createElement('a');
+                link.href = filePath;
+                link.download = `${studentId}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                messageDiv.innerHTML = '<span class="error">عذراً، لم يتم العثور على شهادة لهذا الرقم. تأكد من الرقم أو تواصل مع النادي.</span>';
+            }
+        })
+        .catch(err => {
+            messageDiv.innerHTML = '<span class="error">حدث خطأ في الاتصال، حاول مرة أخرى.</span>';
+        });
+    }
+</script>
+
+</body>
+</html>
