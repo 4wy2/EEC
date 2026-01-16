@@ -6,108 +6,114 @@
   <title>بوابة الشهادات | اللجنة العلمية</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    :root{
-      --bg0:#060714; --bg1:#0B1026; --stroke: rgba(255,255,255,.08);
-      --brand:#004a99; /* لون الهيئة الملكية الأزرق */
-      --brand2:#008c45; /* لون الهيئة الملكية الأخضر */
-      --text: rgba(255,255,255,.92);
+    :root {
+      --bg0: #060714; 
+      --bg1: #0B1026; 
+      --stroke: rgba(255,255,255,.08);
+      --brand: #004a99; /* أزرق الهيئة */
+      --brand2: #008c45; /* أخضر الهيئة */
     }
-    body{
-      font-family:'Cairo', sans-serif;
+    body {
+      font-family: 'Cairo', sans-serif;
       background:
         radial-gradient(900px 380px at 20% 10%, rgba(0,74,153,.15), transparent 60%),
         radial-gradient(800px 340px at 80% 25%, rgba(0,140,69,.12), transparent 55%),
         linear-gradient(180deg, var(--bg0), var(--bg1));
-      color: var(--text);
+      color: rgba(255,255,255,.92);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    .glass{ background: rgba(15,23,42,.72); backdrop-filter: blur(10px); border: 1px solid var(--stroke); }
-    .btn-brand{
+    .glass { 
+      background: rgba(15,23,42,.72); 
+      backdrop-filter: blur(12px); 
+      -webkit-backdrop-filter: blur(12px); 
+      border: 1px solid var(--stroke); 
+    }
+    .btn-brand {
       background: linear-gradient(135deg, #004a99 0%, #008c45 100%);
-      transition: transform .18s ease, box-shadow .18s ease;
+      transition: all .2s ease;
     }
-    .btn-brand:hover{ transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,74,153,.3); }
-    .btn-brand:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-brand:hover:not(:disabled) { 
+      transform: translateY(-2px); 
+      box-shadow: 0 10px 30px rgba(0,74,153,.4); 
+    }
+    .btn-brand:disabled { opacity: 0.5; cursor: not-allowed; }
     
     @keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     .animate-scale { animation: scaleIn 0.3s ease-out forwards; }
   </style>
 </head>
 
-<body class="flex flex-col overflow-x-hidden">
+<body class="overflow-x-hidden">
 
   <header class="px-6 pt-10">
     <div class="flex justify-between items-center max-w-5xl mx-auto">
       <div class="flex items-center gap-3 text-right">
-        <div>
-          <h1 class="text-xl font-black">بوابة الشهادات الرقمية</h1>
-          <p class="text-[10px] text-white/40 uppercase tracking-widest">Electrical Engineering Club</p>
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center glass border-white/10 shadow-xl">
+          <i class="fa-solid fa-award text-indigo-400 text-xl"></i>
         </div>
-        <div class="w-12 h-12 rounded-2xl flex items-center justify-center glass border-indigo-500/20 shadow-xl">
-          <i class="fa-solid fa-certificate text-indigo-400 text-xl"></i>
+        <div>
+          <h1 class="text-xl font-black leading-none">بوابة الشهادات</h1>
+          <p class="text-[10px] text-white/40 uppercase tracking-widest mt-1">RCJY Engineering Club</p>
         </div>
       </div>
-      <a href="index.html" class="w-11 h-11 rounded-2xl glass flex items-center justify-center hover:bg-white/5 transition">
-        <i class="fa-solid fa-house text-sm text-white/60"></i>
-      </a>
     </div>
   </header>
 
-  <main class="px-4 sm:px-6 py-12">
-    <div class="max-w-3xl mx-auto">
+  <main class="flex-grow flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-2xl">
       
-      <section class="glass rounded-[2.5rem] p-8 md:p-12 text-center relative overflow-hidden">
+      <section class="glass rounded-[2.5rem] p-8 md:p-12 text-center relative overflow-hidden shadow-2xl">
         <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-600/10 blur-[100px] rounded-full"></div>
         
         <div class="relative z-10">
           <h2 class="text-3xl font-black mb-4">استعلم عن شهادتك</h2>
           <p class="text-white/50 text-sm mb-10 max-w-md mx-auto leading-relaxed">
-            أدخل الرقم الأكاديمي المكون من 9 أرقام لاستعراض وتحميل كافة شهادات الحضور الخاصة بك.
+            أدخل الرقم الأكاديمي المكون من 9 أرقام (مثال: 461xxxxxx) لتحميل شهاداتك.
           </p>
 
           <div class="max-w-md mx-auto space-y-4">
-            <div class="group relative">
-              <input type="text" id="studentId" 
+            <div class="relative">
+              <input type="tel" id="studentId" 
                 class="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 text-center text-2xl font-black tracking-[0.2em] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-white/5" 
-                placeholder="461XXXXXX" maxlength="9">
+                placeholder="461000000" maxlength="9">
             </div>
             
             <button id="searchBtn" onclick="handleSearch()" 
-              class="btn-brand w-full py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 tracking-wide">
+              class="btn-brand w-full py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 tracking-wide text-white">
               <i class="fa-solid fa-magnifying-glass text-sm"></i>
-              تحقق من الشهادات
+              <span>تحقق من الشهادات</span>
             </button>
           </div>
 
-          <div id="resultArea" class="mt-12 min-h-[100px] flex flex-col items-center gap-4">
+          <div id="resultArea" class="mt-10 min-h-[80px] flex flex-col items-center justify-center gap-4">
             </div>
         </div>
       </section>
 
-      <p class="mt-10 text-center text-[10px] text-white/20 uppercase tracking-[0.3em]">
-        Official Educational Services Portal &bull; RCJY
-      </p>
     </div>
   </main>
 
-  <footer class="mt-auto py-8 border-t border-white/5">
-    <div class="flex items-center justify-center gap-3 opacity-40 hover:opacity-100 transition-opacity">
+  <footer class="py-8 border-t border-white/5">
+    <div class="flex items-center justify-center gap-3 opacity-30 hover:opacity-100 transition-opacity duration-500 cursor-default">
         <div class="text-right border-l border-white/10 pl-3">
             <span class="block text-xs font-black">الرصاصي</span>
-            <span class="block text-[8px] uppercase tracking-tighter">Creative Dev</span>
+            <span class="block text-[8px] uppercase tracking-tighter">Design & Dev</span>
         </div>
         <i class="fa-solid fa-bolt text-indigo-400"></i>
     </div>
   </footer>
 
   <script>
-    // الرابط الأساسي لـ Cloudflare (الـ Worker الخاص بك)
+    // الرابط الأساسي للـ Worker (تأكد من وجود / في النهاية)
     const cloudflareBaseUrl = "https://silent-limit-b55b.mohammed-rasasi.workers.dev/";
 
     async function handleSearch() {
@@ -116,53 +122,57 @@
       const btn = document.getElementById('searchBtn');
       const id = idInput.value.trim();
 
+      // 1. التحقق من المدخلات
       if (id.length !== 9 || isNaN(id)) {
-        showStatus('error', '❌ يرجى إدخال رقم أكاديمي صحيح (9 أرقام)');
+        renderMessage('error', '❌ يرجى إدخال رقم أكاديمي صحيح (9 أرقام)');
         return;
       }
 
-      // تجهيز الواجهة للبحث
+      // 2. حالة التحميل
       btn.disabled = true;
       resultArea.innerHTML = `
         <div class="flex flex-col items-center animate-pulse">
-            <div class="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mb-4"></div>
-            <span class="text-indigo-400 font-bold text-sm">جاري مراجعة الأرشيف الرقمي...</span>
+            <div class="w-8 h-8 border-3 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mb-3"></div>
+            <span class="text-indigo-400 font-bold text-xs uppercase tracking-widest">Searching Archives...</span>
         </div>`;
 
-      const fileUrl = `${cloudflareBaseUrl}${id}.pdf`;
+      // إضافة باراميتر عشوائي لمنع الـ Cache في الجوال
+      const fileUrl = `${cloudflareBaseUrl}${id}.pdf?nocache=${Date.now()}`;
 
       try {
-        // التحقق من وجود الملف
-        const response = await fetch(fileUrl, { method: 'HEAD' });
+        // 3. الطلب البرمجي (استخدام GET لضمان التوافق مع الجوال)
+        const response = await fetch(fileUrl);
 
         if (response.ok) {
           resultArea.innerHTML = `
-            <div class="animate-scale w-full glass p-5 rounded-3xl border-green-500/20 flex items-center justify-between shadow-2xl shadow-green-500/5">
+            <div class="animate-scale w-full glass p-5 rounded-3xl border-green-500/20 flex items-center justify-between shadow-2xl">
                 <div class="flex items-center gap-4 text-right">
                     <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400">
                         <i class="fa-solid fa-file-pdf text-xl"></i>
                     </div>
                     <div>
-                        <span class="block text-[10px] text-white/40 font-bold uppercase tracking-widest">Certificate Found</span>
-                        <h4 class="font-black text-white text-sm">شهادة حضور دورة أساسيات القيادة</h4>
+                        <span class="block text-[10px] text-white/40 font-bold uppercase tracking-widest leading-none mb-1">Found</span>
+                        <h4 class="font-black text-white text-sm">شهادة حضور دورة القيادة</h4>
                     </div>
                 </div>
-                <a href="${fileUrl}" download="${id}.pdf" 
+                <button onclick="window.open('${fileUrl}', '_blank')" 
                     class="h-12 px-6 bg-green-500 text-white rounded-xl font-black text-xs flex items-center justify-center hover:bg-green-600 transition-all shadow-lg shadow-green-500/20">
-                    تحميل PDF
-                </a>
+                    تحميل
+                </button>
             </div>`;
         } else {
-          showStatus('error', '❌ لم نجد أي شهادات مرتبطة بهذا الرقم حالياً.');
+          renderMessage('error', '❌ لا توجد شهادة مسجلة لهذا الرقم');
         }
       } catch (err) {
-        showStatus('error', '⚠️ حدث خطأ في الاتصال بالسيرفر. يرجى المحاولة لاحقاً.');
+        console.error("Fetch Error:", err);
+        renderMessage('error', '⚠️ مشكلة في الاتصال. تأكد من إعدادات CORS في Worker');
       } finally {
         btn.disabled = false;
       }
     }
 
-    function showStatus(type, msg) {
+    function renderMessage(type, msg) {
+      const resultArea = document.getElementById('resultArea');
       const colorClass = type === 'error' ? 'text-red-400 bg-red-400/10 border-red-400/20' : 'text-indigo-400 bg-indigo-400/10 border-indigo-400/20';
       resultArea.innerHTML = `
         <div class="animate-scale flex items-center gap-3 ${colorClass} px-6 py-4 rounded-2xl border font-bold text-sm">
@@ -170,8 +180,13 @@
         </div>`;
     }
 
-    // دعم الضغط على Enter
-    document.getElementById('studentId').addEventListener('keypress', (e) => { if(e.key === 'Enter') handleSearch(); });
+    // دعم الضغط على Enter ودعم كيبورد الجوال
+    document.getElementById('studentId').addEventListener('keypress', (e) => { 
+        if(e.key === 'Enter') {
+            handleSearch();
+            document.getElementById('studentId').blur(); // إغلاق الكيبورد في الجوال
+        }
+    });
   </script>
 </body>
 </html>
