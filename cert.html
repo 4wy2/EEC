@@ -3,190 +3,108 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>بوابة الشهادات | اللجنة العلمية</title>
-
+  <title>بوابة الشهادات الرقمية | RCJY</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
   <style>
-    :root {
-      --bg0: #060714; 
-      --bg1: #0B1026; 
-      --stroke: rgba(255,255,255,.08);
-      --brand: #004a99; /* أزرق الهيئة */
-      --brand2: #008c45; /* أخضر الهيئة */
-    }
+    :root { --brand: #004a99; --brand2: #008c45; }
     body {
       font-family: 'Cairo', sans-serif;
-      background:
-        radial-gradient(900px 380px at 20% 10%, rgba(0,74,153,.15), transparent 60%),
-        radial-gradient(800px 340px at 80% 25%, rgba(0,140,69,.12), transparent 55%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
-      color: rgba(255,255,255,.92);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      background: radial-gradient(circle at top right, rgba(0,74,153,0.1), #060714), #060714;
+      color: white; min-height: 100vh;
     }
-    .glass { 
-      background: rgba(15,23,42,.72); 
-      backdrop-filter: blur(12px); 
-      -webkit-backdrop-filter: blur(12px); 
-      border: 1px solid var(--stroke); 
-    }
-    .btn-brand {
-      background: linear-gradient(135deg, #004a99 0%, #008c45 100%);
-      transition: all .2s ease;
-    }
-    .btn-brand:hover:not(:disabled) { 
-      transform: translateY(-2px); 
-      box-shadow: 0 10px 30px rgba(0,74,153,.4); 
-    }
-    .btn-brand:disabled { opacity: 0.5; cursor: not-allowed; }
-    
-    @keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    .animate-scale { animation: scaleIn 0.3s ease-out forwards; }
+    .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.08); }
+    .btn-gradient { background: linear-gradient(135deg, var(--brand), var(--brand2)); transition: 0.3s; }
+    .btn-gradient:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,74,153,0.4); }
+    @keyframes slideIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+    .animate-in { animation: slideIn 0.4s ease forwards; }
   </style>
 </head>
+<body class="flex flex-col items-center p-6">
 
-<body class="overflow-x-hidden">
-
-  <header class="px-6 pt-10">
-    <div class="flex justify-between items-center max-w-5xl mx-auto">
-      <div class="flex items-center gap-3 text-right">
-        <div class="w-12 h-12 rounded-2xl flex items-center justify-center glass border-white/10 shadow-xl">
-          <i class="fa-solid fa-award text-indigo-400 text-xl"></i>
-        </div>
-        <div>
-          <h1 class="text-xl font-black leading-none">بوابة الشهادات</h1>
-          <p class="text-[10px] text-white/40 uppercase tracking-widest mt-1">RCJY Engineering Club</p>
-        </div>
-      </div>
+  <header class="w-full max-w-2xl flex justify-between items-center mt-10 mb-12">
+    <div class="text-right">
+      <h1 class="text-2xl font-black tracking-tighter">بوابة الشهادات</h1>
+      <p class="text-[10px] text-white/30 uppercase tracking-[0.3em]">Scientific Committee Portal</p>
+    </div>
+    <div class="w-12 h-12 glass rounded-2xl flex items-center justify-center border-white/10 shadow-2xl">
+      <i class="fa-solid fa-award text-blue-400 text-xl"></i>
     </div>
   </header>
 
-  <main class="flex-grow flex items-center justify-center px-4 py-12">
-    <div class="w-full max-w-2xl">
-      
-      <section class="glass rounded-[2.5rem] p-8 md:p-12 text-center relative overflow-hidden shadow-2xl">
-        <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-600/10 blur-[100px] rounded-full"></div>
+  <main class="w-full max-w-xl">
+    <div class="glass rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative overflow-hidden">
+      <div class="relative z-10">
+        <h2 class="text-xl font-bold text-center mb-8">استعلام عن السجل التدريبي</h2>
         
-        <div class="relative z-10">
-          <h2 class="text-3xl font-black mb-4">استعلم عن شهادتك</h2>
-          <p class="text-white/50 text-sm mb-10 max-w-md mx-auto leading-relaxed">
-            أدخل الرقم الأكاديمي المكون من 9 أرقام (مثال: 461xxxxxx) لتحميل شهاداتك.
-          </p>
-
-          <div class="max-w-md mx-auto space-y-4">
-            <div class="relative">
-              <input type="tel" id="studentId" 
-                class="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 text-center text-2xl font-black tracking-[0.2em] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-white/5" 
-                placeholder="461000000" maxlength="9">
-            </div>
-            
-            <button id="searchBtn" onclick="handleSearch()" 
-              class="btn-brand w-full py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 tracking-wide text-white">
-              <i class="fa-solid fa-magnifying-glass text-sm"></i>
-              <span>تحقق من الشهادات</span>
-            </button>
-          </div>
-
-          <div id="resultArea" class="mt-10 min-h-[80px] flex flex-col items-center justify-center gap-4">
-            </div>
+        <div class="space-y-4">
+          <input type="tel" id="studentId" maxlength="9" 
+            class="w-full bg-white/5 border border-white/10 rounded-2xl py-5 text-center text-2xl font-black tracking-[0.2em] focus:border-blue-500 outline-none transition-all"
+            placeholder="461XXXXXX">
+          
+          <button id="searchBtn" onclick="handleSearch()" 
+            class="btn-gradient w-full py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 shadow-xl">
+            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+            <span>بحث عن الشهادات</span>
+          </button>
         </div>
-      </section>
 
+        <div id="results" class="mt-10 space-y-4">
+          </div>
+      </div>
     </div>
   </main>
 
-  <footer class="py-8 border-t border-white/5">
-    <div class="flex items-center justify-center gap-3 opacity-30 hover:opacity-100 transition-opacity duration-500 cursor-default">
-        <div class="text-right border-l border-white/10 pl-3">
-            <span class="block text-xs font-black">الرصاصي</span>
-            <span class="block text-[8px] uppercase tracking-tighter">Design & Dev</span>
-        </div>
-        <i class="fa-solid fa-bolt text-indigo-400"></i>
-    </div>
+  <footer class="mt-auto py-10 opacity-20 text-[10px] font-bold tracking-[0.5em] uppercase text-center">
+    Designed by Alrasasi &copy; 2026
   </footer>
 
   <script>
-    // الرابط الأساسي للـ Worker (تأكد من وجود / في النهاية)
-    const cloudflareBaseUrl = "https://silent-limit-b55b.mohammed-rasasi.workers.dev/";
+    const API_URL = "https://solitary-truth-a4fa.mohammed-rasasi.workers.dev/";
 
     async function handleSearch() {
-      const idInput = document.getElementById('studentId');
-      const resultArea = document.getElementById('resultArea');
+      const id = document.getElementById('studentId').value.trim();
+      const resArea = document.getElementById('results');
       const btn = document.getElementById('searchBtn');
-      const id = idInput.value.trim();
 
-      // 1. التحقق من المدخلات
-      if (id.length !== 9 || isNaN(id)) {
-        renderMessage('error', '❌ يرجى إدخال رقم أكاديمي صحيح (9 أرقام)');
+      if (id.length !== 9) {
+        resArea.innerHTML = `<p class="text-red-400 text-center font-bold animate-in">❌ الرقم الأكاديمي غير صحيح</p>`;
         return;
       }
 
-      // 2. حالة التحميل
       btn.disabled = true;
-      resultArea.innerHTML = `
-        <div class="flex flex-col items-center animate-pulse">
-            <div class="w-8 h-8 border-3 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mb-3"></div>
-            <span class="text-indigo-400 font-bold text-xs uppercase tracking-widest">Searching Archives...</span>
-        </div>`;
-
-      // إضافة باراميتر عشوائي لمنع الـ Cache في الجوال
-      const fileUrl = `${cloudflareBaseUrl}${id}.pdf?nocache=${Date.now()}`;
+      resArea.innerHTML = `<div class="flex justify-center animate-pulse"><i class="fa-solid fa-spinner fa-spin text-blue-400 text-2xl"></i></div>`;
 
       try {
-        // 3. الطلب البرمجي (استخدام GET لضمان التوافق مع الجوال)
-        const response = await fetch(fileUrl);
+        const response = await fetch(`${API_URL}?studentId=${id}`);
+        const data = await response.json();
 
-        if (response.ok) {
-          resultArea.innerHTML = `
-            <div class="animate-scale w-full glass p-5 rounded-3xl border-green-500/20 flex items-center justify-between shadow-2xl">
-                <div class="flex items-center gap-4 text-right">
-                    <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400">
-                        <i class="fa-solid fa-file-pdf text-xl"></i>
-                    </div>
-                    <div>
-                        <span class="block text-[10px] text-white/40 font-bold uppercase tracking-widest leading-none mb-1">Found</span>
-                        <h4 class="font-black text-white text-sm">شهادة حضور دورة القيادة</h4>
-                    </div>
+        if (data.success && data.count > 0) {
+          resArea.innerHTML = `<p class="text-white/40 text-[10px] uppercase font-bold text-center mb-2 animate-in">تم العثور على (${data.count}) شهادة</p>`;
+          data.certificates.forEach(cert => {
+            resArea.innerHTML += `
+              <div class="glass p-5 rounded-3xl border-blue-500/20 flex items-center justify-between animate-in shadow-xl">
+                <div class="text-right">
+                  <span class="block text-[9px] text-blue-400 font-bold uppercase tracking-widest">${cert.courseName}</span>
+                  <h4 class="font-black text-sm text-white">شهادة حضور معتمدة</h4>
                 </div>
-                <button onclick="window.open('${fileUrl}', '_blank')" 
-                    class="h-12 px-6 bg-green-500 text-white rounded-xl font-black text-xs flex items-center justify-center hover:bg-green-600 transition-all shadow-lg shadow-green-500/20">
-                    تحميل
-                </button>
-            </div>`;
+                <a href="${cert.downloadUrl}" target="_blank" class="w-12 h-12 bg-blue-600/20 text-blue-400 rounded-xl flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-lg">
+                  <i class="fa-solid fa-download"></i>
+                </a>
+              </div>`;
+          });
         } else {
-          renderMessage('error', '❌ لا توجد شهادة مسجلة لهذا الرقم');
+          resArea.innerHTML = `<div class="text-center p-6 animate-in italic text-white/30">لم نجد أي شهادات مرتبطة بهذا الرقم</div>`;
         }
       } catch (err) {
-        console.error("Fetch Error:", err);
-        renderMessage('error', '⚠️ مشكلة في الاتصال. تأكد من إعدادات CORS في Worker');
+        resArea.innerHTML = `<p class="text-red-400 text-center text-xs">⚠️ عذراً، حدث خطأ في الاتصال بالسيرفر</p>`;
       } finally {
         btn.disabled = false;
       }
     }
 
-    function renderMessage(type, msg) {
-      const resultArea = document.getElementById('resultArea');
-      const colorClass = type === 'error' ? 'text-red-400 bg-red-400/10 border-red-400/20' : 'text-indigo-400 bg-indigo-400/10 border-indigo-400/20';
-      resultArea.innerHTML = `
-        <div class="animate-scale flex items-center gap-3 ${colorClass} px-6 py-4 rounded-2xl border font-bold text-sm">
-            ${msg}
-        </div>`;
-    }
-
-    // دعم الضغط على Enter ودعم كيبورد الجوال
-    document.getElementById('studentId').addEventListener('keypress', (e) => { 
-        if(e.key === 'Enter') {
-            handleSearch();
-            document.getElementById('studentId').blur(); // إغلاق الكيبورد في الجوال
-        }
-    });
+    document.getElementById('studentId').addEventListener('keypress', e => { if(e.key === 'Enter') handleSearch(); });
   </script>
 </body>
 </html>
