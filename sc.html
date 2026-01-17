@@ -1,211 +1,337 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Engineering Vision | الجدول المتكامل</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Engineering Vision | النظام الذكي المتكامل</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
-  <style>
-    :root { --primary: #1e40af; --bg: #f8fafc; }
-    body { font-family: 'Cairo', sans-serif; background: var(--bg); padding: 10px; color: #1e293b; }
-    .page-container { max-width: 100%; margin: 0 auto; }
-    
-    /* لوحة التحكم */
-    .control-panel { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; }
-    .input-group input { width: 100%; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 10px; padding: 8px; font-weight: 600; font-size: 14px; margin-bottom: 8px; }
-    
-    /* اختيار الأيام */
-    .day-selector { display: flex; gap: 5px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 5px; }
-    .day-btn { flex: 1; min-width: 60px; padding: 6px; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; text-align: center; cursor: pointer; font-size: 11px; font-weight: 700; }
-    .day-btn.active { background: #10b981; color: white; border-color: #10b981; }
+    <style>
+        :root { --primary: #1e40af; --secondary: #10b981; --bg: #f8fafc; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: #1e293b; margin: 0; padding: 20px; }
+        
+        .glass-card { background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; overflow: hidden; }
+        
+        /* تنسيق الجدول السحري */
+        .grid-table { display: grid; grid-template-columns: 0.8fr repeat(5, 1fr); gap: 4px; background: #fff; }
+        .header-pill { background: var(--primary); color: white; padding: 10px 2px; font-weight: 700; font-size: 12px; text-align: center; border-radius: 4px; }
+        
+        .cell-base { border-radius: 6px; min-height: 65px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #f1f5f9; transition: all 0.3s ease; }
+        .time-cell { background: #f8fafc; font-weight: 800; font-size: 11px; color: var(--primary); border: 1px solid #e2e8f0; }
+        
+        .course-card { width: 100%; height: 100%; padding: 5px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+        .c-name { font-weight: 900; font-size: 10px; line-height: 1.2; }
+        .c-room { font-size: 9px; font-weight: 600; opacity: 0.8; margin-top: 2px; }
+        
+        .delete-btn { position: absolute; top: 2px; right: 2px; background: #ef4444; color: white; width: 18px; height: 18px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; z-index: 20; }
+        .cell-base:hover .delete-btn { display: flex; }
+        .cell-base:hover { transform: scale(1.02); z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-    .day-details-card { background: #f8fafc; border-radius: 10px; padding: 10px; border: 1px solid #e2e8f0; }
-    .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
-    .time-btn { padding: 4px; font-size: 10px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; cursor: pointer; }
-    .time-btn.selected { background: var(--primary); color: white; }
+        /* التحكم */
+        .day-btn { padding: 10px; background: #fff; border: 2px solid #e2e8f0; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; flex: 1; text-align: center; }
+        .day-btn.active { background: var(--secondary); color: white; border-color: var(--secondary); transform: translateY(-2px); }
 
-    /* الجدول السحري - حل مشكلة الجوال */
-    .schedule-card { background: white; border-radius: 15px; padding: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); width: 100%; overflow: hidden; }
-    .grid-table { display: grid; grid-template-columns: 0.8fr repeat(5, 1fr); gap: 2px; width: 100%; }
-    
-    .header-pill { background: var(--primary); color: white; border-radius: 4px; padding: 4px 1px; font-weight: 700; font-size: 9px; text-align: center; }
-    
-    .cell-base { border-radius: 4px; height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-    .time-cell { background: #f1f5f9; color: var(--primary); font-weight: 700; border: 1px solid #e2e8f0; }
-    .time-cell div { font-size: 9px; line-height: 1; }
-    
-    .empty-cell { background: #fafafa; border: 0.5px dashed #e2e8f0; }
-    
-    .course-card { width: 100%; height: 100%; padding: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-    .course-card .c-name { font-weight: 900; font-size: 8px; line-height: 1; margin-top: 1px; word-break: break-all; }
-    .course-card .c-room { font-size: 7px; opacity: 0.8; font-weight: bold; }
+        /* شاشة التحميل */
+        #loadingOverlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
+        .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    .delete-icon { position: absolute; top: 0; left: 0; background: rgba(239, 68, 68, 0.9); color: white; width: 12px; height: 12px; border-radius: 0 0 5px 0; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 8px; z-index: 10; }
-
-    .btn-add { width: 100%; background: var(--primary); color: white; padding: 10px; border-radius: 10px; font-weight: 800; margin-top: 10px; font-size: 14px; }
-    
-    /* تنسيق خاص للـ PDF لضمان الجودة */
-    .rendering .delete-icon { display: none !important; }
-    .rendering { width: 800px !important; padding: 20px !important; } /* تجميد العرض عند التصدير */
-  </style>
+        /* تعديلات الطباعة */
+        @media print {
+            .no-print { display: none !important; }
+            body { padding: 0; background: white; }
+            .glass-card { box-shadow: none; border: none; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="page-container">
-  
-  <div class="control-panel no-print">
-    <div class="input-group">
-      <input id="courseName" type="text" placeholder="اسم المادة" />
-      <input id="roomName" type="text" placeholder="القاعة" />
+<div id="loadingOverlay">
+    <div class="spinner mb-4"></div>
+    <h2 class="text-xl font-black text-blue-900">جاري قراءة الجدول بالذكاء الاصطناعي...</h2>
+    <p class="text-gray-500 font-bold">يرجى الانتظار ثواني قليلة</p>
+</div>
+
+<div class="max-w-6xl mx-auto">
+    <div class="glass-card p-6 mb-8 no-print border-t-4 border-t-blue-600">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+            <div class="text-center md:text-right">
+                <h1 class="text-3xl font-black text-blue-900 italic">ENGINEERING VISION</h1>
+                <p class="text-emerald-600 font-bold tracking-widest text-sm">SCIENTIFIC COMMITTEE • كليـة الهندسـة</p>
+            </div>
+            
+            <div class="flex flex-col items-center gap-2">
+                <input type="file" id="imageInput" accept="image/*,application/pdf" class="hidden">
+                <button onclick="document.getElementById('imageInput').click()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-2xl font-black flex items-center gap-3 shadow-xl shadow-emerald-100 transition-all active:scale-95">
+                    <span>قراءة تلقائية من صورة 📸</span>
+                </button>
+                <span class="text-[10px] text-gray-400 font-bold italic">يدعم صور الجداول الرسمية للجامعة</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="space-y-2">
+                <label class="text-xs font-black text-gray-400 px-1">اسم المادة</label>
+                <input id="courseName" type="text" placeholder="مثال: MATH 201" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 ring-blue-500 font-bold transition-all">
+            </div>
+            <div class="space-y-2">
+                <label class="text-xs font-black text-gray-400 px-1">القاعة / المبنى</label>
+                <input id="roomName" type="text" placeholder="مثال: Bldg 2 - G40" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 ring-blue-500 font-bold transition-all">
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <label class="text-xs font-black text-gray-400 block mb-3 px-1">اختر أيام المحاضرة:</label>
+            <div class="flex gap-2" id="daySelector">
+                <button class="day-btn" onclick="toggleDay(0, this)">أحد</button>
+                <button class="day-btn" onclick="toggleDay(1, this)">اثنين</button>
+                <button class="day-btn" onclick="toggleDay(2, this)">ثلاثاء</button>
+                <button class="day-btn" onclick="toggleDay(3, this)">أربعاء</button>
+                <button class="day-btn" onclick="toggleDay(4, this)">خميس</button>
+            </div>
+        </div>
+
+        <div id="daysConfigs" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 mb-8"></div>
+
+        <div class="flex flex-wrap gap-3 border-t pt-6">
+            <button onclick="saveEntry()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-black text-lg shadow-lg shadow-blue-100 transition-all">إضافة يدوية للجدول</button>
+            <button onclick="downloadPDF()" class="px-10 bg-gray-900 text-white rounded-2xl font-bold hover:bg-black transition-all">حفظ PDF</button>
+            <button onclick="resetAll()" class="px-6 bg-red-50 text-red-500 rounded-2xl font-bold hover:bg-red-100 transition-all">تصفية الكل</button>
+        </div>
     </div>
 
-    <div class="day-selector" id="daySelector">
-      <div class="day-btn" onclick="toggleDay(0, this)">الأحد</div>
-      <div class="day-btn" onclick="toggleDay(1, this)">الإثنين</div>
-      <div class="day-btn" onclick="toggleDay(2, this)">الثلاثاء</div>
-      <div class="day-btn" onclick="toggleDay(3, this)">الأربعاء</div>
-      <div class="day-btn" onclick="toggleDay(4, this)">الخميس</div>
+    <div id="capture-area" class="glass-card p-6 bg-white">
+        <div class="flex justify-between items-center mb-6 border-b-2 border-gray-100 pb-4">
+            <div>
+                <h2 class="text-2xl font-black text-blue-900">الجدول الدراسي الأكاديمي</h2>
+                <p class="text-xs font-bold text-gray-500">تم الإنشاء بواسطة نظام Engineering Vision الذكي</p>
+            </div>
+            <div class="text-left">
+                <p class="text-[10px] font-black text-blue-600 uppercase tracking-widest">Scientific Committee</p>
+                <p class="text-[10px] font-bold text-gray-400 italic" id="pdfDate"></p>
+            </div>
+        </div>
+
+        <div id="grid-container" class="grid-table">
+            </div>
+        
+        <div class="mt-6 text-center border-t pt-4">
+            <p class="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">Official Academic Schedule • Faculty of Engineering</p>
+        </div>
     </div>
-
-    <div id="daysConfigs" class="space-y-2"></div>
-
-    <button onclick="saveEntry()" class="btn-add">حفظ المادة في الجدول</button>
-    
-    <div class="flex gap-2 mt-3">
-      <button onclick="downloadPDF()" class="flex-1 bg-gray-800 text-white py-2 rounded-lg font-bold text-xs">حفظ PDF</button>
-      <button onclick="resetAll()" class="px-3 bg-red-50 text-red-500 rounded-lg font-bold text-xs">تصفية</button>
-    </div>
-  </div>
-
-  <div id="capture-area" class="schedule-card">
-    <div class="text-center mb-2">
-      <h1 class="text-blue-800 font-black text-lg">Engineering Vision</h1>
-      <p class="text-gray-500 text-[8px]">Academic Schedule System</p>
-    </div>
-    <div id="grid-container" class="grid-table"></div>
-  </div>
-
 </div>
 
 <script>
-  const TIME_SLOTS = [
-    { id: "54", s: "07:15", e: "08:05" }, { id: "86", s: "08:15", e: "09:05" },
-    { id: "44", s: "09:15", e: "10:05" }, { id: "80", s: "10:15", e: "11:05" },
-    { id: "47", s: "12:15", e: "01:05" }, { id: "63", s: "01:15", e: "02:05" },
-    { id: "52", s: "02:15", e: "03:05" }, { id: "51", s: "03:15", e: "04:05" }
-  ];
-  const DAYS_NAMES = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس"];
-  let scheduleData = JSON.parse(localStorage.getItem("ev_final_v4")) || [];
-  let currentSelectedDays = new Map();
-
-  // توليد لون عشوائي متناسق لكل مادة
-  function generateCourseColor() {
-    const hue = Math.floor(Math.random() * 360);
-    return {
-      bg: `hsl(${hue}, 80%, 95%)`,
-      border: `hsl(${hue}, 50%, 80%)`,
-      text: `hsl(${hue}, 90%, 20%)`
-    };
-  }
-
-  function renderConfigs() {
-    const container = document.getElementById("daysConfigs");
-    container.innerHTML = "";
-    currentSelectedDays.forEach((slots, dayIdx) => {
-      container.innerHTML += `
-        <div class="day-details-card">
-          <div class="text-[11px] font-bold text-blue-700 mb-1">${DAYS_NAMES[dayIdx]}</div>
-          <div class="time-grid">${TIME_SLOTS.map(t => `<div class="time-btn ${slots.has(t.id) ? 'selected' : ''}" onclick="toggleTime(${dayIdx}, '${t.id}', this)">${t.id}</div>`).join("")}</div>
-        </div>`;
-    });
-  }
-
-  function toggleDay(idx, el) {
-    currentSelectedDays.has(idx) ? currentSelectedDays.delete(idx) : currentSelectedDays.set(idx, new Set());
-    el.classList.toggle("active");
-    renderConfigs();
-  }
-
-  function toggleTime(dayIdx, slotId, el) {
-    const slots = currentSelectedDays.get(dayIdx);
-    slots.has(slotId) ? slots.delete(slotId) : slots.add(slotId);
-    el.classList.toggle("selected");
-  }
-
-  function renderTable() {
-    const container = document.getElementById("grid-container");
-    container.innerHTML = `<div class="header-pill">الوقت</div>` + DAYS_NAMES.map(d => `<div class="header-pill">${d}</div>`).join("");
-
-    TIME_SLOTS.forEach(slot => {
-      container.innerHTML += `<div class="cell-base time-cell"><div>${slot.s}</div><div style="opacity:0.5; font-size:7px">${slot.e}</div></div>`;
-      for (let d = 0; d < 5; d++) {
-        const entry = scheduleData.find(x => x.day == d && x.slotId === slot.id);
-        if (!entry) {
-          container.innerHTML += `<div class="cell-base empty-cell"></div>`;
-        } else {
-          container.innerHTML += `
-            <div class="cell-base" style="background:${entry.color.bg}; border: 1px solid ${entry.color.border}">
-              <div class="delete-icon no-print" onclick="deleteEntry(event,'${slot.id}',${d})">×</div>
-              <div class="course-card" style="color:${entry.color.text}">
-                <div class="c-room">${entry.room}</div>
-                <div class="c-name">${entry.name}</div>
-              </div>
-            </div>`;
-        }
-      }
-    });
-  }
-
-  function saveEntry() {
-    const name = document.getElementById("courseName").value.trim();
-    const room = document.getElementById("roomName").value.trim() || "";
-    if (!name || currentSelectedDays.size === 0) return alert("أكمل البيانات");
-
-    const courseColor = generateCourseColor();
-
-    currentSelectedDays.forEach((slots, dayIdx) => {
-      slots.forEach(slotId => {
-        scheduleData = scheduleData.filter(x => !(x.day == dayIdx && x.slotId === slotId));
-        scheduleData.push({ day: dayIdx, slotId, name, room, color: courseColor });
-      });
-    });
-
-    localStorage.setItem("ev_final_v4", JSON.stringify(scheduleData));
-    location.reload(); // لإعادة ضبط الواجهة بالكامل
-  }
-
-  function deleteEntry(e, sid, day) {
-    e.stopPropagation();
-    scheduleData = scheduleData.filter(x => !(x.day == day && x.slotId === sid));
-    localStorage.setItem("ev_final_v4", JSON.stringify(scheduleData));
-    renderTable();
-  }
-
-  function resetAll() { if(confirm("حذف الكل؟")) { localStorage.clear(); location.reload(); } }
-
-  async function downloadPDF() {
-    const area = document.getElementById("capture-area");
-    area.classList.add('rendering');
+    const TIME_SLOTS = [
+        { id: "54", s: "07:15", e: "08:05" }, { id: "86", s: "08:15", e: "09:05" },
+        { id: "44", s: "09:15", e: "10:05" }, { id: "80", s: "10:15", e: "11:05" },
+        { id: "47", s: "12:15", e: "01:05" }, { id: "63", s: "01:15", e: "02:05" },
+        { id: "52", s: "02:15", e: "03:05" }, { id: "51", s: "03:15", e: "04:05" }
+    ];
+    const DAYS_NAMES = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس"];
     
-    const opt = {
-      margin: 5,
-      filename: 'My_Schedule.pdf',
-      image: { type: 'jpeg', quality: 1 },
-      html2canvas: { scale: 4, useCORS: true, logging: false },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
+    document.getElementById('pdfDate').innerText = "تاريخ الإصدار: " + new Date().toLocaleDateString('ar-SA');
 
-    try {
-      await html2pdf().set(opt).from(area).save();
-    } finally {
-      area.classList.remove('rendering');
+    let scheduleData = JSON.parse(localStorage.getItem("ev_final_pro")) || [];
+    let currentSelectedDays = new Map();
+    let courseColors = JSON.parse(localStorage.getItem("ev_colors_pro")) || {};
+
+    // --- خاصية الذكاء الاصطناعي (OCR) ---
+    document.getElementById('imageInput').addEventListener('change', async function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        document.getElementById('loadingOverlay').style.display = 'flex';
+        
+        try {
+            const worker = await Tesseract.createWorker('eng'); // الجداول غالباً إنجليزية
+            const { data: { text } } = await worker.recognize(file);
+            await worker.terminate();
+            
+            parseAI(text);
+        } catch (err) {
+            alert("تعذر تحليل الصورة. تأكد من وضوح جدول الجامعة.");
+        } finally {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+    });
+
+    function parseAI(text) {
+        const lines = text.split('\n');
+        lines.forEach(line => {
+            const periods = line.match(/\b(44|47|51|52|54|63|80|86)\b/g);
+            const courseMatch = line.match(/[A-Z]{2,}\s?\d{3}/);
+
+            if (periods && courseMatch) {
+                const name = courseMatch[0];
+                const color = getColor(name);
+                
+                periods.forEach(p => {
+                    // تقدير اليوم بناءً على موضع النص في السطر (منطق تقريبي للجداول المنسقة)
+                    let dayIdx = estimateDayIdx(line, p);
+                    
+                    scheduleData = scheduleData.filter(x => !(x.day == dayIdx && x.slotId === p));
+                    scheduleData.push({ day: dayIdx, slotId: p, name, room: "AI Detected", color });
+                });
+            }
+        });
+        updateUI();
     }
-  }
 
-  renderTable();
+    function estimateDayIdx(line, p) {
+        const pos = line.indexOf(p);
+        const rel = pos / line.length;
+        if (rel < 0.35) return 0; // أحد
+        if (rel < 0.55) return 1; // اثنين
+        if (rel < 0.75) return 2; // ثلاثاء
+        return 3; // أربعاء أو خميس
+    }
+
+    // --- إدارة الألوان والبيانات ---
+    function getColor(name) {
+        if (courseColors[name]) return courseColors[name];
+        const hue = Math.floor(Math.random() * 360);
+        courseColors[name] = {
+            bg: `hsl(${hue}, 85%, 97%)`,
+            border: `hsl(${hue}, 50%, 85%)`,
+            text: `hsl(${hue}, 90%, 20%)`
+        };
+        localStorage.setItem("ev_colors_pro", JSON.stringify(courseColors));
+        return courseColors[name];
+    }
+
+    function toggleDay(idx, el) {
+        if(currentSelectedDays.has(idx)) {
+            currentSelectedDays.delete(idx);
+            el.classList.remove("active");
+        } else {
+            currentSelectedDays.set(idx, new Set());
+            el.classList.add("active");
+        }
+        renderConfigs();
+    }
+
+    function toggleTime(dayIdx, slotId, el) {
+        const slots = currentSelectedDays.get(dayIdx);
+        if(slots.has(slotId)) {
+            slots.delete(slotId);
+            el.classList.remove("bg-blue-600", "text-white");
+        } else {
+            slots.add(slotId);
+            el.classList.add("bg-blue-600", "text-white");
+        }
+    }
+
+    function renderConfigs() {
+        const container = document.getElementById("daysConfigs");
+        container.innerHTML = "";
+        currentSelectedDays.forEach((slots, dayIdx) => {
+            container.innerHTML += `
+                <div class="bg-white p-3 rounded-xl border-2 border-blue-50">
+                    <p class="text-xs font-black text-blue-700 mb-2">${DAYS_NAMES[dayIdx]}</p>
+                    <div class="grid grid-cols-4 gap-1">
+                        ${TIME_SLOTS.map(t => `<button onclick="toggleTime(${dayIdx}, '${t.id}', this)" class="text-[9px] py-1 border rounded font-bold transition-all ${slots.has(t.id) ? 'bg-blue-600 text-white' : 'bg-gray-50'}">${t.id}</button>`).join("")}
+                    </div>
+                </div>`;
+        });
+    }
+
+    function renderTable() {
+        const container = document.getElementById("grid-container");
+        container.innerHTML = `<div class="header-pill">الفترة</div>` + DAYS_NAMES.map(d => `<div class="header-pill">${d}</div>`).join("");
+
+        TIME_SLOTS.forEach(slot => {
+            container.innerHTML += `
+                <div class="cell-base time-cell">
+                    <span class="text-blue-900">${slot.s}</span>
+                    <span class="opacity-40 text-[8px] tracking-tighter">${slot.e}</span>
+                    <span class="absolute bottom-0 right-1 text-[7px] opacity-20">${slot.id}</span>
+                </div>`;
+            
+            for (let d = 0; d < 5; d++) {
+                const entry = scheduleData.find(x => x.day == d && x.slotId === slot.id);
+                if (!entry) {
+                    container.innerHTML += `<div class="cell-base"></div>`;
+                } else {
+                    container.innerHTML += `
+                        <div class="cell-base" style="background:${entry.color.bg}; border: 1.5px solid ${entry.color.border}">
+                            <div class="delete-btn no-print" onclick="deleteEntry('${slot.id}',${d})">✕</div>
+                            <div class="course-card" style="color:${entry.color.text}">
+                                <div class="c-name">${entry.name}</div>
+                                <div class="c-room">${entry.room}</div>
+                            </div>
+                        </div>`;
+                }
+            }
+        });
+    }
+
+    function saveEntry() {
+        const name = document.getElementById("courseName").value.trim();
+        const room = document.getElementById("roomName").value.trim() || "TBA";
+        if (!name || currentSelectedDays.size === 0) return alert("يرجى إدخال اسم المادة واختيار فتراتها");
+
+        const color = getColor(name);
+        currentSelectedDays.forEach((slots, dayIdx) => {
+            slots.forEach(slotId => {
+                scheduleData = scheduleData.filter(x => !(x.day == dayIdx && x.slotId === slotId));
+                scheduleData.push({ day: dayIdx, slotId, name, room, color });
+            });
+        });
+        
+        updateUI();
+        // تصفية المدخلات
+        document.getElementById("courseName").value = "";
+        document.getElementById("roomName").value = "";
+        currentSelectedDays.clear();
+        document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+        renderConfigs();
+    }
+
+    function deleteEntry(sid, day) {
+        scheduleData = scheduleData.filter(x => !(x.day == day && x.slotId === sid));
+        updateUI();
+    }
+
+    function updateUI() {
+        localStorage.setItem("ev_final_pro", JSON.stringify(scheduleData));
+        renderTable();
+    }
+
+    function resetAll() { if(confirm("سيتم حذف كل البيانات، هل أنت متأكد؟")) { localStorage.clear(); location.reload(); } }
+
+    // --- وظيفة الـ PDF المتطورة ---
+    async function downloadPDF() {
+        const element = document.getElementById('capture-area');
+        
+        // إعدادات التصدير
+        const opt = {
+            margin: [10, 5, 10, 5],
+            filename: `Schedule_${new Date().getTime()}.pdf`,
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 3, useCORS: true, letterRendering: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+        };
+
+        // تفعيل وضع الطباعة مؤقتاً لتحسين المظهر
+        document.body.classList.add('rendering');
+        
+        try {
+            await html2pdf().set(opt).from(element).save();
+        } catch (err) {
+            console.error(err);
+        } finally {
+            document.body.classList.remove('rendering');
+        }
+    }
+
+    // التشغيل المبدئي
+    renderTable();
 </script>
+
 </body>
 </html>
