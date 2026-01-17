@@ -3,130 +3,93 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Engineering Vision | الجدول الذكي</title>
+  <title>Engineering Vision | جدول ذكي</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     :root { --primary: #1e40af; --bg: #f8fafc; }
-    body { font-family: 'Cairo', sans-serif; background: var(--bg); padding: 10px; color: #1e293b; overflow-x: hidden; }
+    body { font-family: 'Cairo', sans-serif; background: var(--bg); padding: 5px; color: #1e293b; overflow-x: hidden; }
     
-    .control-panel { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #e2e8f0; }
-    .input-group input { width: 100%; background: #f1f5f9; border: 2px solid #e2e8f0; border-radius: 8px; padding: 10px; font-weight: 700; font-size: 14px; margin-bottom: 8px; outline: none; transition: 0.3s; }
-    .input-group input:focus { border-color: var(--primary); background: white; }
+    .control-panel { background: white; border-radius: 12px; padding: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 10px; border: 1px solid #e2e8f0; }
+    .input-group input { width: 100%; background: #f1f5f9; border: 2px solid #e2e8f0; border-radius: 8px; padding: 8px; font-weight: 700; font-size: 13px; margin-bottom: 6px; }
     
-    .day-btn { flex: 1; min-width: 50px; padding: 8px; background: white; border: 1.5px solid #e2e8f0; border-radius: 8px; text-align: center; cursor: pointer; font-size: 12px; font-weight: 700; transition: 0.2s; }
+    .day-btn { flex: 1; min-width: 45px; padding: 5px; background: white; border: 1.5px solid #e2e8f0; border-radius: 6px; text-align: center; cursor: pointer; font-size: 10px; font-weight: 700; }
     .day-btn.active { background: #10b981; color: white; border-color: #10b981; }
 
-    .time-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
-    .time-btn { padding: 6px; font-size: 10px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; cursor: pointer; font-weight: 700; }
-    .time-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
+    .time-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; }
+    .time-btn { padding: 4px; font-size: 9px; background: white; border: 1px solid #cbd5e1; border-radius: 5px; text-align: center; cursor: pointer; font-weight: 700; }
+    .time-btn.selected { background: var(--primary); color: white; }
 
-    .schedule-card { background: white; border-radius: 12px; padding: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; margin: 0 auto; border: 1px solid #e2e8f0; position: relative; }
+    .schedule-card { background: white; border-radius: 10px; padding: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); width: 100%; margin: 0 auto; }
     
-    .grid-table { display: grid; grid-template-columns: 0.7fr repeat(5, 1fr); gap: 2px; width: 100%; background: #e2e8f0; border-radius: 8px; overflow: hidden; }
+    .grid-table { display: grid; grid-template-columns: 0.8fr repeat(5, 1fr); gap: 1.5px; width: 100%; background: #e2e8f0; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; }
     
-    .header-pill { background: #1e293b; color: white; padding: 8px 0; font-weight: 900; font-size: 10px; text-align: center; }
+    .header-pill { background: #1e293b; color: white; padding: 6px 0; font-weight: 900; font-size: 9px; text-align: center; }
     
-    .cell-base { background: white; min-height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 4px; transition: 0.2s; }
+    .cell-base { background: white; min-height: 45px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 2px; }
     
-    .time-cell { background: #f1f5f9; color: var(--primary); font-weight: 900; border-left: 2px solid #e2e8f0; }
-    .time-cell div:first-child { font-size: 11px; }
+    .time-cell { background: #f8fafc; color: var(--primary); font-weight: 900; border-left: 1.5px solid #cbd5e1; }
+    .time-cell div:first-child { font-size: 10px; line-height: 1; }
     .time-cell div:last-child { font-size: 8px; opacity: 0.6; }
     
-    .course-card { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-radius: 4px; }
-    .c-name { font-weight: 900; font-size: 10px; line-height: 1.2; margin-bottom: 2px; }
-    .c-room { font-size: 8px; font-weight: 700; opacity: 0.7; border-top: 1px solid rgba(0,0,0,0.1); width: 80%; padding-top: 2px; }
+    .course-card { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .c-name { font-weight: 900; font-size: 9px; line-height: 1.1; margin-bottom: 1px; word-break: break-all; }
+    .c-room { font-size: 7px; font-weight: 700; color: rgba(0,0,0,0.5); border-top: 0.5px solid rgba(0,0,0,0.1); width: 90%; padding-top: 1px; }
 
-    .edit-actions { position: absolute; inset: 0; background: rgba(255,255,255,0.9); display: none; align-items: center; justify-content: center; gap: 8px; z-index: 20; border-radius: inherit; }
+    .edit-actions { position: absolute; inset: 0; background: rgba(255,255,255,0.85); display: none; align-items: center; justify-content: space-around; z-index: 20; }
     .delete-mode .edit-actions { display: flex !important; }
-    .action-btn { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; cursor: pointer; transition: 0.2s; }
-    .action-btn:hover { transform: scale(1.1); }
+    .action-btn { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; cursor: pointer; }
     .btn-del { background: #ef4444; }
     .btn-edit { background: #f59e0b; }
 
-    .btn-main { width: 100%; background: var(--primary); color: white; padding: 12px; border-radius: 10px; font-weight: 800; font-size: 15px; margin-top: 10px; transition: 0.3s; }
-    .btn-main:active { transform: scale(0.98); }
+    .btn-main { width: 100%; background: var(--primary); color: white; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 14px; margin-top: 8px; }
     
-    @media print { .no-print { display: none !important; } }
+    .no-print { transition: all 0.3s; }
   </style>
 </head>
 <body>
 
-<div class="max-w-2xl mx-auto">
+<div class="page-container">
   <div class="control-panel no-print" id="ui-panel">
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="font-black text-blue-900">إضافة مادة جديدة</h2>
-        <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-bold">V 2.0</span>
-    </div>
-
     <div class="input-group">
-      <input id="courseName" type="text" placeholder="اسم المادة (مثلاً: MATH101)" />
-      <input id="roomName" type="text" placeholder="رقم القاعة" />
+      <input id="courseName" type="text" placeholder="رمز المادة" />
+      <input id="roomName" type="text" placeholder="القاعة" />
     </div>
 
-    <p class="text-[11px] font-bold mb-2 text-slate-500">اختر الأيام:</p>
-    <div class="flex gap-1 mb-4 overflow-x-auto pb-2">
-      <div class="day-btn" onclick="toggleDay(0, this)">الأحد</div>
+    <div class="flex gap-1 mb-2 overflow-x-auto">
+      <div class="day-btn" onclick="toggleDay(0, this)">الاحد</div>
       <div class="day-btn" onclick="toggleDay(1, this)">الاثنين</div>
       <div class="day-btn" onclick="toggleDay(2, this)">الثلاثاء</div>
-      <div class="day-btn" onclick="toggleDay(3, this)">الأربعاء</div>
+      <div class="day-btn" onclick="toggleDay(3, this)">الاربعاء</div>
       <div class="day-btn" onclick="toggleDay(4, this)">الخميس</div>
     </div>
 
-    <div id="daysConfigs" class="space-y-3"></div>
-    
-    <button onclick="saveEntry()" class="btn-main shadow-lg shadow-blue-200">إضافة للجدول</button>
-    
-    <div class="flex gap-2 mt-3">
-        <button onclick="downloadImage()" class="flex-1 py-2 bg-emerald-600 text-white rounded-lg font-bold text-xs">حفظ كصورة</button>
-        <button onclick="resetAll()" class="px-4 py-2 border border-red-200 text-red-500 rounded-lg font-bold text-xs">تصفية</button>
-    </div>
+    <div id="daysConfigs" class="space-y-2"></div>
+    <button onclick="saveEntry()" class="btn-main">إضافة المادة</button>
+    <button onclick="resetAll()" class="w-full mt-2 text-red-500 font-bold text-[10px]">تصفية الجدول</button>
   </div>
 
   <div id="display-area" class="schedule-card">
-    <div class="flex justify-between items-end mb-4 px-2 border-b pb-2 border-slate-100">
+    <div class="flex justify-between items-center mb-2 px-1">
         <div>
-            <h1 class="text-blue-900 font-black text-lg leading-tight">Engineering Vision</h1>
-            <p class="text-slate-400 text-[10px] font-bold">الجدول الدراسي الأكاديمي 2026</p>
+            <h1 class="text-blue-900 font-black text-sm">Engineering Vision</h1>
+            <p class="text-gray-400 text-[8px]">الجدول الدراسي الأكاديمي</p>
         </div>
-        <div class="text-left">
-            <div id="current-date" class="text-[9px] font-bold text-slate-400"></div>
-        </div>
+        <div class="text-[8px] font-bold text-slate-400">2026 Season</div>
     </div>
     
     <div id="grid-container" class="grid-table"></div>
     
-    <div class="flex gap-2 no-print">
-        <button id="edit-toggle-btn" onclick="toggleEditMode()" class="mt-4 flex-1 py-2 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold border border-slate-200">
-            ⚙️ وضع التعديل والحذف
+    <div class="flex gap-2">
+        <button id="edit-toggle-btn" onclick="toggleEditMode()" class="no-print mt-3 flex-1 py-2 border border-dashed border-slate-300 text-slate-500 rounded text-[10px] font-bold">
+            وضع التعديل
         </button>
+        
     </div>
+    <p id="tip" class="hidden text-center text-[9px] text-gray-400 mt-2">اضغط على أي مكان لإعادة إظهار لوحة التحكم</p>
   </div>
-</div>
 
-<div id="editModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-[100] p-4 backdrop-blur-sm">
-    <div class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl scale-in">
-        <h3 class="text-lg font-black mb-1 text-blue-900">تعديل المادة</h3>
-        <p class="text-xs text-slate-400 mb-5 font-bold">سيتم التعديل في جميع الأيام المرتبطة</p>
-        
-        <div class="space-y-4">
-            <div>
-                <label class="block text-[11px] font-black mb-1 text-slate-500 mr-1">اسم المادة</label>
-                <input id="modalCourseName" type="text" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 font-bold outline-none focus:border-blue-500 transition-all">
-            </div>
-            <div>
-                <label class="block text-[11px] font-black mb-1 text-slate-500 mr-1">القاعة</label>
-                <input id="modalRoomName" type="text" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 font-bold outline-none focus:border-blue-500 transition-all">
-            </div>
-        </div>
-        
-        <div class="flex gap-3 mt-8">
-            <button onclick="saveModalEdit()" class="flex-[2] bg-blue-600 text-white py-3 rounded-xl font-black shadow-lg shadow-blue-100">حفظ</button>
-            <button onclick="closeModal()" class="flex-1 bg-slate-100 text-slate-500 py-3 rounded-xl font-bold">إلغاء</button>
-        </div>
-    </div>
 </div>
 
 <script>
@@ -138,20 +101,13 @@
     { id: "59", s: "04:15", e: "05:05" }, { id: "60", s: "05:15", e: "06:05" }
   ];
   const DAYS_NAMES = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس"];
-  
-  let scheduleData = JSON.parse(localStorage.getItem("ev_v11")) || [];
+  let scheduleData = JSON.parse(localStorage.getItem("ev_v10")) || [];
   let currentSelectedDays = new Map();
   let editMode = false;
-  let currentEditingName = "";
 
-  // توليد ألوان متناسقة (ألوان هادئة للعين)
   function generateCourseColor() {
-    const palette = [
-        {bg: '#eff6ff', text: '#1e40af'}, {bg: '#ecfdf5', text: '#065f46'},
-        {bg: '#fff7ed', text: '#9a3412'}, {bg: '#f5f3ff', text: '#5b21b6'},
-        {bg: '#fff1f2', text: '#9f1239'}, {bg: '#f0f9ff', text: '#075985'}
-    ];
-    return palette[Math.floor(Math.random() * palette.length)];
+    const hue = Math.floor(Math.random() * 360);
+    return { bg: `hsl(${hue}, 80%, 96%)`, text: `hsl(${hue}, 90%, 20%)` };
   }
 
   function renderConfigs() {
@@ -159,8 +115,8 @@
     container.innerHTML = "";
     currentSelectedDays.forEach((slots, dayIdx) => {
       container.innerHTML += `
-        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 animate-fade-in">
-          <div class="text-[10px] font-black text-blue-800 mb-2">${DAYS_NAMES[dayIdx]}</div>
+        <div class="bg-slate-50 p-2 rounded border border-slate-100">
+          <div class="text-[9px] font-bold text-blue-800 mb-1">${DAYS_NAMES[dayIdx]}</div>
           <div class="time-grid">${TIME_SLOTS.map(t => `<div class="time-btn ${slots.has(t.id) ? 'selected' : ''}" onclick="toggleTime(${dayIdx}, '${t.id}', this)">${t.id}</div>`).join("")}</div>
         </div>`;
     });
@@ -181,50 +137,37 @@
   function toggleEditMode() {
     editMode = !editMode;
     document.getElementById("display-area").classList.toggle("delete-mode", editMode);
-    document.getElementById("edit-toggle-btn").innerText = editMode ? "✅ إنهاء التعديل" : "⚙️ وضع التعديل والحذف";
-    document.getElementById("edit-toggle-btn").classList.toggle("bg-green-50");
+    document.getElementById("edit-toggle-btn").innerText = editMode ? "إغلاق التعديل" : "وضع التعديل";
   }
 
-  // دوال الـ Modal
-  function openEditModal(name, room) {
-    currentEditingName = name;
-    document.getElementById("modalCourseName").value = name;
-    document.getElementById("modalRoomName").value = room;
-    document.getElementById("editModal").classList.remove("hidden");
-    document.getElementById("editModal").classList.add("flex");
-  }
-
-  function closeModal() {
-    document.getElementById("editModal").classList.add("hidden");
-    document.getElementById("editModal").classList.remove("flex");
-  }
-
-  function saveModalEdit() {
-    const newName = document.getElementById("modalCourseName").value.trim();
-    const newRoom = document.getElementById("modalRoomName").value.trim();
-    if (!newName) return;
-
-    scheduleData = scheduleData.map(item => {
-        if (item.name === currentEditingName) {
-            return { ...item, name: newName, room: newRoom };
-        }
-        return item;
-    });
-
-    localStorage.setItem("ev_v11", JSON.stringify(scheduleData));
-    closeModal();
-    renderTable();
+  // دالة لإخفاء الواجهة لالتقاط الصورة
+  function hideUI() {
+    document.getElementById('ui-panel').style.display = 'none';
+    document.getElementById('hide-btn').style.display = 'none';
+    document.getElementById('edit-toggle-btn').style.display = 'none';
+    document.getElementById('tip').classList.remove('hidden');
+    document.body.onclick = () => {
+        document.getElementById('ui-panel').style.display = 'block';
+        document.getElementById('hide-btn').style.display = 'block';
+        document.getElementById('edit-toggle-btn').style.display = 'block';
+        document.getElementById('tip').classList.add('hidden');
+        document.body.onclick = null;
+    };
   }
 
   function renderTable() {
     const container = document.getElementById("grid-container");
-    let lastSlotIndex = 4;
-    scheduleData.forEach(entry => {
-        const idx = TIME_SLOTS.findIndex(s => s.id === entry.slotId);
-        if (idx > lastSlotIndex) lastSlotIndex = idx;
-    });
     
+    // العثور على آخر وقت مضاف لقص الجدول عنده
+    let lastSlotIndex = 4; // الحد الأدنى للعرض (حتى الساعة 11)
+    if (scheduleData.length > 0) {
+        scheduleData.forEach(entry => {
+            const idx = TIME_SLOTS.findIndex(s => s.id === entry.slotId);
+            if (idx > lastSlotIndex) lastSlotIndex = idx;
+        });
+    }
     const visibleSlots = TIME_SLOTS.slice(0, lastSlotIndex + 1);
+
     container.innerHTML = `<div class="header-pill">الوقت</div>` + DAYS_NAMES.map(d => `<div class="header-pill">${d}</div>`).join("");
 
     visibleSlots.forEach(slot => {
@@ -237,7 +180,7 @@
           container.innerHTML += `
             <div class="cell-base" style="background:${entry.color.bg};">
               <div class="edit-actions">
-                <div class="action-btn btn-edit" onclick="openEditModal('${entry.name}', '${entry.room}')">✎</div>
+                <div class="action-btn btn-edit" onclick="editCourse('${entry.name}', '${entry.room}')">✎</div>
                 <div class="action-btn btn-del" onclick="deleteEntireCourse('${entry.name}')">×</div>
               </div>
               <div class="course-card" style="color:${entry.color.text}">
@@ -250,10 +193,16 @@
     });
   }
 
+  function editCourse(name, room) {
+    document.getElementById("courseName").value = name;
+    document.getElementById("roomName").value = room;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   function deleteEntireCourse(courseName) {
-    if(confirm(`حذف مادة "${courseName}" من جميع الأيام؟`)) {
+    if(confirm(`حذف مادة "${courseName}"؟`)) {
         scheduleData = scheduleData.filter(x => x.name !== courseName);
-        localStorage.setItem("ev_v11", JSON.stringify(scheduleData));
+        localStorage.setItem("ev_v10", JSON.stringify(scheduleData));
         renderTable();
     }
   }
@@ -261,7 +210,7 @@
   function saveEntry() {
     const name = document.getElementById("courseName").value.trim();
     const room = document.getElementById("roomName").value.trim();
-    if (!name || currentSelectedDays.size === 0) return alert("يرجى إدخال اسم المادة واختيار الأيام والحصص");
+    if (!name || currentSelectedDays.size === 0) return alert("أكمل البيانات");
 
     const color = generateCourseColor();
     currentSelectedDays.forEach((slots, dayIdx) => {
@@ -271,28 +220,12 @@
       });
     });
 
-    localStorage.setItem("ev_v11", JSON.stringify(scheduleData));
+    localStorage.setItem("ev_v10", JSON.stringify(scheduleData));
     location.reload();
   }
 
-  function downloadImage() {
-    const element = document.getElementById('display-area');
-    // إخفاء الأزرار مؤقتاً
-    const editBtn = document.getElementById('edit-toggle-btn');
-    editBtn.style.display = 'none';
-    
-    html2canvas(element, { scale: 3 }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `Engineering-Schedule-${Date.now()}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
-        editBtn.style.display = 'block';
-    });
-  }
-
-  function resetAll() { if(confirm("هل أنت متأكد من مسح الجدول بالكامل؟")) { localStorage.clear(); location.reload(); } }
+  function resetAll() { if(confirm("مسح الكل؟")) { localStorage.clear(); location.reload(); } }
   
-  document.getElementById('current-date').innerText = new Date().toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   renderTable();
 </script>
 </body>
