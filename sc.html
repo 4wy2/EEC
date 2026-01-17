@@ -8,10 +8,15 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    :root { --primary: #1e40af; --bg: #f8fafc; }
+    :root { --primary: #1e40af; --bg: #f8fafc; --ramadan-theme: #059669; }
     body { font-family: 'Cairo', sans-serif; background: var(--bg); padding: 5px; color: #1e293b; overflow-x: hidden; }
     
     .control-panel { background: white; border-radius: 12px; padding: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 10px; border: 1px solid #e2e8f0; }
+    
+    /* تصميم صندوق رمضان المدمج */
+    .ramadan-box { border: 2px solid #e2e8f0; border-radius: 12px; overflow: hidden; margin-bottom: 10px; }
+    .ramadan-note { background: #eff6ff; padding: 8px; border-bottom: 1px solid #e2e8f0; }
+
     .input-group input { width: 100%; background: #f1f5f9; border: 2px solid #e2e8f0; border-radius: 8px; padding: 8px; font-weight: 700; font-size: 13px; margin-bottom: 6px; }
     
     .day-btn { flex: 1; min-width: 45px; padding: 5px; background: white; border: 1.5px solid #e2e8f0; border-radius: 6px; text-align: center; cursor: pointer; font-size: 10px; font-weight: 700; }
@@ -30,6 +35,8 @@
     .cell-base { background: white; min-height: 45px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 2px; }
     
     .time-cell { background: #f8fafc; color: var(--primary); font-weight: 900; border-left: 1.5px solid #cbd5e1; }
+    .ramadan-mode-active .time-cell { color: var(--ramadan-theme); background: #f0fdf4; }
+
     .time-cell div:first-child { font-size: 10px; line-height: 1; }
     .time-cell div:last-child { font-size: 8px; opacity: 0.6; }
     
@@ -52,6 +59,9 @@
 
 <div class="page-container">
   <div class="control-panel no-print" id="ui-panel">
+    
+    
+
     <div class="input-group">
       <input id="courseName" type="text" placeholder="رمز المادة" />
       <input id="roomName" type="text" placeholder="القاعة" />
@@ -64,7 +74,17 @@
       <div class="day-btn" onclick="toggleDay(3, this)">الاربعاء</div>
       <div class="day-btn" onclick="toggleDay(4, this)">الخميس</div>
     </div>
-
+    <div id="ramadan-box" class="ramadan-box">
+        <div class="ramadan-note">
+            <p id="ramadan-note-text" class="text-[10px] text-blue-800 font-semibold italic text-center">
+                💡 ملاحظة: أدخل جدولك الأساسي، وسيتم تحديث الأوقات تلقائياً عند تفعيل زر شهر رمضان.
+            </p>
+        </div>
+        <button id="ramadan-toggle" disabled style="opacity: 0.6; cursor: not-allowed;" onclick="toggleRamadanMode()" class="w-full bg-slate-800 text-white py-2.5 text-[11px] font-black flex items-center justify-center gap-2 transition-all">
+            <span id="ramadan-text">توقيت شهر رمضان المبارك</span>
+            <span id="ramadan-badge" class="bg-amber-400 text-white px-2 py-0.5 rounded-full text-[8px] animate-pulse">SOON</span>
+        </button>
+    </div>
     <div id="daysConfigs" class="space-y-2"></div>
     <button onclick="saveEntry()" class="btn-main">إضافة المادة</button>
     <button onclick="resetAll()" class="w-full mt-2 text-red-500 font-bold text-[10px]">تصفية الجدول</button>
@@ -74,7 +94,7 @@
     <div class="flex justify-between items-center mb-2 px-1">
         <div>
             <h1 class="text-blue-900 font-black text-sm">Engineering Vision</h1>
-            <p class="text-gray-400 text-[8px]">الجدول الدراسي الأكاديمي</p>
+            <p id="sub-label" class="text-gray-400 text-[8px]">الجدول الدراسي الأكاديمي (12H)</p>
         </div>
         <div class="text-[8px] font-bold text-slate-400">2026 Season</div>
     </div>
@@ -85,7 +105,6 @@
         <button id="edit-toggle-btn" onclick="toggleEditMode()" class="no-print mt-3 flex-1 py-2 border border-dashed border-slate-300 text-slate-500 rounded text-[10px] font-bold">
             وضع التعديل
         </button>
-        
     </div>
     <p id="tip" class="hidden text-center text-[9px] text-gray-400 mt-2">اضغط على أي مكان لإعادة إظهار لوحة التحكم</p>
   </div>
@@ -93,6 +112,7 @@
 </div>
 
 <script>
+  // أوقات الجدول العادي (12 ساعة)
   const TIME_SLOTS = [
     { id: "54", s: "07:15", e: "08:05" }, { id: "86", s: "08:15", e: "09:05" },
     { id: "44", s: "09:15", e: "10:05" }, { id: "80", s: "10:15", e: "11:05" },
@@ -100,10 +120,53 @@
     { id: "52", s: "02:15", e: "03:05" }, { id: "51", s: "03:15", e: "04:05" },
     { id: "59", s: "04:15", e: "05:05" }, { id: "60", s: "05:15", e: "06:05" }
   ];
+
+  // أوقات الجدول الرمضاني (12 ساعة)
+  const RAMADAN_SLOTS = [
+    { id: "54", s: "07:15", e: "07:55" }, { id: "86", s: "08:00", e: "08:40" },
+    { id: "44", s: "08:45", e: "09:25" }, { id: "80", s: "10:55", e: "11:35" },
+    { id: "47", s: "11:40", e: "12:20" }, { id: "63", s: "12:25", e: "01:05" },
+    { id: "52", s: "02:35", e: "03:15" }, { id: "51", s: "03:20", e: "04:00" },
+    { id: "59", s: "04:05", e: "04:45" }, { id: "60", s: "04:50", e: "05:30" }
+  ];
+
   const DAYS_NAMES = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس"];
   let scheduleData = JSON.parse(localStorage.getItem("ev_v10")) || [];
   let currentSelectedDays = new Map();
   let editMode = false;
+  let isRamadanMode = JSON.parse(localStorage.getItem("ramadan_active")) || false;
+
+  function toggleRamadanMode() {
+    isRamadanMode = !isRamadanMode;
+    localStorage.setItem("ramadan_active", isRamadanMode);
+    updateRamadanUI();
+    renderTable();
+  }
+
+  function updateRamadanUI() {
+    const btn = document.getElementById("ramadan-toggle");
+    const noteText = document.getElementById("ramadan-note-text");
+    const subLabel = document.getElementById("sub-label");
+    const area = document.getElementById("display-area");
+
+    if(isRamadanMode) {
+        btn.classList.replace("bg-slate-800", "bg-emerald-600");
+        document.getElementById("ramadan-text").innerText = "وضع رمضان نشط 🌙";
+        noteText.innerText = "✅ تم تفعيل توقيت رمضان بنجاح.";
+        noteText.classList.replace("text-blue-800", "text-emerald-700");
+        subLabel.innerText = "توقيت شهر رمضان المبارك (12H)";
+        area.classList.add("ramadan-mode-active");
+    } else {
+        if(!btn.disabled) {
+          btn.classList.replace("bg-emerald-600", "bg-slate-800");
+          document.getElementById("ramadan-text").innerText = "توقيت شهر رمضان المبارك";
+          noteText.innerText = "💡 ملاحظة: أدخل جدولك الأساسي، وسيتم تحديث الأوقات تلقائياً عند تفعيل زر رمضان.";
+          noteText.classList.replace("text-emerald-700", "text-blue-800");
+        }
+        subLabel.innerText = "الجدول الدراسي الأكاديمي (12H)";
+        area.classList.remove("ramadan-mode-active");
+    }
+  }
 
   function generateCourseColor() {
     const hue = Math.floor(Math.random() * 360);
@@ -140,33 +203,19 @@
     document.getElementById("edit-toggle-btn").innerText = editMode ? "إغلاق التعديل" : "وضع التعديل";
   }
 
-  // دالة لإخفاء الواجهة لالتقاط الصورة
-  function hideUI() {
-    document.getElementById('ui-panel').style.display = 'none';
-    document.getElementById('hide-btn').style.display = 'none';
-    document.getElementById('edit-toggle-btn').style.display = 'none';
-    document.getElementById('tip').classList.remove('hidden');
-    document.body.onclick = () => {
-        document.getElementById('ui-panel').style.display = 'block';
-        document.getElementById('hide-btn').style.display = 'block';
-        document.getElementById('edit-toggle-btn').style.display = 'block';
-        document.getElementById('tip').classList.add('hidden');
-        document.body.onclick = null;
-    };
-  }
-
   function renderTable() {
     const container = document.getElementById("grid-container");
+    const ACTIVE_SLOTS = isRamadanMode ? RAMADAN_SLOTS : TIME_SLOTS;
     
-    // العثور على آخر وقت مضاف لقص الجدول عنده
-    let lastSlotIndex = 4; // الحد الأدنى للعرض (حتى الساعة 11)
+    // ميزة تقصير وتطويل الجدول حسب المحاضرات (نفس منطق كودك الأصلي)
+    let lastSlotIndex = 4;
     if (scheduleData.length > 0) {
         scheduleData.forEach(entry => {
-            const idx = TIME_SLOTS.findIndex(s => s.id === entry.slotId);
+            const idx = ACTIVE_SLOTS.findIndex(s => s.id === entry.slotId);
             if (idx > lastSlotIndex) lastSlotIndex = idx;
         });
     }
-    const visibleSlots = TIME_SLOTS.slice(0, lastSlotIndex + 1);
+    const visibleSlots = ACTIVE_SLOTS.slice(0, lastSlotIndex + 1);
 
     container.innerHTML = `<div class="header-pill">الوقت</div>` + DAYS_NAMES.map(d => `<div class="header-pill">${d}</div>`).join("");
 
@@ -226,6 +275,7 @@
 
   function resetAll() { if(confirm("مسح الكل؟")) { localStorage.clear(); location.reload(); } }
   
+  updateRamadanUI();
   renderTable();
 </script>
 </body>
