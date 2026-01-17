@@ -7,39 +7,53 @@ import json
 st.set_page_config(layout="centered")
 st.markdown("<style>#MainMenu, footer, header {visibility: hidden;} .stApp {background-color: transparent;}</style>", unsafe_allow_html=True)
 
-st.write("### 📸 معالج الجداول المتعدد")
+st.write("### ⚡ بناء الجدول الفوري")
 uploaded_file = st.file_uploader("", type=['png', 'jpg', 'jpeg'])
 
 if uploaded_file:
     image = Image.open(uploaded_file)
     reader = easyocr.Reader(['en'])
+    # استخراج النصوص مع إحداثياتها (bbox)
     results = reader.readtext(np.array(image))
     
-    # مصفوفة لتخزين كل المواد المكتشفة
-    all_courses = []
-    days_map = {'SUN': 0, 'MON': 1, 'TUE': 2, 'WED': 3, 'THU': 4}
+    final_schedule = []
+    # تعريف حدود الأعمدة التقريبية (بناءً على تصميم جدول الجامعة الرسمي)
+    # الأحد: Sun, الاثنين: Mon... الخ
+    days_mapping = {0: "Sun", 1: "Mon", 2: "Tue", 3: "Wed", 4: "Thu"}
     valid_slots = ['44', '47', '51', '52', '54', '63', '80', '86']
 
-    # منطق البحث المطور: نمر على النتائج ونبحث عن كود المادة (مثل EE 202)
     for i, (bbox, text, prob) in enumerate(results):
-        upper_text = text.upper()
-        # إذا وجدنا كود المادة، نبحث في نفس السطر عن الأيام والفترات
-        if any(code in upper_text for code in ['EE', 'MA', 'ESP', 'PHYS']):
-            course_name = upper_text
-            # نبحث في النصوص التالية لهذا السطر عن الأيام والفترات
-            for j in range(i+1, min(i+15, len(results))):
-                sub_text = results[j][1].upper()
-                # إذا وجدنا أرقام فترات
-                found_slots = [s for s in valid_slots if s in sub_text]
-                if found_slots:
-                    # تقدير اليوم (هذا الجزء يحتاج دقة في الربط)
-                    # سنرسل البيانات للموقع ليقوم هو بالفرز النهائي
-                    all_courses.append({
-                        'name': course_name,
-                        'slots': found_slots
-                    })
+        # إذا وجدنا رقم فترة
+        clean_text = "".join(filter(str.isdigit, text))
+        if clean_text in valid_slots:
+            x_center = (bbox[0][0] + bbox[1][0]) / 2
+            
+            # محاولة العثور على اسم المادة في نفس السطر (بالرجوع للخلف في النتائج)
+            course_name = "Unknown"
+            for k in range(i, 0, -1):
+                if any(code in results[k][1].upper() for code in ['EE', 'MA', 'ESP', 'PHYS']):
+                    course_name = results[k][1].upper()
+                    break
+            
+            # تحديد اليوم بناءً على إحداثيات X (توزيع أعمدة الجدول)
+            # هذه الحسبة موزونة لجدول الجامعة اللي في صورتك
+            img_width = image.size[0]
+            x_rel = x_center / img_width
+            
+            day_idx = 0
+            if x_rel < 0.45: day_idx = 0 # Sun
+            elif x_rel < 0.53: day_idx = 1 # Mon
+            elif x_rel < 0.61: day_idx = 2 # Tue
+            elif x_rel < 0.70: day_idx = 3 # Wed
+            else: day_idx = 4 # Thu
 
-    if all_courses:
-        js_payload = json.dumps({'type': 'ocr_full_schedule', 'data': all_courses})
+            final_schedule.append({
+                'day': day_idx,
+                'slot': clean_text,
+                'course': course_name
+            })
+
+    if final_schedule:
+        js_payload = json.dumps({'type': 'DIRECT_BUILD', 'entries': final_schedule})
         st.components.v1.html(f"<script>window.parent.postMessage({js_payload}, '*');</script>", height=0)
-        st.success("✅ تم إرسال الجدول بالكامل!")
+        st.success(f"تم تحليل {len(final_schedule)} محاضرات بنجاح!")
