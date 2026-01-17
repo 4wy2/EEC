@@ -66,31 +66,38 @@
 
     // استقبال البيانات من تطبيق بايثون
    window.addEventListener('message', function(event) {
-    if (event.data.type === 'ocr_full_schedule') {
-        const scheduleArray = event.data.data;
+    if (event.data.type === 'DIRECT_BUILD') {
+        const entries = event.data.entries;
         
-        scheduleArray.forEach(item => {
-            // تعبئة البيانات لكل مادة مكتشفة
-            const name = item.name;
-            const slots = item.slots;
+        // مسح الجدول القديم إذا أردت بناء واحد جديد تماماً
+        // scheduleData = []; 
 
-            // افتراضياً سنوزع الفترات (تحتاج لتطوير بسيط لربط اليوم بالفترة بدقة)
-            // سأقوم هنا بحفظها لليوم الحالي المختار كبداية
-            let dayIdx = 0; 
-            if (!currentSelectedDays.has(dayIdx)) currentSelectedDays.set(dayIdx, new Set());
+        entries.forEach(item => {
+            const day = item.day;
+            const slotId = item.slot;
+            const name = item.course;
+
+            // إزالة أي تعارض في نفس الوقت
+            scheduleData = scheduleData.filter(x => !(x.day == day && x.slotId === slotId));
             
-            slots.forEach(id => {
-                currentSelectedDays.get(dayIdx).add(id);
-                // إضافة المادة للبيانات العامة
-                scheduleData = scheduleData.filter(x => !(x.day == dayIdx && x.slotId === id));
-                scheduleData.push({ day: dayIdx, slotId: id, name: name, room: "مكتشف" });
+            // إضافة المحاضرة الجديدة
+            scheduleData.push({
+                day: day,
+                slotId: slotId,
+                name: name,
+                room: "مكتشف آلياً",
+                color: {bg: '#eff6ff', border: '#bfdbfe', text: '#1e40af'} // لون افتراضي هادئ
             });
         });
 
-        // حفظ وتحديث الجدول فوراً
-        localStorage.setItem("ev_ai_v1", JSON.stringify(scheduleData));
-        location.reload(); // إعادة التحميل لإظهار الجدول كاملاً فوراً
+        // حفظ في ذاكرة المتصفح
+        localStorage.setItem("ev_final_pro", JSON.stringify(scheduleData));
+        
+        // تحديث الجدول المعروض فوراً بدون إعادة تحميل الصفحة بالكامل
+        renderTable(); 
+        alert("✅ تم بناء الجدول دايركت!");
     }
+});
 });
 });
     });
