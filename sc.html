@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>مُنسق الجداول | Engineering Vision</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -23,53 +23,40 @@
             background: var(--bg-deep);
             background-image: radial-gradient(circle at 50% -20%, #1e293b 0%, #050710 100%);
             color: #e2e8f0;
-            min-height: 100vh;
             margin: 0; padding: 10px;
+            overflow-x: hidden;
         }
 
-        @media (min-width: 768px) { body { padding: 20px; } }
-
-        .glass-card {
-            background: rgba(11, 17, 38, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-        }
-
-        /* حاوية الجدول للجوال */
-        .table-responsive {
+        /* حاوية الجدول المرنة */
+        .table-container {
+            width: 100%;
             overflow-x: auto;
+            border-radius: 16px;
+            background: var(--panel-bg);
+            border: 1px solid var(--glass-border);
             -webkit-overflow-scrolling: touch;
-            padding-bottom: 15px;
-            cursor: grab;
         }
-
-        /* تخصيص السكرول بار ليظهر بشكل أنيق */
-        .table-responsive::-webkit-scrollbar { height: 6px; }
-        .table-responsive::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 10px; }
 
         .grid-container {
             display: grid;
-            grid-template-columns: 80px repeat(5, 1fr);
-            min-width: 800px; /* ضمان وضوح البيانات عند لقطة الشاشة */
-            background: var(--panel-bg);
+            grid-template-columns: 75px repeat(5, minmax(120px, 1fr));
+            min-width: 700px; /* لضمان وضوح الأعمدة في الجوال */
         }
 
         .header-cell {
-            background: rgba(59, 130, 246, 0.1);
+            background: rgba(59, 130, 246, 0.15);
             color: var(--accent-blue);
-            font-weight: 900;
+            font-weight: 800;
             padding: 12px 5px;
             text-align: center;
             border-bottom: 2px solid var(--accent-blue);
-            border-left: 1px solid var(--glass-border);
-            font-size: 13px;
+            position: sticky; top: 0; z-index: 10;
         }
 
         .cell {
             border: 1px solid var(--glass-border);
-            min-height: 75px;
-            padding: 4px;
+            min-height: 80px;
+            padding: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -79,96 +66,94 @@
         .time-cell {
             background: rgba(255, 255, 255, 0.02);
             flex-direction: column;
-            border-right: 4px solid var(--accent-blue);
+            border-right: 3px solid var(--accent-blue);
+            font-size: 10px;
         }
 
         .course-chip {
             width: 100%; height: 100%; border-radius: 8px;
-            padding: 4px; display: flex; flex-direction: column;
+            padding: 6px; display: flex; flex-direction: column;
             justify-content: center; text-align: center;
             border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        /* مدخلات البيانات */
+        .custom-input {
+            background: rgba(5, 7, 16, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 12px; color: white; width: 100%;
         }
 
         .time-option {
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid var(--glass-border);
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px;
-            padding: 6px;
-            text-align: center;
+            cursor: pointer; border-radius: 8px; padding: 8px;
+            border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03);
+            text-align: center; font-size: 11px; transition: 0.2s;
         }
         .time-option.selected {
-            background: var(--accent-blue) !important;
-            border-color: white;
-            color: white;
+            background: var(--accent-blue) !important; color: white; font-weight: bold;
         }
 
-        .custom-input {
-            background: #050710; border: 1px solid var(--glass-border);
-            border-radius: 10px; padding: 10px; color: white; width: 100%; font-size: 14px;
-        }
-
-        /* تنسيق التصدير */
-        #capture { width: 100%; margin: 0 auto; background: var(--bg-deep); }
+        /* وضعية الطباعة والـ PDF */
+        #capture { background: var(--bg-deep); width: 100%; }
         .pdf-header { display: none; }
-        .rendering .pdf-header { display: block; text-align: center; padding: 15px; }
+        .rendering .pdf-header { display: block; padding: 20px; text-align: center; }
 
         .delete-btn {
             position: absolute; top: 2px; left: 2px;
-            width: 16px; height: 16px; background: #ef4444;
+            width: 18px; height: 18px; background: #ef4444;
             color: white; border-radius: 50%; display: none;
-            cursor: pointer; font-size: 9px; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 10px; align-items: center; justify-content: center;
         }
         .cell:hover .delete-btn { display: flex; }
 
-        @media print { .no-print { display: none !important; } }
+        @media (max-width: 640px) {
+            .grid-container { min-width: 650px; }
+            .header-cell { font-size: 12px; }
+            .course-chip span { font-size: 10px !important; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="max-w-7xl mx-auto">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 no-print">
-            <div class="text-center md:text-right">
-                <h1 class="text-2xl font-black italic text-white tracking-tighter uppercase">Engineering <span class="text-blue-500">Vision</span></h1>
-                <p class="text-white/40 text-[9px] font-bold tracking-[0.2em]">Smart Schedule Builder</p>
-            </div>
-            <button onclick="downloadPDF()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg text-sm">
-                <i class="fas fa-download ml-2"></i> حفظ كملف PDF
+    <div class="max-w-6xl mx-auto py-4">
+        <header class="flex justify-between items-center mb-6 px-2 no-print">
+            <h1 class="text-xl font-black text-white italic">ENGINEERING <span class="text-blue-500">VISION</span></h1>
+            <button onclick="downloadPDF()" class="bg-blue-600 text-white px-5 py-2 rounded-lg font-bold text-sm shadow-lg">
+                <i class="fas fa-file-pdf ml-1"></i> حفظ PDF
             </button>
         </header>
 
-        <div class="glass-card p-4 md:p-6 mb-6 no-print">
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        <div class="bg-white/5 backdrop-blur-md border border-white/10 p-5 rounded-2xl mb-6 no-print">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="space-y-3">
-                    <input type="text" id="course" placeholder="رمز المادة" class="custom-input uppercase font-bold">
-                    <input type="text" id="room" placeholder="رقم القاعة" class="custom-input">
+                    <input type="text" id="course" placeholder="اسم المادة" class="custom-input uppercase font-bold">
+                    <input type="text" id="room" placeholder="القاعة" class="custom-input">
                     <select id="day" class="custom-input">
                         <option value="0">الأحد</option><option value="1">الإثنين</option>
                         <option value="2">الثلاثاء</option><option value="3">الأربعاء</option>
                         <option value="4">الخميس</option>
                     </select>
                 </div>
-
-                <div class="lg:col-span-2">
-                    <label class="text-[10px] font-bold text-blue-400 mb-2 block uppercase">اختر الساعات (متعدد)</label>
-                    <div id="time-grid" class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-3 gap-2"></div>
-                </div>
-
-                <div class="flex items-end">
-                    <button onclick="addSubject()" class="w-full bg-blue-500 text-white h-[45px] rounded-lg font-bold hover:bg-blue-600 transition-all">
+                <div class="md:col-span-2">
+                    <label class="text-[10px] text-blue-400 font-bold mb-2 block uppercase">اختر الأوقات</label>
+                    <div id="time-grid" class="grid grid-cols-3 sm:grid-cols-5 gap-2"></div>
+                    <button onclick="addSubject()" class="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-bold transition-all">
                         تحديث الجدول
                     </button>
                 </div>
             </div>
         </div>
 
-        <p class="text-white/30 text-[10px] mb-2 md:hidden"><i class="fas fa-arrows-left-right"></i> اسحب الجدول لليسار لمشاهدة باقي الأيام</p>
+        <div class="mb-2 px-2 no-print">
+            <p class="text-white/40 text-[10px]"><i class="fas fa-info-circle ml-1"></i> اسحب الجدول لليسار لمشاهدة باقي الأيام، أو اضغط حفظ PDF للتحميل.</p>
+        </div>
         
-        <div class="table-responsive glass-card">
+        <div class="table-container">
             <div id="capture">
                 <div class="pdf-header">
-                    <h2 style="color: white; font-size: 18px; margin: 0; font-weight: 900;">Engineering Vision | الجدول الدراسي</h2>
+                    <h2 style="color: white; font-size: 20px; font-weight: 900;">Engineering Vision | الجدول الدراسي</h2>
+                    <p style="color: #3b82f6; font-size: 10px;">Academic Schedule 2026</p>
                 </div>
                 <div class="grid-container" id="grid">
                     <div class="header-cell">الوقت</div>
@@ -192,29 +177,23 @@
         ];
 
         const THEMES = ["#3b82f6", "#8b5cf6", "#10b981", "#f59e0b", "#ef4444", "#ec4899"];
-        let db = JSON.parse(localStorage.getItem('ev_final_v7')) || [];
-        let selectedTimeCodes = new Set();
+        let db = JSON.parse(localStorage.getItem('ev_mobile_v8')) || [];
+        let selectedTimes = new Set();
 
         function init() {
-            const timeGrid = document.getElementById('time-grid');
-            timeGrid.innerHTML = TIME_MAP.map(t => `
-                <div class="time-option" id="btn-${t.id}" onclick="toggleTime('${t.id}')">
-                    <div class="font-bold text-[10px] uppercase">${t.id}</div>
-                    <div class="opacity-50 text-[8px]">${t.s}</div>
+            document.getElementById('time-grid').innerHTML = TIME_MAP.map(t => `
+                <div class="time-option" id="t-${t.id}" onclick="toggleT('${t.id}')">
+                    <div class="font-bold uppercase">${t.id}</div>
+                    <div class="opacity-50 text-[9px]">${t.s}</div>
                 </div>
             `).join('');
             render();
         }
 
-        function toggleTime(code) {
-            const el = document.getElementById(`btn-${code}`);
-            if(selectedTimeCodes.has(code)) {
-                selectedTimeCodes.delete(code);
-                el.classList.remove('selected');
-            } else {
-                selectedTimeCodes.add(code);
-                el.classList.add('selected');
-            }
+        function toggleT(id) {
+            const el = document.getElementById(`t-${id}`);
+            selectedTimes.has(id) ? selectedTimes.delete(id) : selectedTimes.add(id);
+            el.classList.toggle('selected');
         }
 
         function render() {
@@ -226,7 +205,7 @@
             TIME_MAP.forEach(t => {
                 const sidebar = document.createElement('div');
                 sidebar.className = 'cell time-cell';
-                sidebar.innerHTML = `<span class="text-white font-bold text-[10px]">${t.s}</span><span class="text-white/30 text-[8px]">كود ${t.id}</span>`;
+                sidebar.innerHTML = `<span class="text-white font-bold">${t.s}</span><span class="text-white/30 text-[9px]">كود ${t.id}</span>`;
                 grid.appendChild(sidebar);
 
                 for (let d = 0; d < 5; d++) {
@@ -237,8 +216,8 @@
                         const color = THEMES[item.name.charCodeAt(0) % THEMES.length];
                         box.innerHTML = `
                             <div class="course-chip" style="background: ${color}20; border-color: ${color}50">
-                                <div class="delete-btn no-print" onclick="removeSubject('${t.id}', ${d})">×</div>
-                                <span class="text-[8px] font-bold text-white/40 uppercase">${item.room}</span>
+                                <div class="delete-btn no-print" onclick="removeSub('${t.id}', ${d})">×</div>
+                                <span class="text-[8px] font-bold text-white/40 uppercase mb-1">${item.room}</span>
                                 <span class="text-[11px] font-black text-white leading-tight">${item.name}</span>
                             </div>`;
                     }
@@ -251,43 +230,38 @@
             const name = document.getElementById('course').value.trim().toUpperCase();
             const room = document.getElementById('room').value.trim() || 'HALL';
             const day = document.getElementById('day').value;
-            if(!name || selectedTimeCodes.size === 0) return alert("أدخل اسم المادة واختر كود الوقت");
+            if(!name || selectedTimes.size === 0) return alert("البيانات ناقصة");
             
-            selectedTimeCodes.forEach(code => {
+            selectedTimes.forEach(code => {
                 db = db.filter(x => !(x.code === code && x.day == day));
                 db.push({ name, room, day, code });
             });
             
-            localStorage.setItem('ev_final_v7', JSON.stringify(db));
-            selectedTimeCodes.clear();
+            localStorage.setItem('ev_mobile_v8', JSON.stringify(db));
+            selectedTimes.clear();
             document.querySelectorAll('.time-option').forEach(el => el.classList.remove('selected'));
             document.getElementById('course').value = '';
             render();
         }
 
-        function removeSubject(code, day) {
+        function removeSub(code, day) {
             db = db.filter(x => !(x.code === code && x.day == day));
-            localStorage.setItem('ev_final_v7', JSON.stringify(db));
+            localStorage.setItem('ev_mobile_v8', JSON.stringify(db));
             render();
         }
 
         async function downloadPDF() {
             const el = document.getElementById('capture');
             el.classList.add('rendering');
-            
             const opt = {
-                margin: 0.2,
+                margin: 0.1,
                 filename: 'Engineering_Vision_Schedule.pdf',
                 image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 3, backgroundColor: '#050710', useCORS: true },
+                html2canvas: { scale: 3, backgroundColor: '#050710' },
                 jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
             };
-
-            try {
-                await html2pdf().set(opt).from(el).save();
-            } finally {
-                el.classList.remove('rendering');
-            }
+            await html2pdf().set(opt).from(el).save();
+            el.classList.remove('rendering');
         }
 
         init();
