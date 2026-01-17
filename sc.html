@@ -16,15 +16,14 @@
     .input-group input { width: 100%; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 10px; font-weight: 600; margin-bottom: 10px; transition: 0.3s; }
     .input-group input:focus { border-color: var(--primary); outline: none; background: white; }
     
-    .day-btn { flex: 1; min-width: 60px; padding: 8px; background: white; border: 2px solid #e2e8f0; border-radius: 10px; text-align: center; cursor: pointer; font-size: 12px; font-weight: 700; transition: 0.3s; }
+    .day-btn { flex: 1; min-width: 60px; padding: 8px; background: white; border: 2px solid #e2e8f0; border-radius: 10px; text-align: center; cursor: pointer; font-size: 12px; font-weight: 700; }
     .day-btn.active { background: #10b981; color: white; border-color: #10b981; }
 
     .time-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
     .time-btn { padding: 6px; font-size: 11px; background: white; border: 1px solid #cbd5e1; border-radius: 8px; text-align: center; cursor: pointer; font-weight: 600; }
-    .time-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
+    .time-btn.selected { background: var(--primary); color: white; }
 
-    /* تصميم الجدول */
-    .schedule-card { background: white; border-radius: 20px; padding: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; position: relative; }
+    .schedule-card { background: white; border-radius: 20px; padding: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: relative; }
     .grid-table { display: grid; grid-template-columns: 0.7fr repeat(5, 1fr); gap: 3px; width: 100%; }
     
     .header-pill { background: #1e293b; color: white; border-radius: 6px; padding: 6px 2px; font-weight: 700; font-size: 10px; text-align: center; }
@@ -35,19 +34,18 @@
     
     .empty-cell { background: #fafafa; border: 0.5px dashed #cbd5e1; opacity: 0.5; }
     
-    .course-card { width: 100%; height: 100%; padding: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-radius: 6px; }
-    .c-name { font-weight: 900; font-size: 9px; line-height: 1.1; margin-top: 2px; }
-    .c-room { font-size: 7px; font-weight: 700; text-transform: uppercase; }
+    .course-card { width: 100%; height: 100%; padding: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-radius: 6px; }
+    .c-name { font-weight: 900; font-size: 9px; line-height: 1.1; }
+    .c-room { font-size: 7.5px; font-weight: 800; margin-bottom: 2px; background: rgba(0,0,0,0.05); padding: 0 4px; border-radius: 3px; }
 
-    /* وضع التعديل والحذف */
     .delete-mode .delete-icon { display: flex !important; }
-    .delete-icon { position: absolute; top: -5px; left: -5px; background: #ef4444; color: white; width: 18px; height: 18px; border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; z-index: 30; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    .delete-icon { position: absolute; top: -5px; left: -5px; background: #ef4444; color: white; width: 18px; height: 18px; border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 30; border: 2px solid white; font-size: 12px; }
 
-    .btn-main { width: 100%; background: var(--primary); color: white; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 15px; margin-top: 10px; box-shadow: 0 4px 10px rgba(30, 64, 175, 0.3); }
+    .btn-main { width: 100%; background: var(--primary); color: white; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 15px; margin-top: 10px; }
     
-    /* تنسيق الطباعة الثابت لضمان الأناقة */
-    #pdf-template { width: 800px; padding: 40px; background: white; position: absolute; left: -9999px; top: -9999px; }
-    .pdf-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; margin-bottom: 20px; }
+    /* تحسينات الـ PDF */
+    .pdf-export-mode { padding: 30px !important; width: 900px !important; border-radius: 0 !important; }
+    .pdf-export-mode .no-print { display: none !important; }
   </style>
 </head>
 <body>
@@ -56,8 +54,8 @@
   
   <div class="control-panel no-print">
     <div class="input-group">
-      <input id="courseName" type="text" placeholder="اسم المادة (مثال: رياضيات 101)" />
-      <input id="roomName" type="text" placeholder="رقم القاعة" />
+      <input id="courseName" type="text" placeholder="اسم المادة" />
+      <input id="roomName" type="text" placeholder="القاعة (اختياري)" />
     </div>
 
     <div class="flex gap-2 mb-3 overflow-x-auto pb-2">
@@ -72,7 +70,7 @@
     <button onclick="saveEntry()" class="btn-main">إضافة المادة للجدول</button>
     
     <div class="flex gap-2 mt-4">
-      <button onclick="generateCleanPDF()" class="flex-1 bg-slate-800 text-white py-3 rounded-xl font-bold text-sm shadow-lg">حفظ كملف PDF أنيق ✨</button>
+      <button onclick="generatePDF()" class="flex-1 bg-slate-800 text-white py-3 rounded-xl font-bold text-sm shadow-lg">حفظ كملف PDF ✨</button>
       <button onclick="resetAll()" class="px-4 bg-red-50 text-red-500 rounded-xl font-bold text-sm">تصفية</button>
     </div>
   </div>
@@ -81,37 +79,20 @@
     <div class="flex justify-between items-center mb-4">
         <div>
             <h1 class="text-blue-900 font-black text-xl">Engineering Vision</h1>
-            <p class="text-gray-400 text-[10px]">نظام الجدولة الذكي</p>
+            <p class="text-gray-400 text-[10px]">نظام الجدولة الأكاديمي</p>
         </div>
-        <div class="text-left">
-            <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-[10px] font-bold">2026 Season</span>
+        <div id="pdf-date" class="text-left hidden pdf-only">
+             <span class="text-slate-500 text-[10px] font-bold" id="current-date-label"></span>
         </div>
     </div>
     
     <div id="grid-container" class="grid-table"></div>
     
-    <button onclick="toggleEditMode()" class="no-print mt-6 w-full py-2 border-2 border-dashed border-slate-200 text-slate-400 rounded-xl text-[11px] font-bold hover:bg-slate-50 transition-all">
-       تعديل أو حذف المواد من الجدول
+    <button id="edit-toggle-btn" onclick="toggleEditMode()" class="no-print mt-6 w-full py-2 border-2 border-dashed border-slate-200 text-slate-400 rounded-xl text-[11px] font-bold hover:bg-slate-50">
+       تفعيل وضع الحذف والتعديل
     </button>
   </div>
 
-</div>
-
-<div id="pdf-template">
-    <div class="pdf-header">
-        <div>
-            <h1 style="color: #1e40af; font-size: 28px; font-weight: 900; margin: 0;">ENGINEERING VISION</h1>
-            <p style="color: #64748b; font-size: 14px; margin: 5px 0 0 0;">Academic Course Schedule - الفصل الدراسي الحالي</p>
-        </div>
-        <div style="text-align: left; color: #94a3b8; font-size: 12px;">
-            تاريخ التصدير<br>
-            <span id="export-date" style="font-weight: bold; color: #1e293b;"></span>
-        </div>
-    </div>
-    <div id="pdf-grid" class="grid-table"></div>
-    <div style="margin-top: 30px; text-align: center; border-top: 1px solid #f1f5f9; padding-top: 20px;">
-        <p style="color: #cbd5e1; font-size: 10px;">تم إنشاء هذا الجدول بواسطة نظام Engineering Vision الذكي</p>
-    </div>
 </div>
 
 <script>
@@ -123,7 +104,7 @@
     { id: "59", s: "04:15", e: "05:05" }, { id: "60", s: "05:15", e: "06:05" }
   ];
   const DAYS_NAMES = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس"];
-  let scheduleData = JSON.parse(localStorage.getItem("ev_final_v6")) || [];
+  let scheduleData = JSON.parse(localStorage.getItem("ev_final_v7")) || [];
   let currentSelectedDays = new Map();
   let editMode = false;
 
@@ -137,8 +118,8 @@
     container.innerHTML = "";
     currentSelectedDays.forEach((slots, dayIdx) => {
       container.innerHTML += `
-        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 animate-in slide-in-from-top-2">
-          <div class="text-[12px] font-bold text-blue-800 mb-2">توقيت يوم ${DAYS_NAMES[dayIdx]}</div>
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+          <div class="text-[12px] font-bold text-blue-800 mb-2">يوم ${DAYS_NAMES[dayIdx]}</div>
           <div class="time-grid">${TIME_SLOTS.map(t => `<div class="time-btn ${slots.has(t.id) ? 'selected' : ''}" onclick="toggleTime(${dayIdx}, '${t.id}', this)">${t.id}</div>`).join("")}</div>
         </div>`;
     });
@@ -159,10 +140,11 @@
   function toggleEditMode() {
     editMode = !editMode;
     document.getElementById("display-area").classList.toggle("delete-mode", editMode);
+    document.getElementById("edit-toggle-btn").innerText = editMode ? "إيقاف وضع الحذف" : "تفعيل وضع الحذف والتعديل";
   }
 
-  function createGrid(containerId, isPdf = false) {
-    const container = document.getElementById(containerId);
+  function renderTable() {
+    const container = document.getElementById("grid-container");
     container.innerHTML = `<div class="header-pill">الوقت</div>` + DAYS_NAMES.map(d => `<div class="header-pill">${d}</div>`).join("");
 
     TIME_SLOTS.forEach(slot => {
@@ -172,11 +154,13 @@
         if (!entry) {
           container.innerHTML += `<div class="cell-base empty-cell"></div>`;
         } else {
+          // تعديل هنا: لا تظهر القاعة إذا كانت فارغة
+          const roomHtml = entry.room ? `<div class="c-room">قاعة: ${entry.room}</div>` : '';
           container.innerHTML += `
             <div class="cell-base" style="background:${entry.color.bg}; border: 1px solid ${entry.color.border}">
-              ${!isPdf ? `<div class="delete-icon" onclick="deleteEntireCourse('${entry.name}')">×</div>` : ''}
+              <div class="delete-icon" onclick="deleteEntireCourse('${entry.name}')">×</div>
               <div class="course-card" style="color:${entry.color.text}">
-                <div class="c-room">${entry.room}</div>
+                ${roomHtml}
                 <div class="c-name">${entry.name}</div>
               </div>
             </div>`;
@@ -186,17 +170,17 @@
   }
 
   function deleteEntireCourse(courseName) {
-    if(confirm(`هل تريد حذف مادة "${courseName}" من كل الجدول؟`)) {
+    if(confirm(`حذف مادة "${courseName}" من الجدول؟`)) {
         scheduleData = scheduleData.filter(x => x.name !== courseName);
-        localStorage.setItem("ev_final_v6", JSON.stringify(scheduleData));
+        localStorage.setItem("ev_final_v7", JSON.stringify(scheduleData));
         renderTable();
     }
   }
 
   function saveEntry() {
     const name = document.getElementById("courseName").value.trim();
-    const room = document.getElementById("roomName").value.trim() || "قاعة غير محددة";
-    if (!name || currentSelectedDays.size === 0) return alert("أدخل اسم المادة وحدد الأيام والفترات أولاً");
+    const room = document.getElementById("roomName").value.trim(); // تترك فارغة إذا لم يدخل الطالب شيئاً
+    if (!name || currentSelectedDays.size === 0) return alert("أكمل البيانات أولاً");
 
     const courseColor = generateCourseColor();
     currentSelectedDays.forEach((slots, dayIdx) => {
@@ -206,37 +190,42 @@
       });
     });
 
-    localStorage.setItem("ev_final_v6", JSON.stringify(scheduleData));
+    localStorage.setItem("ev_final_v7", JSON.stringify(scheduleData));
     location.reload();
   }
 
-  async function generateCleanPDF() {
-    const btn = event.target;
-    btn.innerText = "جاري التحضير...";
+  async function generatePDF() {
+    const element = document.getElementById("display-area");
+    const dateLabel = document.getElementById("current-date-label");
+    const dateDiv = document.getElementById("pdf-date");
     
-    // إعداد القالب المخفي
-    document.getElementById("export-date").innerText = new Date().toLocaleDateString('ar-SA');
-    createGrid("pdf-grid", true);
+    // إخفاء وضع التعديل قبل الحفظ
+    if(editMode) toggleEditMode();
+    
+    // تحضير للعرض في الـ PDF
+    dateLabel.innerText = "تم التصدير في: " + new Date().toLocaleDateString('ar-SA');
+    dateDiv.classList.remove('hidden');
+    element.classList.add('pdf-export-mode');
 
-    const element = document.getElementById("pdf-template");
     const opt = {
-      margin: 0,
-      filename: 'My_Academic_Schedule.pdf',
+      margin: 5,
+      filename: 'My_Schedule.pdf',
       image: { type: 'jpeg', quality: 1 },
-      html2canvas: { scale: 4, useCORS: true, letterRendering: true },
+      html2canvas: { scale: 3, useCORS: true, logging: false },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
     try {
       await html2pdf().set(opt).from(element).save();
     } finally {
-      btn.innerText = "حفظ كملف PDF";
+      // إعادة الشكل للطبيعي
+      element.classList.remove('pdf-export-mode');
+      dateDiv.classList.add('hidden');
     }
   }
 
-  function resetAll() { if(confirm("حذف كل البيانات؟")) { localStorage.clear(); location.reload(); } }
-  function renderTable() { createGrid("grid-container", false); }
-
+  function resetAll() { if(confirm("حذف كل الجدول؟")) { localStorage.clear(); location.reload(); } }
+  
   renderTable();
 </script>
 </body>
