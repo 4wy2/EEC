@@ -1,270 +1,425 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>مُنسق الجداول | Engineering Vision</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>مُنسق الجداول | Engineering Vision</title>
 
-    <style>
-        :root {
-            --bg-deep: #050710;
-            --panel-bg: #0b1126;
-            --accent-blue: #3b82f6;
-            --glass-border: rgba(255, 255, 255, 0.08);
-        }
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: var(--bg-deep);
-            background-image: radial-gradient(circle at 50% -20%, #1e293b 0%, #050710 100%);
-            color: #e2e8f0;
-            margin: 0; padding: 10px;
-            overflow-x: hidden;
-        }
+  <style>
+    :root {
+      --bg-deep: #050710;
+      --panel-bg: #0b1126;
+      --accent-blue: #3b82f6;
+      --glass-border: rgba(255, 255, 255, 0.08);
+    }
 
-        /* حاوية الجدول المرنة */
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-            border-radius: 16px;
-            background: var(--panel-bg);
-            border: 1px solid var(--glass-border);
-            -webkit-overflow-scrolling: touch;
-        }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg-deep);
+      background-image: radial-gradient(circle at 50% -20%, #1e293b 0%, #050710 100%);
+      color: #e2e8f0;
+      margin: 0; padding: 10px;
+      overflow-x: hidden;
+    }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: 75px repeat(5, minmax(120px, 1fr));
-            min-width: 700px; /* لضمان وضوح الأعمدة في الجوال */
-        }
+    /* حاوية */
+    .table-container {
+      width: 100%;
+      overflow-x: hidden; /* مهم: ما نبغى سحب بالجوال */
+      border-radius: 16px;
+      background: var(--panel-bg);
+      border: 1px solid var(--glass-border);
+      -webkit-overflow-scrolling: touch;
+    }
 
-        .header-cell {
-            background: rgba(59, 130, 246, 0.15);
-            color: var(--accent-blue);
-            font-weight: 800;
-            padding: 12px 5px;
-            text-align: center;
-            border-bottom: 2px solid var(--accent-blue);
-            position: sticky; top: 0; z-index: 10;
-        }
+    /* ===== Desktop/Tablet Grid ===== */
+    .grid-container {
+      display: grid;
+      grid-template-columns: 75px repeat(5, minmax(120px, 1fr));
+      width: 100%;
+    }
 
-        .cell {
-            border: 1px solid var(--glass-border);
-            min-height: 80px;
-            padding: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
+    .header-cell {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent-blue);
+      font-weight: 800;
+      padding: 12px 5px;
+      text-align: center;
+      border-bottom: 2px solid var(--accent-blue);
+      position: sticky; top: 0; z-index: 10;
+    }
 
-        .time-cell {
-            background: rgba(255, 255, 255, 0.02);
-            flex-direction: column;
-            border-right: 3px solid var(--accent-blue);
-            font-size: 10px;
-        }
+    .cell {
+      border: 1px solid var(--glass-border);
+      min-height: 80px;
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
 
-        .course-chip {
-            width: 100%; height: 100%; border-radius: 8px;
-            padding: 6px; display: flex; flex-direction: column;
-            justify-content: center; text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-        }
+    .time-cell {
+      background: rgba(255, 255, 255, 0.02);
+      flex-direction: column;
+      border-right: 3px solid var(--accent-blue);
+      font-size: 10px;
+    }
 
-        /* مدخلات البيانات */
-        .custom-input {
-            background: rgba(5, 7, 16, 0.8);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px; padding: 12px; color: white; width: 100%;
-        }
+    .course-chip {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
 
-        .time-option {
-            cursor: pointer; border-radius: 8px; padding: 8px;
-            border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03);
-            text-align: center; font-size: 11px; transition: 0.2s;
-        }
-        .time-option.selected {
-            background: var(--accent-blue) !important; color: white; font-weight: bold;
-        }
+    /* مدخلات */
+    .custom-input {
+      background: rgba(5, 7, 16, 0.8);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 12px;
+      color: white;
+      width: 100%;
+    }
 
-        /* وضعية الطباعة والـ PDF */
-        #capture { background: var(--bg-deep); width: 100%; }
-        .pdf-header { display: none; }
-        .rendering .pdf-header { display: block; padding: 20px; text-align: center; }
+    .time-option {
+      cursor: pointer;
+      border-radius: 8px;
+      padding: 8px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.03);
+      text-align: center;
+      font-size: 11px;
+      transition: 0.2s;
+      user-select: none;
+    }
 
-        .delete-btn {
-            position: absolute; top: 2px; left: 2px;
-            width: 18px; height: 18px; background: #ef4444;
-            color: white; border-radius: 50%; display: none;
-            cursor: pointer; font-size: 10px; align-items: center; justify-content: center;
-        }
-        .cell:hover .delete-btn { display: flex; }
+    .time-option.selected {
+      background: var(--accent-blue) !important;
+      color: white;
+      font-weight: bold;
+    }
 
-        @media (max-width: 640px) {
-            .grid-container { min-width: 650px; }
-            .header-cell { font-size: 12px; }
-            .course-chip span { font-size: 10px !important; }
-        }
-    </style>
+    /* PDF */
+    #capture { background: var(--bg-deep); width: 100%; }
+    .pdf-header { display: none; }
+    .rendering .pdf-header { display: block; padding: 20px; text-align: center; }
+
+    .delete-btn {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      background: #ef4444;
+      color: white;
+      border-radius: 50%;
+      display: none;
+      cursor: pointer;
+      font-size: 10px;
+      align-items: center;
+      justify-content: center;
+      line-height: 18px;
+      text-align: center;
+      z-index: 5;
+    }
+
+    .cell:hover .delete-btn { display: flex; }
+
+    /* ===== Mobile Cards (بدون سحب) ===== */
+    @media (max-width: 640px) {
+      .grid-container {
+        display: block;
+        min-width: 0 !important;
+      }
+
+      .grid-container .header-cell { display: none; }
+
+      .time-row-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        margin: 10px 0;
+        overflow: hidden;
+      }
+
+      .time-row-head {
+        padding: 12px 12px;
+        background: rgba(59,130,246,0.12);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .day-row {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 10px;
+        padding: 10px 12px;
+        border-top: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .day-label {
+        color: rgba(226,232,240,0.6);
+        font-weight: 800;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      .day-cell {
+        min-height: 54px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .course-chip span { font-size: 12px !important; }
+    }
+  </style>
 </head>
+
 <body>
+  <div class="max-w-6xl mx-auto py-4">
+    <header class="flex justify-between items-center mb-6 px-2 no-print">
+      <h1 class="text-xl font-black text-white italic">ENGINEERING <span class="text-blue-500">VISION</span></h1>
+      <button onclick="downloadPDF()" class="bg-blue-600 text-white px-5 py-2 rounded-lg font-bold text-sm shadow-lg">
+        <i class="fas fa-file-pdf ml-1"></i> حفظ PDF (مقاس جوال)
+      </button>
+    </header>
 
-    <div class="max-w-6xl mx-auto py-4">
-        <header class="flex justify-between items-center mb-6 px-2 no-print">
-            <h1 class="text-xl font-black text-white italic">ENGINEERING <span class="text-blue-500">VISION</span></h1>
-            <button onclick="downloadPDF()" class="bg-blue-600 text-white px-5 py-2 rounded-lg font-bold text-sm shadow-lg">
-                <i class="fas fa-file-pdf ml-1"></i> حفظ PDF
-            </button>
-        </header>
-
-        <div class="bg-white/5 backdrop-blur-md border border-white/10 p-5 rounded-2xl mb-6 no-print">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="space-y-3">
-                    <input type="text" id="course" placeholder="اسم المادة" class="custom-input uppercase font-bold">
-                    <input type="text" id="room" placeholder="القاعة" class="custom-input">
-                    <select id="day" class="custom-input">
-                        <option value="0">الأحد</option><option value="1">الإثنين</option>
-                        <option value="2">الثلاثاء</option><option value="3">الأربعاء</option>
-                        <option value="4">الخميس</option>
-                    </select>
-                </div>
-                <div class="md:col-span-2">
-                    <label class="text-[10px] text-blue-400 font-bold mb-2 block uppercase">اختر الأوقات</label>
-                    <div id="time-grid" class="grid grid-cols-3 sm:grid-cols-5 gap-2"></div>
-                    <button onclick="addSubject()" class="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-bold transition-all">
-                        تحديث الجدول
-                    </button>
-                </div>
-            </div>
+    <div class="bg-white/5 backdrop-blur-md border border-white/10 p-5 rounded-2xl mb-6 no-print">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="space-y-3">
+          <input type="text" id="course" placeholder="اسم المادة" class="custom-input uppercase font-bold">
+          <input type="text" id="room" placeholder="القاعة" class="custom-input">
+          <select id="day" class="custom-input">
+            <option value="0">الأحد</option>
+            <option value="1">الإثنين</option>
+            <option value="2">الثلاثاء</option>
+            <option value="3">الأربعاء</option>
+            <option value="4">الخميس</option>
+          </select>
         </div>
 
-        <div class="mb-2 px-2 no-print">
-            <p class="text-white/40 text-[10px]"><i class="fas fa-info-circle ml-1"></i> اسحب الجدول لليسار لمشاهدة باقي الأيام، أو اضغط حفظ PDF للتحميل.</p>
+        <div class="md:col-span-2">
+          <label class="text-[10px] text-blue-400 font-bold mb-2 block uppercase">اختر الأوقات</label>
+          <div id="time-grid" class="grid grid-cols-3 sm:grid-cols-5 gap-2"></div>
+
+          <button onclick="addSubject()"
+            class="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-bold transition-all">
+            تحديث الجدول
+          </button>
         </div>
-        
-        <div class="table-container">
-            <div id="capture">
-                <div class="pdf-header">
-                    <h2 style="color: white; font-size: 20px; font-weight: 900;">Engineering Vision | الجدول الدراسي</h2>
-                    <p style="color: #3b82f6; font-size: 10px;">Academic Schedule 2026</p>
-                </div>
-                <div class="grid-container" id="grid">
-                    <div class="header-cell">الوقت</div>
-                    <div class="header-cell">الأحد</div>
-                    <div class="header-cell">الإثنين</div>
-                    <div class="header-cell">الثلاثاء</div>
-                    <div class="header-cell">الأربعاء</div>
-                    <div class="header-cell">الخميس</div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <script>
-        const TIME_MAP = [
-            { id: "54", s: "07:15 AM" }, { id: "86", s: "08:15 AM" },
-            { id: "44", s: "09:15 AM" }, { id: "80", s: "10:15 AM" },
-            { id: "15", s: "11:15 AM" }, { id: "47", s: "12:15 PM" },
-            { id: "63", s: "01:15 PM" }, { id: "52", s: "02:15 PM" },
-            { id: "51", s: "03:15 PM" }
-        ];
+    <div class="mb-2 px-2 no-print">
+      <p class="text-white/40 text-[10px]">
+        <i class="fas fa-info-circle ml-1"></i>
+        في الجوال: العرض تلقائي بدون سحب. حفظ PDF يطلع نسخة مناسبة للجوال للمشاركة.
+      </p>
+    </div>
 
-        const THEMES = ["#3b82f6", "#8b5cf6", "#10b981", "#f59e0b", "#ef4444", "#ec4899"];
-        let db = JSON.parse(localStorage.getItem('ev_mobile_v8')) || [];
-        let selectedTimes = new Set();
+    <div class="table-container">
+      <div id="capture">
+        <div class="pdf-header">
+          <h2 style="color: white; font-size: 20px; font-weight: 900;">Engineering Vision | الجدول الدراسي</h2>
+          <p style="color: #3b82f6; font-size: 10px;">Academic Schedule 2026</p>
+        </div>
 
-        function init() {
-            document.getElementById('time-grid').innerHTML = TIME_MAP.map(t => `
-                <div class="time-option" id="t-${t.id}" onclick="toggleT('${t.id}')">
-                    <div class="font-bold uppercase">${t.id}</div>
-                    <div class="opacity-50 text-[9px]">${t.s}</div>
+        <div class="grid-container" id="grid">
+          <!-- يتم البناء عبر JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TIME_MAP = [
+      { id: "54", s: "07:15 AM" }, { id: "86", s: "08:15 AM" },
+      { id: "44", s: "09:15 AM" }, { id: "80", s: "10:15 AM" },
+      { id: "15", s: "11:15 AM" }, { id: "47", s: "12:15 PM" },
+      { id: "63", s: "01:15 PM" }, { id: "52", s: "02:15 PM" },
+      { id: "51", s: "03:15 PM" }
+    ];
+
+    const DAY_NAMES = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس"];
+    const THEMES = ["#3b82f6", "#8b5cf6", "#10b981", "#f59e0b", "#ef4444", "#ec4899"];
+
+    let db = JSON.parse(localStorage.getItem('ev_mobile_v9')) || [];
+    let selectedTimes = new Set();
+
+    function init() {
+      document.getElementById('time-grid').innerHTML = TIME_MAP.map(t => `
+        <div class="time-option" id="t-${t.id}" onclick="toggleT('${t.id}')">
+          <div class="font-bold uppercase">${t.id}</div>
+          <div class="opacity-50 text-[9px]">${t.s}</div>
+        </div>
+      `).join('');
+
+      render();
+      window.addEventListener('resize', () => render());
+    }
+
+    function toggleT(id) {
+      const el = document.getElementById(`t-${id}`);
+      if (selectedTimes.has(id)) selectedTimes.delete(id);
+      else selectedTimes.add(id);
+      el.classList.toggle('selected');
+    }
+
+    function render() {
+      const grid = document.getElementById('grid');
+      const isMobile = window.matchMedia("(max-width: 640px)").matches;
+
+      grid.innerHTML = '';
+
+      if (!isMobile) {
+        // ===== Desktop/Tablet Grid =====
+        const headersHTML = `
+          <div class="header-cell">الوقت</div>
+          ${DAY_NAMES.map(d => `<div class="header-cell">${d}</div>`).join('')}
+        `;
+        grid.insertAdjacentHTML('beforeend', headersHTML);
+
+        TIME_MAP.forEach(t => {
+          const sidebar = document.createElement('div');
+          sidebar.className = 'cell time-cell';
+          sidebar.innerHTML = `
+            <span class="text-white font-bold">${t.s}</span>
+            <span class="text-white/30 text-[9px]">كود ${t.id}</span>
+          `;
+          grid.appendChild(sidebar);
+
+          for (let d = 0; d < 5; d++) {
+            const box = document.createElement('div');
+            box.className = 'cell';
+
+            const item = db.find(x => x.code === t.id && x.day == d);
+            if (item) {
+              const color = THEMES[item.name.charCodeAt(0) % THEMES.length];
+              box.innerHTML = `
+                <div class="course-chip" style="background: ${color}20; border-color: ${color}50">
+                  <div class="delete-btn no-print" onclick="removeSub('${t.id}', ${d})">×</div>
+                  <span class="text-[8px] font-bold text-white/40 uppercase mb-1">${item.room}</span>
+                  <span class="text-[11px] font-black text-white leading-tight">${item.name}</span>
                 </div>
-            `).join('');
-            render();
+              `;
+            }
+
+            grid.appendChild(box);
+          }
+        });
+
+        return;
+      }
+
+      // ===== Mobile Cards =====
+      TIME_MAP.forEach(t => {
+        const card = document.createElement('div');
+        card.className = 'time-row-card';
+
+        card.innerHTML = `
+          <div class="time-row-head">
+            <div class="text-white font-black">${t.s}</div>
+            <div class="text-white/40 text-[11px] font-bold">كود ${t.id}</div>
+          </div>
+        `;
+
+        for (let d = 0; d < 5; d++) {
+          const item = db.find(x => x.code === t.id && x.day == d);
+
+          let content = `<div class="text-white/15 text-[12px] font-bold">—</div>`;
+          if (item) {
+            const color = THEMES[item.name.charCodeAt(0) % THEMES.length];
+            content = `
+              <div class="course-chip" style="background: ${color}20; border-color: ${color}50">
+                <div class="delete-btn no-print" onclick="removeSub('${t.id}', ${d})">×</div>
+                <span class="text-[10px] font-bold text-white/50 uppercase mb-1">${item.room}</span>
+                <span class="text-[13px] font-black text-white leading-tight">${item.name}</span>
+              </div>
+            `;
+          }
+
+          const row = document.createElement('div');
+          row.className = 'day-row';
+          row.innerHTML = `
+            <div class="day-label">${DAY_NAMES[d]}</div>
+            <div class="day-cell">${content}</div>
+          `;
+
+          card.appendChild(row);
         }
 
-        function toggleT(id) {
-            const el = document.getElementById(`t-${id}`);
-            selectedTimes.has(id) ? selectedTimes.delete(id) : selectedTimes.add(id);
-            el.classList.toggle('selected');
-        }
+        grid.appendChild(card);
+      });
+    }
 
-        function render() {
-            const grid = document.getElementById('grid');
-            const headers = Array.from(grid.querySelectorAll('.header-cell'));
-            grid.innerHTML = '';
-            headers.forEach(h => grid.appendChild(h));
+    function addSubject() {
+      const name = document.getElementById('course').value.trim().toUpperCase();
+      const room = document.getElementById('room').value.trim() || 'HALL';
+      const day = document.getElementById('day').value;
 
-            TIME_MAP.forEach(t => {
-                const sidebar = document.createElement('div');
-                sidebar.className = 'cell time-cell';
-                sidebar.innerHTML = `<span class="text-white font-bold">${t.s}</span><span class="text-white/30 text-[9px]">كود ${t.id}</span>`;
-                grid.appendChild(sidebar);
+      if (!name || selectedTimes.size === 0) return alert("البيانات ناقصة");
 
-                for (let d = 0; d < 5; d++) {
-                    const box = document.createElement('div');
-                    box.className = 'cell';
-                    const item = db.find(x => x.code === t.id && x.day == d);
-                    if (item) {
-                        const color = THEMES[item.name.charCodeAt(0) % THEMES.length];
-                        box.innerHTML = `
-                            <div class="course-chip" style="background: ${color}20; border-color: ${color}50">
-                                <div class="delete-btn no-print" onclick="removeSub('${t.id}', ${d})">×</div>
-                                <span class="text-[8px] font-bold text-white/40 uppercase mb-1">${item.room}</span>
-                                <span class="text-[11px] font-black text-white leading-tight">${item.name}</span>
-                            </div>`;
-                    }
-                    grid.appendChild(box);
-                }
-            });
-        }
+      selectedTimes.forEach(code => {
+        db = db.filter(x => !(x.code === code && x.day == day));
+        db.push({ name, room, day, code });
+      });
 
-        function addSubject() {
-            const name = document.getElementById('course').value.trim().toUpperCase();
-            const room = document.getElementById('room').value.trim() || 'HALL';
-            const day = document.getElementById('day').value;
-            if(!name || selectedTimes.size === 0) return alert("البيانات ناقصة");
-            
-            selectedTimes.forEach(code => {
-                db = db.filter(x => !(x.code === code && x.day == day));
-                db.push({ name, room, day, code });
-            });
-            
-            localStorage.setItem('ev_mobile_v8', JSON.stringify(db));
-            selectedTimes.clear();
-            document.querySelectorAll('.time-option').forEach(el => el.classList.remove('selected'));
-            document.getElementById('course').value = '';
-            render();
-        }
+      localStorage.setItem('ev_mobile_v9', JSON.stringify(db));
 
-        function removeSub(code, day) {
-            db = db.filter(x => !(x.code === code && x.day == day));
-            localStorage.setItem('ev_mobile_v8', JSON.stringify(db));
-            render();
-        }
+      selectedTimes.clear();
+      document.querySelectorAll('.time-option').forEach(el => el.classList.remove('selected'));
+      document.getElementById('course').value = '';
+      render();
+    }
 
-        async function downloadPDF() {
-            const el = document.getElementById('capture');
-            el.classList.add('rendering');
-            const opt = {
-                margin: 0.1,
-                filename: 'Engineering_Vision_Schedule.pdf',
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 3, backgroundColor: '#050710' },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
-            };
-            await html2pdf().set(opt).from(el).save();
-            el.classList.remove('rendering');
-        }
+    function removeSub(code, day) {
+      db = db.filter(x => !(x.code === code && x.day == day));
+      localStorage.setItem('ev_mobile_v9', JSON.stringify(db));
+      render();
+    }
 
-        init();
-    </script>
+    async function downloadPDF() {
+      const el = document.getElementById('capture');
+      el.classList.add('rendering');
+
+      // مقاس قريب من شاشة الجوال (Portrait)
+      const phoneFormat = [360, 640]; // pt
+
+      const opt = {
+        margin: 0,
+        filename: 'Engineering_Vision_Schedule_Mobile.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: {
+          scale: 3,
+          backgroundColor: '#050710',
+          windowWidth: el.scrollWidth
+        },
+        jsPDF: { unit: 'pt', format: phoneFormat, orientation: 'portrait' }
+      };
+
+      await html2pdf().set(opt).from(el).save();
+      el.classList.remove('rendering');
+    }
+
+    init();
+  </script>
 </body>
 </html>
