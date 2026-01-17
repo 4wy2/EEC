@@ -66,28 +66,32 @@
 
     // استقبال البيانات من تطبيق بايثون
    window.addEventListener('message', function(event) {
-    if (event.data.type === 'ocr_result') {
-        const { slots, course, auto_save } = event.data;
+    if (event.data.type === 'ocr_full_schedule') {
+        const scheduleArray = event.data.data;
         
-        // 1. وضع اسم المادة في الخانة
-        document.getElementById("courseName").value = course;
-        
-        // 2. اختيار يوم الأحد كافتراضي (أو يمكنك تطويره لاحقاً)
-        let dayIdx = 0; 
-        if (!currentSelectedDays.has(dayIdx)) {
-            currentSelectedDays.set(dayIdx, new Set());
-        }
-        
-        // 3. إضافة الفترات
-        slots.forEach(id => currentSelectedDays.get(dayIdx).add(id));
+        scheduleArray.forEach(item => {
+            // تعبئة البيانات لكل مادة مكتشفة
+            const name = item.name;
+            const slots = item.slots;
 
-        // 4. الحفظ التلقائي إذا طلب البايثون ذلك
-        if (auto_save) {
-            setTimeout(() => {
-                saveEntry(); // استدعاء دالة الحفظ التي برمجناها سابقاً
-            }, 500); // تأخير بسيط لضمان تحديث الواجهة
-        }
+            // افتراضياً سنوزع الفترات (تحتاج لتطوير بسيط لربط اليوم بالفترة بدقة)
+            // سأقوم هنا بحفظها لليوم الحالي المختار كبداية
+            let dayIdx = 0; 
+            if (!currentSelectedDays.has(dayIdx)) currentSelectedDays.set(dayIdx, new Set());
+            
+            slots.forEach(id => {
+                currentSelectedDays.get(dayIdx).add(id);
+                // إضافة المادة للبيانات العامة
+                scheduleData = scheduleData.filter(x => !(x.day == dayIdx && x.slotId === id));
+                scheduleData.push({ day: dayIdx, slotId: id, name: name, room: "مكتشف" });
+            });
+        });
+
+        // حفظ وتحديث الجدول فوراً
+        localStorage.setItem("ev_ai_v1", JSON.stringify(scheduleData));
+        location.reload(); // إعادة التحميل لإظهار الجدول كاملاً فوراً
     }
+});
 });
     });
 
