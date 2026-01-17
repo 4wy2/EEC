@@ -126,6 +126,28 @@
 </div>
 
 <script>
+    // الاستماع للرسائل القادمة من تطبيق البايثون (Streamlit)
+window.addEventListener('message', function(event) {
+    if (event.data.type === 'ocr_result') {
+        const slots = event.data.slots;
+        console.log("الفترات المستلمة من الذكاء الاصطناعي:", slots);
+        
+        // تفعيل الفترات تلقائياً في الواجهة
+        // نفترض أن اليوزر اختار اليوم يدوياً أو نختار الأحد كافتراضي
+        let dayIdx = 0; 
+        if (!currentSelectedDays.has(dayIdx)) {
+            currentSelectedDays.set(dayIdx, new Set());
+        }
+        
+        slots.forEach(slotId => {
+            currentSelectedDays.get(dayIdx).add(slotId);
+        });
+
+        // تحديث واجهة الإعدادات لإظهار الفترات المختارة
+        renderConfigs();
+        alert("تم استخراج " + slots.length + " فترات وتفعيلها في يوم الأحد (يمكنك تغيير اليوم)");
+    }
+});
     const TIME_SLOTS = [
         { id: "54", s: "07:15", e: "08:05" }, { id: "86", s: "08:15", e: "09:05" },
         { id: "44", s: "09:15", e: "10:05" }, { id: "80", s: "10:15", e: "11:05" },
