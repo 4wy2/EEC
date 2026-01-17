@@ -38,6 +38,15 @@
     
     @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     .animate-scale { animation: scaleIn 0.3s ease-out forwards; }
+    .disclaimer {
+  margin-top: 30px;
+  padding: 10px;
+  font-size: 12px;
+  color: #d1d5db;
+  text-align: center;
+  opacity: 0.7;
+}
+
   </style>
 </head>
 
@@ -323,7 +332,14 @@
 
     document.onkeydown = (e) => { if (e.key === 'Escape') { closeSidebar(); closeUploadModal(); } };
   </script>
+  <div class="disclaimer">
+  <p>
+    هذا الموقع مبادرة طلابية مساعدة، وليس جهة رسمية ولا يُعد بديلًا عن أنظمة الكلية.
+    لا يتم حفظ أي بيانات شخصية، وجميع المعلومات المعروضة مأخوذة من مصادر متاحة ورسمية.
+    في حال وجود أي ملاحظة أو تصحيح، نرحب بالتواصل.
+  </p>
+</div>
+
 </body>
 </html>
-
 
