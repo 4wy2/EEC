@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مُنسق الجداول الاحترافي | Engineering Vision</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --bg-deep: #050710;
+            --panel-bg: #0b1126;
+            --accent-blue: #3b82f6;
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg-deep);
+            background-image: radial-gradient(circle at 50% -20%, #1e293b 0%, #050710 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            margin: 0; padding: 20px;
+        }
+
+        .glass-card {
+            background: rgba(11, 17, 38, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+        }
+
+        /* تحسين أزرار اختيار الوقت */
+        .time-option {
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+        }
+        .time-option.selected {
+            background: var(--accent-blue) !important;
+            border-color: white;
+            color: white;
+            font-weight: bold;
+            transform: scale(0.95);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 140px repeat(5, 1fr);
+            min-width: 950px;
+            background: var(--panel-bg);
+        }
+
+        .header-cell {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+            font-weight: 900;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-blue);
+            border-left: 1px solid var(--glass-border);
+        }
+
+        .cell {
+            border: 1px solid var(--glass-border);
+            min-height: 110px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .time-cell {
+            background: rgba(255, 255, 255, 0.02);
+            flex-direction: column;
+            border-right: 4px solid var(--accent-blue);
+        }
+
+        .course-chip {
+            width: 100%; height: 100%; border-radius: 12px;
+            padding: 10px; display: flex; flex-direction: column;
+            justify-content: center; text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .delete-btn {
+            position: absolute; top: 6px; left: 6px;
+            width: 20px; height: 20px; background: #ef4444;
+            color: white; border-radius: 50%; display: none;
+            cursor: pointer; font-size: 10px; align-items: center; justify-content: center;
+        }
+
+        .cell:hover .delete-btn { display: flex; }
+
+        .custom-input {
+            background: #050710; border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 12px; color: white; width: 100%;
+        }
+
+        @media print { .no-print { display: none !important; } }
+        .pdf-only { display: none; }
+        .rendering .pdf-only { display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="max-w-7xl mx-auto">
+        <header class="flex justify-between items-center mb-8 no-print">
+            <div>
+                <h1 class="text-3xl font-black italic text-white tracking-tighter">ENGINEERING <span class="text-blue-500">VISION</span></h1>
+                <p class="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em]">Smart Schedule Builder</p>
+            </div>
+            <button onclick="downloadPDF()" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-900/40">
+                <i class="fas fa-file-pdf ml-2"></i> تصدير PDF أسطوري
+            </button>
+        </header>
+
+        <div class="glass-card p-8 mb-8 no-print">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-[11px] font-bold text-blue-400 mb-2 block uppercase tracking-wider">اسم المادة</label>
+                        <input type="text" id="course" placeholder="مثال: EE301" class="custom-input uppercase font-bold">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-bold text-blue-400 mb-2 block uppercase tracking-wider">القاعة</label>
+                        <input type="text" id="room" placeholder="مثال: 1102" class="custom-input">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-bold text-blue-400 mb-2 block tracking-wider">اليوم</label>
+                        <select id="day" class="custom-input">
+                            <option value="0">الأحد</option>
+                            <option value="1">الإثنين</option>
+                            <option value="2">الثلاثاء</option>
+                            <option value="3">الأربعاء</option>
+                            <option value="4">الخميس</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2">
+                    <label class="text-[11px] font-bold text-blue-400 mb-3 block uppercase tracking-wider">حدد الساعات (يمكنك اختيار أكثر من كود)</label>
+                    <div id="time-grid" class="grid grid-cols-3 gap-2">
+                        </div>
+                </div>
+
+                <div class="flex items-end">
+                    <button onclick="addSubject()" class="w-full bg-white text-black h-[60px] rounded-2xl font-black hover:bg-blue-500 hover:text-white transition-all transform active:scale-95 shadow-2xl">
+                        إضافة للجدول <i class="fas fa-plus-circle mr-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="capture" class="glass-card overflow-hidden">
+            <div class="pdf-only" style="background: #050710; padding: 30px; border-bottom: 2px solid #3b82f6; text-align: center;">
+                <h1 style="color: white; font-size: 24px; font-weight: 900; margin: 0;">الجدول الدراسي الأكاديمي</h1>
+                <p style="color: #3b82f6; font-size: 10px; margin-top: 5px; letter-spacing: 3px;">ENGINEERING VISION SYSTEM</p>
+            </div>
+
+            <div class="schedule-wrapper">
+                <div class="grid-container" id="grid">
+                    <div class="header-cell">الوقت</div>
+                    <div class="header-cell">الأحد</div>
+                    <div class="header-cell">الإثنين</div>
+                    <div class="header-cell">الثلاثاء</div>
+                    <div class="header-cell">الأربعاء</div>
+                    <div class="header-cell">الخميس</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TIME_MAP = [
+            { id: "54", s: "07:15 AM", e: "08:05 AM" },
+            { id: "86", s: "08:15 AM", e: "09:05 AM" },
+            { id: "44", s: "09:15 AM", e: "10:05 AM" },
+            { id: "80", s: "10:15 AM", e: "11:05 AM" },
+            { id: "15", s: "11:15 AM", e: "12:05 PM" },
+            { id: "47", s: "12:15 PM", e: "01:05 PM" },
+            { id: "63", s: "01:15 PM", e: "02:05 PM" },
+            { id: "52", s: "02:15 PM", e: "03:05 PM" },
+            { id: "51", s: "03:15 PM", e: "04:05 PM" }
+        ];
+
+        const THEMES = ["#3b82f6", "#8b5cf6", "#10b981", "#f59e0b", "#ef4444", "#ec4899"];
+        let db = JSON.parse(localStorage.getItem('ev_final_v5')) || [];
+        let selectedTimeCodes = new Set();
+
+        function init() {
+            // إنشاء أزرار الوقت
+            const timeGrid = document.getElementById('time-grid');
+            timeGrid.innerHTML = TIME_MAP.map(t => `
+                <div class="time-option" onclick="toggleTime('${t.id}', this)">
+                    <div class="font-bold">كود ${t.id}</div>
+                    <div class="opacity-50 text-[9px]">${t.s}</div>
+                </div>
+            `).join('');
+            render();
+        }
+
+        function toggleTime(code, el) {
+            if (selectedTimeCodes.has(code)) {
+                selectedTimeCodes.delete(code);
+                el.classList.remove('selected');
+            } else {
+                selectedTimeCodes.add(code);
+                el.classList.add('selected');
+            }
+        }
+
+        function render() {
+            const grid = document.getElementById('grid');
+            const headers = Array.from(grid.querySelectorAll('.header-cell'));
+            grid.innerHTML = '';
+            headers.forEach(h => grid.appendChild(h));
+
+            TIME_MAP.forEach(t => {
+                const sidebar = document.createElement('div');
+                sidebar.className = 'cell time-cell';
+                sidebar.innerHTML = `
+                    <span class="text-white font-bold text-[11px]">${t.s}</span>
+                    <div class="w-4 h-[1px] bg-blue-500/30 my-1"></div>
+                    <span class="text-white/40 text-[10px]">${t.e}</span>
+                `;
+                grid.appendChild(sidebar);
+
+                for (let d = 0; d < 5; d++) {
+                    const box = document.createElement('div');
+                    box.className = 'cell';
+                    const item = db.find(x => x.code === t.id && x.day == d);
+                    
+                    if (item) {
+                        const color = THEMES[item.name.charCodeAt(0) % THEMES.length];
+                        box.innerHTML = `
+                            <div class="course-chip" style="background: ${color}15; border-color: ${color}40">
+                                <div class="delete-btn no-print" onclick="removeSubject('${t.id}', ${d})">×</div>
+                                <span class="text-[9px] font-bold text-white/40 mb-1 uppercase">${item.room}</span>
+                                <span class="text-[13px] font-black text-white leading-tight">${item.name}</span>
+                            </div>
+                        `;
+                    }
+                    grid.appendChild(box);
+                }
+            });
+        }
+
+        function addSubject() {
+            const name = document.getElementById('course').value.trim().toUpperCase();
+            const room = document.getElementById('room').value.trim() || 'HALL';
+            const day = document.getElementById('day').value;
+            
+            if(!name || selectedTimeCodes.size === 0) {
+                alert("يرجى إدخال اسم المادة واختيار ساعة واحدة على الأقل");
+                return;
+            }
+
+            // إضافة كل الأكواد المختارة لنفس اليوم
+            selectedTimeCodes.forEach(code => {
+                db = db.filter(x => !(x.code === code && x.day == day));
+                db.push({ name, room, day, code });
+            });
+
+            localStorage.setItem('ev_final_v5', JSON.stringify(db));
+            
+            // إعادة ضبط الواجهة
+            selectedTimeCodes.clear();
+            document.querySelectorAll('.time-option').forEach(el => el.classList.remove('selected'));
+            document.getElementById('course').value = '';
+            render();
+        }
+
+        function removeSubject(code, day) {
+            db = db.filter(x => !(x.code === code && x.day == day));
+            localStorage.setItem('ev_final_v5', JSON.stringify(db));
+            render();
+        }
+
+        async function downloadPDF() {
+            const el = document.getElementById('capture');
+            el.classList.add('rendering');
+            
+            const options = {
+                margin: 0.2,
+                filename: 'Engineering_Vision_Schedule.pdf',
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 3, backgroundColor: '#050710' },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+            };
+
+            await html2pdf().set(options).from(el).save();
+            el.classList.remove('rendering');
+        }
+
+        init();
+    </script>
+</body>
+</html>
