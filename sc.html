@@ -3,49 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Engineering Vision | الجدول الأكاديمي</title>
+  <title>Engineering Vision | جدولك</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
-    :root { --primary: #1e40af; --bg: #f1f5f9; }
-    body { font-family: 'Cairo', sans-serif; background: var(--bg); padding: 10px; color: #1e293b; }
+    :root { --primary: #1e40af; --bg: #f8fafc; }
+    body { font-family: 'Cairo', sans-serif; background: var(--bg); padding: 8px; color: #1e293b; }
     
-    .control-panel { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e2e8f0; }
-    .input-group input { width: 100%; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 10px; font-weight: 600; margin-bottom: 10px; transition: 0.3s; }
-    .input-group input:focus { border-color: var(--primary); outline: none; background: white; }
+    /* لوحة التحكم مصغرة */
+    .control-panel { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 12px; border: 1px solid #e2e8f0; }
+    .input-group input { width: 100%; background: #f1f5f9; border: 2px solid #e2e8f0; border-radius: 10px; padding: 8px; font-weight: 700; font-size: 13px; margin-bottom: 8px; }
     
-    .day-btn { flex: 1; min-width: 60px; padding: 8px; background: white; border: 2px solid #e2e8f0; border-radius: 10px; text-align: center; cursor: pointer; font-size: 12px; font-weight: 700; }
+    .day-btn { flex: 1; min-width: 50px; padding: 6px; background: white; border: 1.5px solid #e2e8f0; border-radius: 8px; text-align: center; cursor: pointer; font-size: 11px; font-weight: 700; }
     .day-btn.active { background: #10b981; color: white; border-color: #10b981; }
 
-    .time-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
-    .time-btn { padding: 6px; font-size: 11px; background: white; border: 1px solid #cbd5e1; border-radius: 8px; text-align: center; cursor: pointer; font-weight: 600; }
+    /* شبكة الوقت في التحكم */
+    .time-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+    .time-btn { padding: 5px; font-size: 10px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; cursor: pointer; font-weight: 700; }
     .time-btn.selected { background: var(--primary); color: white; }
 
-    .schedule-card { background: white; border-radius: 20px; padding: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: relative; }
-    .grid-table { display: grid; grid-template-columns: 0.7fr repeat(5, 1fr); gap: 3px; width: 100%; }
+    /* تصميم الجدول المخصص للـ Screenshot */
+    .schedule-card { background: white; border-radius: 12px; padding: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative; width: 100%; margin: 0 auto; }
     
-    .header-pill { background: #1e293b; color: white; border-radius: 6px; padding: 6px 2px; font-weight: 700; font-size: 10px; text-align: center; }
+    /* عرض الأعمدة: الوقت أعرض قليلاً والباقي متساوي */
+    .grid-table { display: grid; grid-template-columns: 1fr repeat(5, 1.2fr); gap: 2px; width: 100%; background: #e2e8f0; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
     
-    .cell-base { border-radius: 6px; height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-    .time-cell { background: #f8fafc; color: var(--primary); font-weight: 800; border: 1px solid #e2e8f0; border-right: 3px solid var(--primary); }
-    .time-cell div { font-size: 9px; line-height: 1.2; }
+    .header-pill { background: #1e293b; color: white; padding: 8px 0; font-weight: 900; font-size: 10px; text-align: center; }
     
-    .empty-cell { background: #fafafa; border: 0.5px dashed #cbd5e1; opacity: 0.5; }
+    .cell-base { background: white; height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
     
-    .course-card { width: 100%; height: 100%; padding: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-radius: 6px; }
-    .c-name { font-weight: 900; font-size: 9px; line-height: 1.1; }
-    .c-room { font-size: 7.5px; font-weight: 800; margin-bottom: 2px; background: rgba(0,0,0,0.05); padding: 0 4px; border-radius: 3px; }
+    /* تمييز عمود الوقت */
+    .time-cell { background: #f1f5f9; color: var(--primary); font-weight: 900; border-left: 1px solid #e2e8f0; }
+    .time-cell div:first-child { font-size: 10px; }
+    .time-cell div:last-child { font-size: 8px; opacity: 0.6; }
+    
+    .empty-cell { background: #ffffff; }
+    
+    .course-card { width: 100%; height: 100%; padding: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .c-name { font-weight: 900; font-size: 9px; line-height: 1; word-break: break-word; }
+    .c-room { font-size: 7px; font-weight: 800; margin-bottom: 1px; color: rgba(0,0,0,0.6); }
 
+    /* أيقونة الحذف */
     .delete-mode .delete-icon { display: flex !important; }
-    .delete-icon { position: absolute; top: -5px; left: -5px; background: #ef4444; color: white; width: 18px; height: 18px; border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 30; border: 2px solid white; font-size: 12px; }
+    .delete-icon { position: absolute; top: 0; left: 0; background: #ef4444; color: white; width: 14px; height: 14px; border-radius: 0 0 5px 0; display: none; align-items: center; justify-content: center; font-size: 10px; z-index: 10; }
 
-    .btn-main { width: 100%; background: var(--primary); color: white; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 15px; margin-top: 10px; }
+    .btn-main { width: 100%; background: var(--primary); color: white; padding: 10px; border-radius: 10px; font-weight: 800; font-size: 14px; margin-top: 8px; }
     
-    /* تحسينات الـ PDF */
-    .pdf-export-mode { padding: 30px !important; width: 900px !important; border-radius: 0 !important; }
-    .pdf-export-mode .no-print { display: none !important; }
+    /* تحسين شكل الجدول في الشاشات الصغيرة جداً */
+    @media (max-width: 400px) {
+      .header-pill { font-size: 8px; }
+      .c-name { font-size: 7.5px; }
+      .time-cell div:first-child { font-size: 8.5px; }
+    }
   </style>
 </head>
 <body>
@@ -58,38 +68,32 @@
       <input id="roomName" type="text" placeholder="القاعة (اختياري)" />
     </div>
 
-    <div class="flex gap-2 mb-3 overflow-x-auto pb-2">
-      <div class="day-btn" onclick="toggleDay(0, this)">الأحد</div>
-      <div class="day-btn" onclick="toggleDay(1, this)">الإثنين</div>
-      <div class="day-btn" onclick="toggleDay(2, this)">الثلاثاء</div>
-      <div class="day-btn" onclick="toggleDay(3, this)">الأربعاء</div>
-      <div class="day-btn" onclick="toggleDay(4, this)">الخميس</div>
+    <div class="flex gap-1 mb-3 overflow-x-auto pb-1">
+      <div class="day-btn" onclick="toggleDay(0, this)">أحد</div>
+      <div class="day-btn" onclick="toggleDay(1, this)">إثنين</div>
+      <div class="day-btn" onclick="toggleDay(2, this)">ثلوث</div>
+      <div class="day-btn" onclick="toggleDay(3, this)">ربوع</div>
+      <div class="day-btn" onclick="toggleDay(4, this)">خميس</div>
     </div>
 
-    <div id="daysConfigs" class="space-y-3"></div>
-    <button onclick="saveEntry()" class="btn-main">إضافة المادة للجدول</button>
-    
-    <div class="flex gap-2 mt-4">
-      <button onclick="generatePDF()" class="flex-1 bg-slate-800 text-white py-3 rounded-xl font-bold text-sm shadow-lg">حفظ كملف PDF ✨</button>
-      <button onclick="resetAll()" class="px-4 bg-red-50 text-red-500 rounded-xl font-bold text-sm">تصفية</button>
-    </div>
+    <div id="daysConfigs" class="space-y-2"></div>
+    <button onclick="saveEntry()" class="btn-main">إضافة المادة</button>
+    <button onclick="resetAll()" class="w-full mt-2 text-red-500 font-bold text-xs py-1">تصفية الجدول</button>
   </div>
 
   <div id="display-area" class="schedule-card">
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between items-end mb-3 px-1">
         <div>
-            <h1 class="text-blue-900 font-black text-xl">Engineering Vision</h1>
-            <p class="text-gray-400 text-[10px]">نظام الجدولة الأكاديمي</p>
+            <h1 class="text-blue-900 font-black text-base leading-none">Engineering Vision</h1>
+            <p class="text-gray-400 text-[8px]">الجدول الدراسي الأكاديمي</p>
         </div>
-        <div id="pdf-date" class="text-left hidden pdf-only">
-             <span class="text-slate-500 text-[10px] font-bold" id="current-date-label"></span>
-        </div>
+        <div class="text-[8px] font-bold text-slate-400">2026 Season</div>
     </div>
     
     <div id="grid-container" class="grid-table"></div>
     
-    <button id="edit-toggle-btn" onclick="toggleEditMode()" class="no-print mt-6 w-full py-2 border-2 border-dashed border-slate-200 text-slate-400 rounded-xl text-[11px] font-bold hover:bg-slate-50">
-       تفعيل وضع الحذف والتعديل
+    <button id="edit-toggle-btn" onclick="toggleEditMode()" class="no-print mt-4 w-full py-2 border border-dashed border-slate-200 text-slate-400 rounded-lg text-[10px] font-bold">
+       وضع التعديل والحذف
     </button>
   </div>
 
@@ -104,13 +108,14 @@
     { id: "59", s: "04:15", e: "05:05" }, { id: "60", s: "05:15", e: "06:05" }
   ];
   const DAYS_NAMES = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس"];
-  let scheduleData = JSON.parse(localStorage.getItem("ev_final_v7")) || [];
+  let scheduleData = JSON.parse(localStorage.getItem("ev_final_v8")) || [];
   let currentSelectedDays = new Map();
   let editMode = false;
 
   function generateCourseColor() {
     const hue = Math.floor(Math.random() * 360);
-    return { bg: `hsl(${hue}, 85%, 97%)`, border: `hsl(${hue}, 50%, 85%)`, text: `hsl(${hue}, 90%, 20%)` };
+    // ألوان أكثر وضوحاً في السكرين شوت
+    return { bg: `hsl(${hue}, 80%, 95%)`, border: `hsl(${hue}, 60%, 80%)`, text: `hsl(${hue}, 90%, 15%)` };
   }
 
   function renderConfigs() {
@@ -118,8 +123,8 @@
     container.innerHTML = "";
     currentSelectedDays.forEach((slots, dayIdx) => {
       container.innerHTML += `
-        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-          <div class="text-[12px] font-bold text-blue-800 mb-2">يوم ${DAYS_NAMES[dayIdx]}</div>
+        <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+          <div class="text-[10px] font-bold text-blue-800 mb-1">توقيت يوم ${DAYS_NAMES[dayIdx]}</div>
           <div class="time-grid">${TIME_SLOTS.map(t => `<div class="time-btn ${slots.has(t.id) ? 'selected' : ''}" onclick="toggleTime(${dayIdx}, '${t.id}', this)">${t.id}</div>`).join("")}</div>
         </div>`;
     });
@@ -140,7 +145,7 @@
   function toggleEditMode() {
     editMode = !editMode;
     document.getElementById("display-area").classList.toggle("delete-mode", editMode);
-    document.getElementById("edit-toggle-btn").innerText = editMode ? "إيقاف وضع الحذف" : "تفعيل وضع الحذف والتعديل";
+    document.getElementById("edit-toggle-btn").innerText = editMode ? "إغلاق وضع الحذف" : "وضع التعديل والحذف";
   }
 
   function renderTable() {
@@ -154,10 +159,9 @@
         if (!entry) {
           container.innerHTML += `<div class="cell-base empty-cell"></div>`;
         } else {
-          // تعديل هنا: لا تظهر القاعة إذا كانت فارغة
-          const roomHtml = entry.room ? `<div class="c-room">قاعة: ${entry.room}</div>` : '';
+          const roomHtml = entry.room ? `<div class="c-room">${entry.room}</div>` : '';
           container.innerHTML += `
-            <div class="cell-base" style="background:${entry.color.bg}; border: 1px solid ${entry.color.border}">
+            <div class="cell-base" style="background:${entry.color.bg};">
               <div class="delete-icon" onclick="deleteEntireCourse('${entry.name}')">×</div>
               <div class="course-card" style="color:${entry.color.text}">
                 ${roomHtml}
@@ -170,17 +174,17 @@
   }
 
   function deleteEntireCourse(courseName) {
-    if(confirm(`حذف مادة "${courseName}" من الجدول؟`)) {
+    if(confirm(`حذف مادة "${courseName}"؟`)) {
         scheduleData = scheduleData.filter(x => x.name !== courseName);
-        localStorage.setItem("ev_final_v7", JSON.stringify(scheduleData));
+        localStorage.setItem("ev_final_v8", JSON.stringify(scheduleData));
         renderTable();
     }
   }
 
   function saveEntry() {
     const name = document.getElementById("courseName").value.trim();
-    const room = document.getElementById("roomName").value.trim(); // تترك فارغة إذا لم يدخل الطالب شيئاً
-    if (!name || currentSelectedDays.size === 0) return alert("أكمل البيانات أولاً");
+    const room = document.getElementById("roomName").value.trim();
+    if (!name || currentSelectedDays.size === 0) return alert("أكمل البيانات");
 
     const courseColor = generateCourseColor();
     currentSelectedDays.forEach((slots, dayIdx) => {
@@ -190,41 +194,11 @@
       });
     });
 
-    localStorage.setItem("ev_final_v7", JSON.stringify(scheduleData));
+    localStorage.setItem("ev_final_v8", JSON.stringify(scheduleData));
     location.reload();
   }
 
-  async function generatePDF() {
-    const element = document.getElementById("display-area");
-    const dateLabel = document.getElementById("current-date-label");
-    const dateDiv = document.getElementById("pdf-date");
-    
-    // إخفاء وضع التعديل قبل الحفظ
-    if(editMode) toggleEditMode();
-    
-    // تحضير للعرض في الـ PDF
-    dateLabel.innerText = "تم التصدير في: " + new Date().toLocaleDateString('ar-SA');
-    dateDiv.classList.remove('hidden');
-    element.classList.add('pdf-export-mode');
-
-    const opt = {
-      margin: 5,
-      filename: 'My_Schedule.pdf',
-      image: { type: 'jpeg', quality: 1 },
-      html2canvas: { scale: 3, useCORS: true, logging: false },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    try {
-      await html2pdf().set(opt).from(element).save();
-    } finally {
-      // إعادة الشكل للطبيعي
-      element.classList.remove('pdf-export-mode');
-      dateDiv.classList.add('hidden');
-    }
-  }
-
-  function resetAll() { if(confirm("حذف كل الجدول؟")) { localStorage.clear(); location.reload(); } }
+  function resetAll() { if(confirm("مسح الجدول؟")) { localStorage.clear(); location.reload(); } }
   
   renderTable();
 </script>
