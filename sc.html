@@ -66,37 +66,38 @@
 
     // استقبال البيانات من تطبيق بايثون
    window.addEventListener('message', function(event) {
-    if (event.data.type === 'DIRECT_BUILD') {
-        const entries = event.data.entries;
-        
-        // مسح الجدول القديم إذا أردت بناء واحد جديد تماماً
-        // scheduleData = []; 
+    if (event.data.type === 'FINAL_SYNC') {
+        const extractedData = event.data.data;
+        console.log("البيانات المستلمة:", extractedData);
 
-        entries.forEach(item => {
-            const day = item.day;
-            const slotId = item.slot;
-            const name = item.course;
+        extractedData.forEach(item => {
+            const courseName = item.course;
+            const slots = item.slots;
 
-            // إزالة أي تعارض في نفس الوقت
-            scheduleData = scheduleData.filter(x => !(x.day == day && x.slotId === slotId));
-            
-            // إضافة المحاضرة الجديدة
-            scheduleData.push({
-                day: day,
-                slotId: slotId,
-                name: name,
-                room: "مكتشف آلياً",
-                color: {bg: '#eff6ff', border: '#bfdbfe', text: '#1e40af'} // لون افتراضي هادئ
+            // نوزع المادة على يوم الأحد كبداية (ليظهر الجدول فوراً)
+            let dayIdx = 0; 
+            if (!currentSelectedDays.has(dayIdx)) {
+                currentSelectedDays.set(dayIdx, new Set());
+            }
+
+            slots.forEach(slotId => {
+                // إضافة البيانات لمصفوفة الجدول الأساسية
+                scheduleData.push({
+                    day: dayIdx,
+                    slotId: slotId,
+                    name: courseName,
+                    room: "تم الاستخراج",
+                    color: getColor(courseName) // سيستخدم دالة الألوان الموجودة في كودك
+                });
             });
         });
 
-        // حفظ في ذاكرة المتصفح
+        // حفظ وتحديث الواجهة
         localStorage.setItem("ev_final_pro", JSON.stringify(scheduleData));
-        
-        // تحديث الجدول المعروض فوراً بدون إعادة تحميل الصفحة بالكامل
         renderTable(); 
-        alert("✅ تم بناء الجدول دايركت!");
+        alert("✅ تم بناء الجدول! يمكنك الآن نقل المواد بين الأيام بسهولة.");
     }
+});
 });
 });
 });
