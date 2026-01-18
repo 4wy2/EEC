@@ -203,39 +203,31 @@
 
 }
 
-    .year-sidebar {
+    /* --- تعديل السايدبار لضمان عدم انكسار السطر --- */
+.year-sidebar {
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
+  border-right: 3px solid #333;
+  flex-shrink: 0;
+  overflow: visible; /* لضمان عدم قص النص */
+}
 
-      width: 60px;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
-
-      border-right: 3px solid #333; /* سيتم تغيير اللون في HTML */
-
-      flex-shrink: 0;
-
-    }
-
-    .year-label {
-
-      writing-mode: vertical-rl;
-
-      transform: rotate(180deg);
-
-      font-weight: 900;
-
-      letter-spacing: 5px;
-
-      font-size: 1.2rem;
-
-      transition: all 0.3s;
-
-    }
+.year-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-weight: 900;
+  letter-spacing: 5px;
+  font-size: 1.2rem;
+  transition: all 0.3s;
+  
+  /* الحل السحري هنا */
+  white-space: nowrap; /* يمنع نزول الرقم لسطر جديد */
+  display: block;
+  width: max-content; /* يجعل العرض على مقاس النص بالضبط */
+}
 
 
 
@@ -470,6 +462,18 @@
       justify-content: center;
 
     }
+    @media (max-width: 600px) {
+  header h2 {
+    font-size: 1rem !important; /* تصغير عنوان الصفحة */
+  }
+  .legend {
+    gap: 10px;
+    font-size: 0.6rem;
+  }
+  .year-label {
+    font-size: 1rem; /* تصغير كلمة YEAR قليلاً لتناسب الشاشة */
+  }
+}
 
   </style>
 
