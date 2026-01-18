@@ -497,9 +497,24 @@ function manualZoom(factor) {
 }
 
 function resetView() {
-  scale = 0.7;
+  const vWidth = viewport.clientWidth;
+  const vHeight = viewport.clientHeight;
+  
+  // 1. حساب أبعاد المحتوى الفعلي (السنوات والسمسترات)
+  // استخدمنا getBoundingClientRect للمحتوى الداخلي بدون تأثير التحويلات الحالية
+  const contentWidth = wrapper.scrollWidth - 4000; // طرحنا البادينج الإضافي (2000+2000)
+  const contentHeight = wrapper.scrollHeight - 4000;
+
+  // 2. حساب نسبة التكبير/التصغير المناسبة (مع ترك هامش 10%)
+  const scaleX = vWidth / contentWidth;
+  const scaleY = vHeight / contentHeight;
+  scale = Math.min(scaleX, scaleY) * 0.9; 
+
+  // 3. توسيط المحتوى
+  // بما أننا نستخدم transform-origin: center، الحساب يكون كالتالي:
   translateX = 0;
   translateY = 0;
+
   updateTransform();
 }
 
