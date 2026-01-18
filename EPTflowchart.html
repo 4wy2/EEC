@@ -15,8 +15,7 @@
       --accent-blue: #38bdf8;
       --accent-yellow: #fbbf24;
       --accent-green: #22c55e;
-      /* عرض مرن للبطاقة يتناسب مع حجم الشاشة */
-      --card-width: clamp(115px, 12vw, 135px);
+      --card-width: 135px; /* تثبيت العرض لمنع "التمطيط" في الجوال */
     }
 
     * { box-sizing: border-box; }
@@ -32,7 +31,7 @@
     }
 
     header {
-      padding: clamp(10px, 2vh, 20px);
+      padding: 15px;
       text-align: center;
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -47,19 +46,17 @@
       font-weight: 900;
       letter-spacing: 2px;
       color: #fff;
-      font-size: clamp(1rem, 4vw, 1.5rem);
+      font-size: clamp(0.9rem, 4vw, 1.5rem);
     }
 
     .legend {
       display: inline-flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: clamp(10px, 2vw, 20px);
-      font-size: clamp(0.6rem, 2vw, 0.8rem);
-      margin-top: 10px;
+      gap: 15px;
+      font-size: 0.75rem;
+      margin-top: 8px;
     }
-    .legend-item { display: flex; align-items: center; gap: 6px; }
-    .dot { width: 10px; height: 10px; border-radius: 2px; }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .dot { width: 8px; height: 8px; border-radius: 2px; }
 
     .viewport {
       width: 100vw;
@@ -67,19 +64,17 @@
       cursor: grab;
       position: relative;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-    .viewport:active { cursor: grabbing; }
 
+    /* هذا القسم هو المسؤول عن بقاء الجدول مرتباً في الجوال */
     .flowchart-wrapper {
       position: absolute;
       transform-origin: center center; 
-      padding: 300px; /* تقليل البادينج لتحسين الأداء وتحديد القيود */
-      will-change: transform;
-      display: flex;
+      padding: 400px;
+      display: inline-flex; /* يمنع انكماش العناصر */
       flex-direction: column;
+      min-width: 1400px; /* ضمان عرض ثابت لجميع الأجهزة */
+      will-change: transform;
     }
 
     .year-section {
@@ -96,18 +91,14 @@
       left: 80px;
       right: 40px;
       height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15) 20%, rgba(255, 255, 255, 0.15) 80%, transparent);
-      border-radius: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1) 20%, rgba(255, 255, 255, 0.1) 80%, transparent);
     }
-
-    .year-section:last-of-type::after { display: none; }
 
     .year-sidebar {
       width: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
       border-right: 3px solid #333;
       flex-shrink: 0;
     }
@@ -116,37 +107,34 @@
       transform: rotate(180deg);
       font-weight: 900;
       letter-spacing: 5px;
-      font-size: clamp(1rem, 3vw, 1.2rem);
+      font-size: 1.1rem;
     }
 
     .semesters-container {
-      flex-grow: 1;
       display: flex;
       flex-direction: column;
-      gap: 75px; 
+      gap: 70px; 
     }
 
     .semester-row { 
       display: flex; 
       align-items: center; 
-      padding-left: clamp(15px, 3vw, 30px); 
+      padding-left: 30px; 
     }
 
     .sem-indicator {
-      width: clamp(70px, 10vw, 100px);
-      font-size: 0.75rem;
+      width: 90px;
+      font-size: 0.7rem;
       font-weight: 800;
-      text-transform: uppercase;
-      flex-shrink: 0;
       color: var(--text-muted);
       border-left: 2px solid rgba(255,255,255,0.05);
-      padding-left: 15px;
-      letter-spacing: 2px;
+      padding-left: 12px;
+      flex-shrink: 0;
     }
 
     .course-list { 
       display: flex; 
-      gap: clamp(20px, 4vw, 50px); 
+      gap: 45px; /* الحفاظ على نفس المسافة في اللابتوب والجوال */
     }
 
     .card {
@@ -162,50 +150,35 @@
       text-align: center;
       position: relative;
       z-index: 10;
-      transition: all 0.3s;
+      transition: transform 0.2s;
       cursor: pointer;
-      user-select: none;
     }
     
-    .card.selected { 
-      border-color: var(--accent-yellow) !important; 
-      box-shadow: 0 0 25px rgba(251, 191, 36, 0.5); 
-      z-index: 100;
-      background: #1e293b;
-    }
-
     .card.completed {
       border-color: var(--accent-green) !important;
-      background: rgba(34, 197, 94, 0.2) !important;
+      background: rgba(34, 197, 94, 0.15) !important;
     }
     .card.completed::after {
       content: '✓';
       position: absolute;
-      top: 5px; right: 8px;
+      top: 4px; right: 6px;
       color: var(--accent-green);
-      font-weight: bold; font-size: 14px;
+      font-size: 12px;
     }
 
-    .card.dimmed { opacity: 0.2; filter: grayscale(0.5); }
-    
-    .code { font-family: 'JetBrains Mono'; font-size: clamp(0.7rem, 2vw, 0.85rem); color: var(--accent-blue); font-weight: 800; }
-    .name { font-size: 0.6rem; color: #cbd5e1; margin-top: 5px; font-weight: 600; padding: 0 8px; line-height: 1.1; }
+    .code { font-family: 'JetBrains Mono'; font-size: 0.8rem; color: var(--accent-blue); font-weight: 800; }
+    .name { font-size: 0.58rem; color: #cbd5e1; margin-top: 4px; padding: 0 5px; line-height: 1.2; }
 
     #svg-canvas {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
       pointer-events: none;
-      z-index: 1;
     }
-
-    path { transition: opacity 0.4s ease; stroke-linecap: round; }
-    path.active-path { opacity: 1 !important; stroke-width: 3; filter: drop-shadow(0 0 5px var(--accent-blue)); }
-    path.faded { opacity: 0.05 !important; }
 
     .zoom-controls {
       position: fixed;
-      bottom: 20px;
+      bottom: 25px;
       right: 20px;
       display: flex;
       flex-direction: column;
@@ -215,14 +188,14 @@
     
     .zoom-btn {
       width: 45px; height: 45px;
-      border-radius: 10px;
+      border-radius: 12px;
       border: 1px solid var(--card-border);
       background: rgba(15, 23, 42, 0.9);
       color: white;
       font-size: 20px;
-      cursor: pointer;
       backdrop-filter: blur(5px);
       display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
   </style>
 </head>
@@ -230,20 +203,18 @@
 
 <header id="main-header">
   <h2>ELECTRICAL ENGINEERING STUDY PLAN</h2>
-  <div style="font-size: 0.85rem; color: #fff; font-weight: 600; letter-spacing: 1px;">
-    Designed & Developed by <span style="color: #38bdf8;">AL-RASSASI</span>
-  </div>
+  <div style="font-size: 0.8rem; color: #38bdf8; font-weight: 600;">Designed & Developed by AL-RASSASI</div>
   <div class="legend">
     <div class="legend-item"><div class="dot" style="background:var(--accent-blue)"></div> Prerequisite</div>
     <div class="legend-item"><div class="dot" style="background:var(--accent-yellow)"></div> Co-requisite</div>
-    <div class="legend-item"><div class="dot" style="background:var(--accent-green)"></div> Completed (Dbl Click)</div>
+    <div class="legend-item"><div class="dot" style="background:var(--accent-green)"></div> Completed</div>
   </div>
 </header>
 
 <div class="zoom-controls">
-  <button class="zoom-btn" onclick="manualZoom(1.2)">+</button>
-  <button class="zoom-btn" onclick="manualZoom(0.8)">-</button>
-  <button class="zoom-btn" onclick="resetView()" style="font-size: 10px;">RESET</button>
+  <button class="zoom-btn" onclick="manualZoom(1.15)">+</button>
+  <button class="zoom-btn" onclick="manualZoom(0.85)">-</button>
+  <button class="zoom-btn" onclick="resetView()" style="font-size: 10px; font-weight: 900;">RESET</button>
 </div>
 
 <div class="viewport" id="viewport">
@@ -313,7 +284,7 @@
         <div class="semester-row">
           <div class="sem-indicator">TRAINING</div>
           <div class="course-list">
-            <div class="card" id="ELET320" style="width: clamp(180px, 20vw, 250px);">
+            <div class="card" id="ELET320" style="width: 250px;">
               <div class="code">ELET 320</div>
               <div class="name">Co-op Training (14 Weeks)</div>
               <div style="font-size: 0.5rem; color: var(--accent-yellow); margin-top: 4px;">Requires 67 Credit Hours</div>
@@ -322,7 +293,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -332,12 +302,11 @@ const viewport = document.getElementById('viewport');
 const svg = document.getElementById('svg-canvas');
 const header = document.getElementById('main-header');
 
-let scale = 0.7;
+let scale = 0.3; // سكيل افتراضي أصغر للجوال
 let translateX = 0;
 let translateY = 0;
 let isDragging = false;
 let startX, startY;
-let initialPinchDist = null;
 
 const connections = [
   { from: 'GSMA101', to: 'GSMA102', type: 'pre' },
@@ -366,249 +335,127 @@ const connections = [
   { from: 'ELET224', to: 'ELET225', type: 'co'  }
 ];
 
-const MIN_SCALE = 0.35;
-const MAX_SCALE = 2.0;
-
 function updateTransform() {
-    const vWidth = viewport.clientWidth;
-    const vHeight = viewport.clientHeight;
-    const hHeight = header.offsetHeight;
-
+    const vW = viewport.clientWidth;
+    const vH = viewport.clientHeight;
+    const hH = header.offsetHeight;
     const rect = wrapper.getBoundingClientRect();
-    const contentWidth = rect.width;
-    const contentHeight = rect.height;
 
-    // قيود الحركة: تمنع الجدول من الخروج تماماً عن الشاشة
-    // القيد العلوي يمنع التداخل مع الهيدر
-    const topBound = (contentHeight / 2) - (vHeight / 2) + hHeight + 20;
-    const xBound = (contentWidth / 2) + (vWidth / 2) - 150;
-    const yBound = (contentHeight / 2) + (vHeight / 2) - 150;
+    // قيود ذكية تمنع الضياع
+    const xLim = (rect.width / 2) + (vW / 2) - 100;
+    const yTop = (rect.height / 2) - (vH / 2) + hH + 10;
+    const yBot = (rect.height / 2) + (vH / 2) - 100;
 
-    translateX = Math.min(Math.max(translateX, -xBound), xBound);
-    translateY = Math.min(Math.max(translateY, -topBound), yBound);
+    translateX = Math.min(Math.max(translateX, -xLim), xLim);
+    translateY = Math.max(Math.min(translateY, yBot), -yTop);
 
     wrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
 }
 
-// الماوس واللمس
-viewport.addEventListener('mousedown', (e) => {
-  if (e.target.closest('.card')) return;
-  isDragging = true;
-  startX = e.clientX - translateX;
-  startY = e.clientY - translateY;
-});
+// السحب (ماوس + لمس)
+function startDrag(x, y) { isDragging = true; startX = x - translateX; startY = y - translateY; }
+function moveDrag(x, y) { if (!isDragging) return; translateX = x - startX; translateY = y - startY; updateTransform(); }
 
-window.addEventListener('mousemove', (e) => {
-  if (!isDragging) return;
-  translateX = e.clientX - startX;
-  translateY = e.clientY - startY;
-  updateTransform();
-});
-
+viewport.addEventListener('mousedown', e => startDrag(e.clientX, e.clientY));
+window.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
 window.addEventListener('mouseup', () => isDragging = false);
 
-viewport.addEventListener('touchstart', (e) => {
-  if (e.touches.length === 1) {
-    if (e.target.closest('.card')) return;
-    isDragging = true;
-    startX = e.touches[0].clientX - translateX;
-    startY = e.touches[0].clientY - translateY;
-  } else if (e.touches.length === 2) {
-    initialPinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-  }
-}, { passive: false });
+viewport.addEventListener('touchstart', e => { if(e.touches.length === 1) startDrag(e.touches[0].clientX, e.touches[0].clientY); }, {passive: false});
+viewport.addEventListener('touchmove', e => { if(e.touches.length === 1) { moveDrag(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, {passive: false});
+viewport.addEventListener('touchend', () => isDragging = false);
 
-viewport.addEventListener('touchmove', (e) => {
-  if (e.touches.length === 1 && isDragging) {
-    translateX = e.touches[0].clientX - startX;
-    translateY = e.touches[0].clientY - startY;
-  } else if (e.touches.length === 2 && initialPinchDist) {
-    const currentDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-    const delta = currentDist / initialPinchDist;
-    scale = Math.min(Math.max(MIN_SCALE, scale * delta), MAX_SCALE);
-    initialPinchDist = currentDist;
-  }
-  updateTransform();
-  e.preventDefault();
-}, { passive: false });
+// الزوم
+viewport.addEventListener('wheel', e => { e.preventDefault(); scale = Math.min(Math.max(0.2, scale * (e.deltaY > 0 ? 0.9 : 1.1)), 2); updateTransform(); }, {passive: false});
 
-viewport.addEventListener('touchend', () => { isDragging = false; initialPinchDist = null; });
-
-viewport.addEventListener('wheel', (e) => {
-  e.preventDefault();
-  const delta = e.deltaY > 0 ? 0.9 : 1.1;
-  const newScale = Math.min(Math.max(MIN_SCALE, scale * delta), MAX_SCALE);
-  scale = newScale;
-  updateTransform();
-}, { passive: false });
-
-function manualZoom(factor) {
-  const newScale = scale * factor;
-  if (newScale >= MIN_SCALE && newScale <= MAX_SCALE) {
-    scale = newScale;
-    updateTransform();
-  }
-}
+function manualZoom(f) { scale = Math.min(Math.max(0.2, scale * f), 2); updateTransform(); }
 
 function resetView() {
-  const vWidth = viewport.clientWidth;
-  const vHeight = viewport.clientHeight;
-  const hHeight = header.offsetHeight;
-  
-  // ضبط الحجم ليناسب الشاشة مع ترك هامش
-  scale = Math.min(vWidth / 1400, vHeight / 1200) * 0.9;
-  scale = Math.min(Math.max(scale, MIN_SCALE), MAX_SCALE);
-
-  translateX = 0;
-  // إزاحة البداية ليكون تحت الهيدر مباشرة
-  translateY = - (wrapper.offsetHeight * scale * 0.5) + (vHeight * 0.5) + hHeight + 20;
-
-  updateTransform();
-  drawConnections();
+    const vW = viewport.clientWidth;
+    const vH = viewport.clientHeight;
+    // سكيل ذكي للجوال: إذا كان العرض صغيراً، صغر الزوم تلقائياً لترى الخطة كاملة
+    scale = vW < 600 ? (vW / 1500) : 0.7;
+    translateX = 0;
+    translateY = - (wrapper.offsetHeight * scale * 0.5) + (vH * 0.5) + header.offsetHeight + 20;
+    updateTransform();
+    drawConnections();
 }
 
 function drawConnections() {
   svg.innerHTML = `
     <defs>
-      <marker id="arrow-pre" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-        <path d="M0,0 L8,4 L0,8 Z" fill="#38bdf8" />
-      </marker>
-      <marker id="arrow-co" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-        <path d="M0,0 L8,4 L0,8 Z" fill="#fbbf24" />
-      </marker>
-    </defs>
-  `;
-  
+      <marker id="arrow-pre" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#38bdf8" /></marker>
+      <marker id="arrow-co" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#fbbf24" /></marker>
+    </defs>`;
   svg.setAttribute('width', wrapper.scrollWidth);
   svg.setAttribute('height', wrapper.scrollHeight);
   const wrapRect = wrapper.getBoundingClientRect();
 
-  connections.forEach((c) => {
-    const f = document.getElementById(c.from);
-    const t = document.getElementById(c.to);
+  connections.forEach(c => {
+    const f = document.getElementById(c.from), t = document.getElementById(c.to);
     if(!f || !t) return;
-
-    const r1 = f.getBoundingClientRect();
-    const r2 = t.getBoundingClientRect();
-
-    const x1 = (r1.left + r1.width/2 - wrapRect.left) / scale;
-    const y1 = (r1.bottom - wrapRect.top) / scale;
-    const x2 = (r2.left + r2.width/2 - wrapRect.left) / scale;
-    const y2 = (r2.top - wrapRect.top) / scale;
-
+    const r1 = f.getBoundingClientRect(), r2 = t.getBoundingClientRect();
+    const x1 = (r1.left + r1.width/2 - wrapRect.left)/scale, y1 = (r1.bottom - wrapRect.top)/scale;
+    const x2 = (r2.left + r2.width/2 - wrapRect.left)/scale, y2 = (r2.top - wrapRect.top)/scale;
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     let d;
-
-    if (c.type === 'co') {
-      const cx1 = (r1.right - wrapRect.left) / scale;
-      const cy1 = (r1.top + r1.height/2 - wrapRect.top) / scale;
-      const cx2 = (r2.left - wrapRect.left) / scale;
-      const cy2 = (r2.top + r2.height/2 - wrapRect.top) / scale;
-      d = `M ${cx1} ${cy1} L ${cx1+15} ${cy1} L ${cx1+15} ${cy2} L ${cx2-5} ${cy2}`;
-      path.setAttribute('stroke', '#fbbf24');
-      path.setAttribute('marker-end', 'url(#arrow-co)');
+    if(c.type==='co'){
+        const cx1 = (r1.right - wrapRect.left)/scale, cy1 = (r1.top + r1.height/2 - wrapRect.top)/scale;
+        const cx2 = (r2.left - wrapRect.left)/scale, cy2 = (r2.top + r2.height/2 - wrapRect.top)/scale;
+        d = `M ${cx1} ${cy1} L ${cx1+15} ${cy1} L ${cx1+15} ${cy2} L ${cx2-5} ${cy2}`;
+        path.setAttribute('stroke', '#fbbf24'); path.setAttribute('marker-end', 'url(#arrow-co)');
     } else {
-      const midY = y1 + (y2 - y1) / 2;
-      d = `M ${x1} ${y1} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${y2 - 5}`;
-      path.setAttribute('stroke', '#38bdf8');
-      path.setAttribute('marker-end', 'url(#arrow-pre)');
+        d = `M ${x1} ${y1} L ${x1} ${y1+(y2-y1)/2} L ${x2} ${y1+(y2-y1)/2} L ${x2} ${y2-5}`;
+        path.setAttribute('stroke', '#38bdf8'); path.setAttribute('marker-end', 'url(#arrow-pre)');
     }
-
-    path.setAttribute('d', d);
-    path.setAttribute('fill', 'none');
-    path.setAttribute('stroke-width', '2');
-    path.setAttribute('opacity', '0.2');
-    path.setAttribute('data-from', c.from);
-    path.setAttribute('data-to', c.to);
+    path.setAttribute('d', d); path.setAttribute('fill', 'none'); path.setAttribute('stroke-width', '2'); path.setAttribute('opacity', '0.2');
+    path.setAttribute('data-from', c.from); path.setAttribute('data-to', c.to);
     svg.appendChild(path);
   });
 }
 
-function saveProgress() {
-  const completedIds = Array.from(document.querySelectorAll('.card.completed')).map(c => c.id);
-  localStorage.setItem('ee_completed_courses', JSON.stringify(completedIds));
-}
-
-function loadProgress() {
-  const saved = localStorage.getItem('ee_completed_courses');
-  if (saved) {
-    JSON.parse(saved).forEach(id => {
-      const card = document.getElementById(id);
-      if (card) card.classList.add('completed');
-    });
-  }
-}
-
 function initInteractions() {
-  const cards = document.querySelectorAll('.card');
-  const paths = document.querySelectorAll('path:not(defs path)');
-
-  cards.forEach(card => {
-    // لابتوب: Dbl Click
-    card.addEventListener('dblclick', (e) => {
-      e.stopPropagation();
-      card.classList.toggle('completed');
-      saveProgress();
-    });
-
-    // جوال: Double Tap
+  document.querySelectorAll('.card').forEach(card => {
+    // دعم النقر المزدوج للجوال واللابتوب
     let lastTap = 0;
-    card.addEventListener('touchstart', (e) => {
-      const now = new Date().getTime();
-      const delta = now - lastTap;
-      if (delta < 300 && delta > 0) {
-        e.preventDefault();
-        card.classList.toggle('completed');
-        saveProgress();
-        if (navigator.vibrate) navigator.vibrate(40);
-      }
-      lastTap = now;
+    card.addEventListener('touchend', e => {
+        const now = Date.now();
+        if(now - lastTap < 300) { card.classList.toggle('completed'); localStorage.setItem('ee_data', JSON.stringify(Array.from(document.querySelectorAll('.card.completed')).map(c=>c.id))); }
+        lastTap = now;
     });
+    card.addEventListener('dblclick', () => { card.classList.toggle('completed'); });
 
-    // اختيار المادة لعرض المتطلبات
-    card.addEventListener('click', (e) => {
+    card.addEventListener('click', e => {
       e.stopPropagation();
-      if (card.classList.contains('selected')) { clearSelection(); return; }
+      if(card.classList.contains('selected')){ clearSelection(); return; }
       clearSelection();
-      cards.forEach(c => c.classList.add('dimmed'));
-      paths.forEach(p => p.classList.add('faded'));
-      card.classList.remove('dimmed');
-      card.classList.add('selected');
-
-      paths.forEach(p => {
-        if (p.getAttribute('data-from') === card.id || p.getAttribute('data-to') === card.id) {
-          p.classList.remove('faded');
-          p.classList.add('active-path');
-          document.getElementById(p.getAttribute('data-from'))?.classList.remove('dimmed');
-          document.getElementById(p.getAttribute('data-to'))?.classList.remove('dimmed');
+      document.querySelectorAll('.card').forEach(c => c.style.opacity = '0.2');
+      document.querySelectorAll('path').forEach(p => p.style.opacity = '0.05');
+      card.style.opacity = '1'; card.classList.add('selected');
+      document.querySelectorAll('path').forEach(p => {
+        if(p.dataset.from===card.id || p.dataset.to===card.id){
+            p.style.opacity = '1'; p.style.strokeWidth = '3';
+            document.getElementById(p.dataset.from).style.opacity = '1';
+            document.getElementById(p.dataset.to).style.opacity = '1';
         }
       });
     });
   });
-  document.addEventListener('click', () => clearSelection());
+  document.addEventListener('click', clearSelection);
 }
 
 function clearSelection() {
-  document.querySelectorAll('.card').forEach(c => c.classList.remove('dimmed', 'selected'));
-  document.querySelectorAll('path').forEach(p => p.classList.remove('faded', 'active-path'));
+  document.querySelectorAll('.card').forEach(c => { c.style.opacity = '1'; c.classList.remove('selected'); });
+  document.querySelectorAll('path').forEach(p => { p.style.opacity = '0.2'; p.style.strokeWidth = '2'; });
 }
 
-window.onload = () => {
-  resetView();
-  initInteractions();
-  loadProgress();
-  // التأكد من رسم الأسهم بعد استقرار الواجهة
-  setTimeout(drawConnections, 500);
+window.onload = () => { 
+    resetView(); 
+    initInteractions(); 
+    const saved = localStorage.getItem('ee_data');
+    if(saved) JSON.parse(saved).forEach(id => document.getElementById(id)?.classList.add('completed'));
+    setTimeout(drawConnections, 300); 
 };
-
-let resizeTimer;
-window.onresize = () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    drawConnections();
-    updateTransform();
-  }, 250);
-};
+window.onresize = resetView;
 </script>
 </body>
 </html>
