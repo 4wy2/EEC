@@ -26,7 +26,7 @@
             position: fixed;
             width: 300px;
             height: 300px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
             border-radius: 50%;
             z-index: -1;
             filter: blur(40px);
@@ -34,8 +34,8 @@
         }
 
         @keyframes move {
-            from { transform: translate(-20%, -20%); }
-            to { transform: translate(30%, 30%); }
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(20%, 20%); }
         }
 
         .glass-card {
@@ -58,8 +58,8 @@
 
         /* تأثير النقر للجوال */
         .tap-active:active {
-            transform: scale(0.96);
-            opacity: 0.8;
+            transform: scale(0.97);
+            background: rgba(255, 255, 255, 0.05);
         }
     </style>
 </head>
@@ -70,7 +70,7 @@
 
     <div class="max-w-5xl mx-auto">
         
-        <nav class="mb-10">
+        <nav class="mb-10 reveal">
             <a href="index.html" class="inline-flex items-center gap-2 text-white/40 font-bold text-xs uppercase tracking-widest hover:text-indigo-400 transition-colors">
                 <i class="fa-solid fa-arrow-right"></i>
                 العودة للرئيسية
@@ -83,7 +83,7 @@
                 دليل <span class="text-transparent bg-clip-text bg-gradient-to-l from-indigo-400 to-cyan-400">المنصة الذكية</span>
             </h1>
             <p class="text-white/50 text-lg md:text-xl max-w-2xl leading-relaxed">
-                نظام تتبع ذكي صُمم لتمكين المهندس من إدارة مسيرته الأكاديمية بوضوح فائق.
+                نظام تتبع ذكي صُمم لتمكين المهندس من إدارة مسيرته الأكاديمية بوضوح فائق ودقة متناهية.
             </p>
         </header>
 
@@ -124,95 +124,97 @@
 
                     <div class="space-y-8">
                         <div class="flex gap-5">
-                            <div class="h-10 w-10 shrink-0 bg-indigo-500/10 rounded-lg flex items-center justify-center text-indigo-400 font-black">1</div>
+                            <div class="h-10 w-10 shrink-0 bg-indigo-500/10 rounded-lg flex items-center justify-center text-indigo-400 font-bold">1</div>
                             <div>
                                 <h4 class="font-bold text-white mb-1">الاستعلام المرئي</h4>
-                                <p class="text-white/40 text-xs leading-relaxed">نقرة واحدة تضيء المسارات المتصلة لكشف المتطلبات.</p>
+                                <p class="text-white/40 text-xs leading-relaxed">نقرة واحدة تضيء المسارات المتصلة لكشف المتطلبات السابقة والقادمة.</p>
                             </div>
                         </div>
                         <div class="flex gap-5">
-                            <div class="h-10 w-10 shrink-0 bg-emerald-500/10 rounded-lg flex items-center justify-center text-emerald-400 font-black">2</div>
+                            <div class="h-10 w-10 shrink-0 bg-emerald-500/10 rounded-lg flex items-center justify-center text-emerald-400 font-bold">2</div>
                             <div>
                                 <h4 class="font-bold text-white mb-1">تتبع الإنجاز</h4>
-                                <p class="text-white/40 text-xs leading-relaxed">نقرتين لتحويل المادة للون الأخضر وحفظ تقدمك.</p>
+                                <p class="text-white/40 text-xs leading-relaxed">نقرتين سريعة لتحويل المادة للون الأخضر وحفظ تقدمك الدراسي.</p>
                             </div>
                         </div>
                         <div class="flex gap-5">
-                            <div class="h-10 w-10 shrink-0 bg-amber-500/10 rounded-lg flex items-center justify-center text-amber-400 font-black">3</div>
+                            <div class="h-10 w-10 shrink-0 bg-amber-500/10 rounded-lg flex items-center justify-center text-amber-400 font-bold">3</div>
                             <div>
                                 <h4 class="font-bold text-white mb-1">الملاحة الذكية</h4>
-                                <p class="text-white/40 text-xs leading-relaxed">تنقل واسحب الخريطة لاستكشاف جميع المستويات.</p>
+                                <p class="text-white/40 text-xs leading-relaxed">حرية كاملة في السحب والتكبير لاستكشاف جميع المستويات الدراسية.</p>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
 
         <section class="mb-24 reveal">
-            <h2 class="text-2xl font-black mb-8 border-r-4 border-indigo-500 pr-4">بوابة المسارات</h2>
+            <h2 class="text-2xl font-black mb-8 border-r-4 border-indigo-500 pr-4">بوابة التخصصات</h2>
             
             <div class="space-y-4">
-                <a href="EEflowchart.html" class="tap-active flex items-center justify-between p-5 bg-gradient-to-l from-indigo-600/20 to-transparent border border-indigo-500/30 rounded-2xl hover:border-indigo-500 transition-all group">
+                <a href="EEflowchart.html" class="tap-active flex items-center justify-between p-6 bg-indigo-600/10 border border-indigo-500/30 rounded-2xl hover:border-indigo-500 transition-all group">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-indigo-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                            <i class="fa-solid fa-graduation-cap"></i>
+                        <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <i class="fa-solid fa-graduation-cap text-xl"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-white">الهندسة الكهربائية (EE)</h3>
-                            <span class="text-[10px] text-indigo-300/50 uppercase">Bachelor Degree Program</span>
+                            <h3 class="font-bold text-lg md:text-xl">الهندسة الكهربائية (EE)</h3>
+                            <span class="text-[10px] text-indigo-300/60 font-bold uppercase tracking-widest">Bachelor Program</span>
                         </div>
                     </div>
-                    <i class="fa-solid fa-chevron-left text-indigo-500"></i>
+                    <i class="fa-solid fa-chevron-left text-indigo-500 group-hover:-translate-x-2 transition-transform"></i>
                 </a>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <a href="EPTflowchart.html" class="tap-active flex items-center gap-4 p-4 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-all">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <a href="EPTflowchart.html" class="tap-active flex items-center gap-4 p-5 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-all">
                         <div class="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center text-emerald-400">
                             <i class="fa-solid fa-bolt"></i>
                         </div>
-                        <span class="text-sm font-bold text-white/80">تقنية القوى الكهربائية (EPT)</span>
+                        <span class="text-sm font-bold">تقنية القوى الكهربائية (EPT)</span>
                     </a>
-                    <a href="ECTflowchart.html" class="tap-active flex items-center gap-4 p-4 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-all">
+                    <a href="ECTflowchart.html" class="tap-active flex items-center gap-4 p-5 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-all">
                         <div class="w-10 h-10 bg-cyan-500/10 rounded-lg flex items-center justify-center text-cyan-400">
                             <i class="fa-solid fa-microchip"></i>
                         </div>
-                        <span class="text-sm font-bold text-white/80">تقنية الإلكترونيات (ECT)</span>
+                        <span class="text-sm font-bold">تقنية الإلكترونيات (ECT)</span>
                     </a>
-                    <a href="ICTflowchart.html" class="tap-active flex items-center gap-4 p-4 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-all">
+                    <a href="ICTflowchart.html" class="tap-active flex items-center gap-4 p-5 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-all">
                         <div class="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center text-purple-400">
                             <i class="fa-solid fa-tower-broadcast"></i>
                         </div>
-                        <span class="text-sm font-bold text-white/80">تقنية الآلات والتحكم (ICT)</span>
+                        <span class="text-sm font-bold">تقنية الآلات والتحكم (ICT)</span>
                     </a>
-                    <a href="MechT.html" class="tap-active flex items-center gap-4 p-4 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-all">
+                    <a href="MechT.html" class="tap-active flex items-center gap-4 p-5 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-all">
                         <div class="w-10 h-10 bg-orange-500/10 rounded-lg flex items-center justify-center text-orange-400">
                             <i class="fa-solid fa-gears"></i>
                         </div>
-                        <span class="text-sm font-bold text-white/80">تقنية الميكاترونيكس (MechT)</span>
+                        <span class="text-sm font-bold">تقنية الميكاترونيكس (MechT)</span>
                     </a>
                 </div>
             </div>
         </section>
 
         <section class="mb-24 reveal">
-            <h2 class="text-2xl font-black mb-8 border-r-4 border-amber-500 pr-4">خارطة التطوير</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="glass-card p-6 rounded-3xl border-b-2 border-indigo-500">
-                    <i class="fa-solid fa-sync text-indigo-400 mb-3 block"></i>
-                    <h5 class="font-bold text-sm mb-2 text-white">مزامنة البيانات</h5>
-                    <p class="text-[11px] text-white/40 leading-relaxed">حفظ التقدم الدراسي سحابياً للوصول إليه من أي جهاز.</p>
+            <h2 class="text-2xl font-black mb-8 border-r-4 border-amber-500 pr-4">آفاق المستقبل</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-8 rounded-[2rem] relative overflow-hidden group hover:border-indigo-500/50 transition-all">
+                    <div class="h-1 w-full bg-indigo-500 absolute top-0 left-0"></div>
+                    <i class="fa-solid fa-sync text-indigo-400 text-xl mb-4 block"></i>
+                    <h5 class="font-bold mb-2">مزامنة البيانات</h5>
+                    <p class="text-[11px] text-white/40 leading-relaxed">تخزين تقدمك الدراسي سحابياً للوصول إليه من أي مكان.</p>
                 </div>
-                <div class="glass-card p-6 rounded-3xl border-b-2 border-cyan-500">
-                    <i class="fa-solid fa-chart-line text-cyan-400 mb-3 block"></i>
-                    <h5 class="font-bold text-sm mb-2 text-white">تحليل الإنجاز</h5>
-                    <p class="text-[11px] text-white/40 leading-relaxed">رسوم بيانية توضح النسبة المئوية المتبقية للتخرج.</p>
+                <div class="glass-card p-8 rounded-[2rem] relative overflow-hidden group hover:border-cyan-500/50 transition-all">
+                    <div class="h-1 w-full bg-cyan-500 absolute top-0 left-0"></div>
+                    <i class="fa-solid fa-chart-line text-cyan-400 text-xl mb-4 block"></i>
+                    <h5 class="font-bold mb-2">تحليل الإنجاز</h5>
+                    <p class="text-[11px] text-white/40 leading-relaxed">رسوم بيانية ذكية توضح نسبة الإنجاز والزمن المتبقي.</p>
                 </div>
-                <div class="glass-card p-6 rounded-3xl border-b-2 border-purple-500">
-                    <i class="fa-solid fa-book text-purple-400 mb-3 block"></i>
-                    <h5 class="font-bold text-sm mb-2 text-white">المكتبة الرقمية</h5>
-                    <p class="text-[11px] text-white/40 leading-relaxed">ربط كل مادة بكتبها ومراجعها الدراسية مباشرة.</p>
+                <div class="glass-card p-8 rounded-[2rem] relative overflow-hidden group hover:border-purple-500/50 transition-all">
+                    <div class="h-1 w-full bg-purple-500 absolute top-0 left-0"></div>
+                    <i class="fa-solid fa-book text-purple-400 text-xl mb-4 block"></i>
+                    <h5 class="font-bold mb-2">المكتبة الرقمية</h5>
+                    <p class="text-[11px] text-white/40 leading-relaxed">توفير الكتب والمراجع الدراسية لكل مادة بشكل مباشر.</p>
                 </div>
             </div>
         </section>
@@ -223,7 +225,7 @@
     </div>
 
     <script>
-        // أنيميشن المحاكاة
+        // أنيميشن المحاكاة (نفس الأكواد السابقة بدون تعديل)
         function startShowcase() {
             const module = document.getElementById('main-module');
             const check = document.getElementById('module-check');
@@ -246,7 +248,6 @@
                 status.innerText = "System Ready";
             };
 
-            // مرحلة 1: البحث
             setTimeout(() => {
                 cursor.style.transform = "translate(-15px, -30px)";
                 status.innerText = "Querying Paths...";
@@ -255,7 +256,6 @@
                 module.style.borderColor = "#fbbf24";
             }, 1000);
 
-            // مرحلة 2: الإنجاز
             setTimeout(() => {
                 module.style.borderColor = "#10b981";
                 module.style.backgroundColor = "rgba(16, 185, 129, 0.05)";
@@ -271,7 +271,6 @@
             }, 7000);
         }
 
-        // تشغيل الظهور عند التمرير
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('active');
@@ -280,7 +279,6 @@
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // التشغيل
         window.addEventListener('load', () => {
             setTimeout(startShowcase, 500);
         });
