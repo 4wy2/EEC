@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>دليل المخططات الهندسية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #020617;
+      --card-bg: rgba(15, 23, 42, 0.7);
+      --border: rgba(255, 255, 255, 0.1);
+      --blue: #38bdf8;
+      --yellow: #fbbf24;
+      --green: #22c55e;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.05) 0%, transparent 20%);
+      color: var(--text);
+      font-family: 'Cairo', sans-serif;
+      line-height: 1.6;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px 30px;
+    }
+
+    .tagline {
+      color: var(--blue);
+      font-weight: 700;
+      letter-spacing: 2px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      font-weight: 900;
+      margin: 0;
+      background: linear-gradient(to bottom, #fff 40%, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    section {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 20px 60px;
+    }
+
+    /* توزيع الكروت العلوية */
+    .info-wrapper {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 30px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .glass-card h2 {
+      color: var(--blue);
+      margin-top: 0;
+      font-size: 1.3rem;
+      border-right: 4px solid var(--blue);
+      padding-right: 12px;
+      margin-bottom: 25px;
+    }
+
+    .instruction-list { list-style: none; padding: 0; margin: 0; }
+    .instruction-list li {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+    }
+
+    .instruction-list b { color: #fff; font-size: 1.05rem; display: block; margin-bottom: 4px; }
+    .instruction-list span { color: var(--muted); font-size: 0.9rem; }
+    .icon-box { font-size: 1.8rem; min-width: 40px; }
+
+    .legend-grid { display: flex; flex-direction: column; gap: 18px; }
+    .legend-item { display: flex; align-items: center; gap: 15px; }
+    .dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 15px currentColor;
+    }
+
+    /* الأزرار والمسارات */
+    .section-title {
+      text-align: center;
+      margin: 40px 0 25px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .section-title::before, .section-title::after {
+      content: ""; flex: 1; height: 1px; background: var(--border);
+    }
+
+    .main-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      margin-bottom: 25px;
+      background: linear-gradient(145deg, rgba(56,189,248,0.15), transparent);
+      border: 2px solid var(--blue);
+      border-radius: 30px;
+      text-decoration: none;
+      color: #fff;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .main-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px -10px rgba(56,189,248,0.4);
+      background: linear-gradient(145deg, rgba(56,189,248,0.25), transparent);
+    }
+
+    .sub-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 15px;
+    }
+
+    .sub-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 25px;
+      border-radius: 22px;
+      text-decoration: none;
+      color: #fff;
+      transition: 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .sub-btn:hover {
+      border-color: var(--blue);
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-3px);
+    }
+
+    .sub-btn b { font-size: 1.1rem; margin-top: 10px; }
+
+    footer {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+
+    /* تحسينات الشاشات المختلفة */
+
+    /* الأجهزة اللوحية (iPad) */
+    @media (max-width: 1024px) {
+      .info-wrapper { grid-template-columns: 1fr; }
+      section { padding: 0 30px 40px; }
+    }
+
+    /* الجوال */
+    @media (max-width: 600px) {
+      header { padding: 40px 15px 25px; }
+      .glass-card { padding: 25px 20px; border-radius: 20px; }
+      .main-btn { padding: 30px 15px; border-radius: 20px; }
+      .sub-grid { grid-template-columns: 1fr; }
+      .icon-box { font-size: 1.4rem; }
+      h1 { font-size: 2.2rem; }
+    }
+
+    /* منع السحب لليسار بسبب العناصر الواسعة */
+    body, html { overflow-x: hidden; }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="tagline">Interactive Engineering Maps</span>
+  <h1>دليل المخططات</h1>
+</header>
+
+<section>
+  <div class="info-wrapper">
+    <div class="glass-card">
+      <h2>كيف تستخدم المخطط؟</h2>
+      <ul class="instruction-list">
+        <li>
+          <div class="icon-box">🖱️</div>
+          <div>
+            <b>تفاعل ذكي</b>
+            <span>بنقرة واحدة تظهر لك العلاقات بين المواد (المتطلبات).</span>
+          </div>
+        </li>
+        <li>
+          <div class="icon-box">✅</div>
+          <div>
+            <b>تتبع الإنجاز</b>
+            <span>أنقر مرتين (Double Click) لتحديد المادة كمجتازة.</span>
+          </div>
+        </li>
+        <li>
+          <div class="icon-box">🔍</div>
+          <div>
+            <b>تحكم كامل</b>
+            <span>استخدم إصبعين للزوم في الجوال أو عجلة الماوس في اللابتوب.</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="glass-card">
+      <h2>دليل الألوان</h2>
+      <div class="legend-grid">
+        <div class="legend-item">
+          <div class="dot" style="background:var(--blue); color:var(--blue)"></div>
+          <div><b>Prerequisite</b><br><small style="color:var(--muted)">متطلب سابق إلزامي</small></div>
+        </div>
+        <div class="legend-item">
+          <div class="dot" style="background:var(--yellow); color:var(--yellow)"></div>
+          <div><b>Co-requisite</b><br><small style="color:var(--muted)">متطلب متزامن (تدرس معاً)</small></div>
+        </div>
+        <div class="legend-item">
+          <div class="dot" style="background:var(--green); color:var(--green)"></div>
+          <div><b>Completed</b><br><small style="color:var(--muted)">مادة تم اجتيازها</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">اختر المسار الدراسي</div>
+
+  <a href="EEflowchart.html" class="main-btn">
+    <span style="font-size: 2.5rem; margin-bottom: 10px;">⚡</span>
+    <span style="font-size: 1.5rem; font-weight: 900;">Electrical Engineering</span>
+    <span style="color: var(--blue); font-weight: 600; font-size: 0.9rem;">بكالوريوس الهندسة الكهربائية</span>
+  </a>
+
+  <div class="sub-grid">
+    <a href="ECTflowchart.html" class="sub-btn">
+      <span style="font-size: 2rem;">📡</span>
+      <b>Electronics</b>
+      <span>الإلكترونيات والاتصالات</span>
+    </a>
+    <a href="EPTflowchart.html" class="sub-btn">
+      <span style="font-size: 2rem;">🔌</span>
+      <b>Power Systems</b>
+      <span>تقنية القوى الكهربائية</span>
+    </a>
+    <a href="MechT.html" class="sub-btn">
+      <span style="font-size: 2rem;">⚙️</span>
+      <b>Mechatronics</b>
+      <span>تقنية الميكاترونكس</span>
+    </a>
+    <a href="ICTflowchart.html" class="sub-btn">
+      <span style="font-size: 2rem;">🎛️</span>
+      <b>Instruments</b>
+      <span>القياس والتحكم</span>
+    </a>
+  </div>
+
+  <div style="text-align: center; margin-top: 50px; color: var(--yellow); font-size: 0.85rem; background: rgba(251, 191, 36, 0.05); padding: 15px; border-radius: 15px; border: 1px dashed rgba(251, 191, 36, 0.3);">
+    ⚠️ النظام في مرحلة التطوير - التحديثات تتم بشكل دوري.
+  </div>
+</section>
+
+<footer>
+  DESIGNED BY AL-RASSASI &copy; 2026
+</footer>
+
+</body>
+</html>
