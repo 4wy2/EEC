@@ -15,7 +15,8 @@
       --accent-blue: #38bdf8;
       --accent-yellow: #fbbf24;
       --accent-green: #22c55e;
-      --card-width: 135px;
+      /* عرض مرن للبطاقة يتناسب مع حجم الشاشة */
+      --card-width: clamp(115px, 12vw, 135px);
     }
 
     * { box-sizing: border-box; }
@@ -31,19 +32,30 @@
     }
 
     header {
-      padding: 20px;
+      padding: clamp(10px, 2vh, 20px);
       text-align: center;
       position: fixed;
       top: 0; left: 0; right: 0;
       background: rgba(5, 8, 16, 0.95);
       backdrop-filter: blur(10px);
-      z-index: 1000;
+      z-index: 2000;
       border-bottom: 1px solid var(--card-border);
     }
+
+    header h2 {
+      margin: 0;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #fff;
+      font-size: clamp(1rem, 4vw, 1.5rem);
+    }
+
     .legend {
       display: inline-flex;
-      gap: 20px;
-      font-size: 0.8rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: clamp(10px, 2vw, 20px);
+      font-size: clamp(0.6rem, 2vw, 0.8rem);
       margin-top: 10px;
     }
     .legend-item { display: flex; align-items: center; gap: 6px; }
@@ -64,49 +76,39 @@
     .flowchart-wrapper {
       position: absolute;
       transform-origin: center center; 
-      padding: 500px;
+      padding: 300px; /* تقليل البادينج لتحسين الأداء وتحديد القيود */
       will-change: transform;
       display: flex;
       flex-direction: column;
     }
 
-    /* --- تعديل السنوات --- */
     .year-section {
-  display: flex;
-  margin-bottom: 80px; /* المسافة بين السنوات */
-  position: relative;
-  padding-bottom: 75px; /* مسافة لترك مساحة للخط في المنتصف */
-}
+      display: flex;
+      margin-bottom: 80px;
+      position: relative;
+      padding-bottom: 75px;
+    }
 
-/* رسم الخط الكامل باستخدام Pseudo-element */
-.year-section::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 80px;  /* يبدأ بعد السايدبار قليلاً */
-  right: 40px; /* ينتهي قبل الحافة اليمنى */
-  height: 2px; /* سمك الخط */
-  /* تدرج لوني: شفاف -> لون خفيف -> شفاف */
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.15) 20%, 
-    rgba(255, 255, 255, 0.15) 80%, 
-    transparent
-  );
-  border-radius: 2px;
-}
+    .year-section::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 80px;
+      right: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15) 20%, rgba(255, 255, 255, 0.15) 80%, transparent);
+      border-radius: 2px;
+    }
 
-/* إخفاء الخط بعد السنة الأخيرة (Senior) */
-.year-section:last-of-type::after {
-  display: none;
-}
+    .year-section:last-of-type::after { display: none; }
+
     .year-sidebar {
       width: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
-      border-right: 3px solid #333; /* سيتم تغيير اللون في HTML */
+      border-right: 3px solid #333;
       flex-shrink: 0;
     }
     .year-label {
@@ -114,8 +116,7 @@
       transform: rotate(180deg);
       font-weight: 900;
       letter-spacing: 5px;
-      font-size: 1.2rem;
-      transition: all 0.3s;
+      font-size: clamp(1rem, 3vw, 1.2rem);
     }
 
     .semesters-container {
@@ -125,31 +126,28 @@
       gap: 75px; 
     }
 
-    /* --- تعديل السمسترات --- */
     .semester-row { 
-        display: flex; 
-        align-items: center; 
-        padding-left: 30px; 
-        transition: all 0.3s ease;
+      display: flex; 
+      align-items: center; 
+      padding-left: clamp(15px, 3vw, 30px); 
     }
+
     .sem-indicator {
-      width: 100px;
+      width: clamp(70px, 10vw, 100px);
       font-size: 0.75rem;
       font-weight: 800;
       text-transform: uppercase;
       flex-shrink: 0;
-      color: var(--text-muted); /* لون موحد هادئ */
+      color: var(--text-muted);
       border-left: 2px solid rgba(255,255,255,0.05);
       padding-left: 15px;
       letter-spacing: 2px;
-      transition: all 0.3s ease;
-    }
-    .semester-row:hover .sem-indicator {
-        color: var(--text-main);
-        border-left-color: rgba(255,255,255,0.3);
     }
 
-    .course-list { display: flex; gap: 50px; }
+    .course-list { 
+      display: flex; 
+      gap: clamp(20px, 4vw, 50px); 
+    }
 
     .card {
       width: var(--card-width);
@@ -170,32 +168,28 @@
     }
     
     .card.selected { 
-        border-color: var(--accent-yellow) !important; 
-        box-shadow: 0 0 25px rgba(251, 191, 36, 0.5); 
-        z-index: 100;
-        background: #1e293b;
+      border-color: var(--accent-yellow) !important; 
+      box-shadow: 0 0 25px rgba(251, 191, 36, 0.5); 
+      z-index: 100;
+      background: #1e293b;
     }
 
     .card.completed {
       border-color: var(--accent-green) !important;
       background: rgba(34, 197, 94, 0.2) !important;
-      box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
     }
     .card.completed::after {
       content: '✓';
       position: absolute;
-      top: 5px;
-      right: 8px;
+      top: 5px; right: 8px;
       color: var(--accent-green);
-      font-weight: bold;
-      font-size: 14px;
+      font-weight: bold; font-size: 14px;
     }
-    .card.completed .code { color: var(--accent-green) !important; }
 
     .card.dimmed { opacity: 0.2; filter: grayscale(0.5); }
     
-    .code { font-family: 'JetBrains Mono'; font-size: 0.85rem; color: var(--accent-blue); font-weight: 800; pointer-events: none; }
-    .name { font-size: 0.6rem; color: #cbd5e1; margin-top: 5px; font-weight: 600; line-height: 1.2; padding: 0 8px; pointer-events: none; }
+    .code { font-family: 'JetBrains Mono'; font-size: clamp(0.7rem, 2vw, 0.85rem); color: var(--accent-blue); font-weight: 800; }
+    .name { font-size: 0.6rem; color: #cbd5e1; margin-top: 5px; font-weight: 600; padding: 0 8px; line-height: 1.1; }
 
     #svg-canvas {
       position: absolute;
@@ -207,54 +201,49 @@
 
     path { transition: opacity 0.4s ease; stroke-linecap: round; }
     path.active-path { opacity: 1 !important; stroke-width: 3; filter: drop-shadow(0 0 5px var(--accent-blue)); }
-    path.faded { opacity: 0.02 !important; }
+    path.faded { opacity: 0.05 !important; }
 
     .zoom-controls {
       position: fixed;
-      bottom: 30px;
-      right: 30px;
+      bottom: 20px;
+      right: 20px;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      z-index: 2000;
+      z-index: 3000;
     }
     
     .zoom-btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 12px;
+      width: 45px; height: 45px;
+      border-radius: 10px;
       border: 1px solid var(--card-border);
       background: rgba(15, 23, 42, 0.9);
       color: white;
-      font-size: 24px;
-      font-weight: bold;
+      font-size: 20px;
       cursor: pointer;
       backdrop-filter: blur(5px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
     }
   </style>
 </head>
 <body>
 
-<header>
-  
-  <h2 style="margin:0; font-weight:900; letter-spacing: 2px; color: #fff;">ELECTRICAL ENGINEERING STUDY PLAN</h2>
-<div style="font-size: 0.85rem; color: #fff; font-weight: 600; letter-spacing: 1px;">
-        Designed & Developed by <span style="color: #38bdf8; border-bottom: 1px solid rgba(56, 189, 248, 0.3);">AL-RASSASI</span>
-    </div>
+<header id="main-header">
+  <h2>ELECTRICAL ENGINEERING STUDY PLAN</h2>
+  <div style="font-size: 0.85rem; color: #fff; font-weight: 600; letter-spacing: 1px;">
+    Designed & Developed by <span style="color: #38bdf8;">AL-RASSASI</span>
+  </div>
   <div class="legend">
     <div class="legend-item"><div class="dot" style="background:var(--accent-blue)"></div> Prerequisite</div>
     <div class="legend-item"><div class="dot" style="background:var(--accent-yellow)"></div> Co-requisite</div>
-    <div class="legend-item"><div class="dot" style="background:var(--accent-green)"></div> Completed (Double Click)</div>
+    <div class="legend-item"><div class="dot" style="background:var(--accent-green)"></div> Completed (Dbl Click)</div>
   </div>
 </header>
 
 <div class="zoom-controls">
   <button class="zoom-btn" onclick="manualZoom(1.2)">+</button>
   <button class="zoom-btn" onclick="manualZoom(0.8)">-</button>
-  <button class="zoom-btn" onclick="resetView()" style="font-size: 12px;">RESET</button>
+  <button class="zoom-btn" onclick="resetView()" style="font-size: 10px;">RESET</button>
 </div>
 
 <div class="viewport" id="viewport">
@@ -262,77 +251,77 @@
     <svg id="svg-canvas"></svg>
 
     <div class="year-section">
-    <div class="year-sidebar"><span class="year-label" style="color:var(--text-main);">YEAR 1</span></div>
-    <div class="semesters-container">
-      <div class="semester-row">
-        <div class="sem-indicator">SEM 1</div>
-        <div class="course-list">
-          <div class="card" id="ENG101"><div class="code">ENG 101</div><div class="name">English Communication</div></div>
-          <div class="card" id="GSMA101"><div class="code">GSMA 101</div><div class="name">Calculus I</div></div>
-          <div class="card" id="GSPH101"><div class="code">GSPH 101</div><div class="name">General Physics</div></div>
-          <div class="card" id="GSPE101"><div class="code">GSPE 101</div><div class="name">Physical Education I</div></div>
-          <div class="card" id="ELET101"><div class="code">ELET 101</div><div class="name">Electrical Circuits I</div></div>
-          <div class="card" id="ELET104"><div class="code">ELET 104</div><div class="name">Computer Programming</div></div>
+      <div class="year-sidebar"><span class="year-label" style="color:var(--text-main);">YEAR 1</span></div>
+      <div class="semesters-container">
+        <div class="semester-row">
+          <div class="sem-indicator">SEM 1</div>
+          <div class="course-list">
+            <div class="card" id="ENG101"><div class="code">ENG 101</div><div class="name">English Communication</div></div>
+            <div class="card" id="GSMA101"><div class="code">GSMA 101</div><div class="name">Calculus I</div></div>
+            <div class="card" id="GSPH101"><div class="code">GSPH 101</div><div class="name">General Physics</div></div>
+            <div class="card" id="GSPE101"><div class="code">GSPE 101</div><div class="name">Physical Education I</div></div>
+            <div class="card" id="ELET101"><div class="code">ELET 101</div><div class="name">Electrical Circuits I</div></div>
+            <div class="card" id="ELET104"><div class="code">ELET 104</div><div class="name">Computer Programming</div></div>
+          </div>
         </div>
-      </div>
-      <div class="semester-row">
-        <div class="sem-indicator">SEM 2</div>
-        <div class="course-list">
-          <div class="card" id="GSCH101"><div class="code">GSCH 101</div><div class="name">General Chemistry</div></div>
-          <div class="card" id="GSMA102"><div class="code">GSMA 102</div><div class="name">Calculus II</div></div>
-          <div class="card" id="ENG102"><div class="code">ENG 102</div><div class="name">English Composition</div></div>
-          <div class="card" id="ELET102"><div class="code">ELET 102</div><div class="name">Electrical Circuits II</div></div>
-          <div class="card" id="ELET103"><div class="code">ELET 103</div><div class="name">Electrical Machines I</div></div>
-          <div class="card" id="ELET105"><div class="code">ELET 105</div><div class="name">Electronics I</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="year-section">
-    <div class="year-sidebar"><span class="year-label" style="color:var(--accent-blue);">YEAR 2</span></div>
-    <div class="semesters-container">
-      <div class="semester-row">
-        <div class="sem-indicator">SEM 3</div>
-        <div class="course-list">
-          <div class="card" id="GSST201"><div class="code">GSST 201</div><div class="name">Applied Statistics</div></div>
-          <div class="card" id="ENGT201"><div class="code">ENGT 201</div><div class="name">Industrial Safety</div></div>
-          <div class="card" id="ELET201"><div class="code">ELET 201</div><div class="name">Basic Industrial Electronics</div></div>
-          <div class="card" id="ELET202"><div class="code">ELET 202</div><div class="name">Digital Electronics I</div></div>
-          <div class="card" id="ELET203"><div class="code">ELET 203</div><div class="name">Control System Components</div></div>
-          <div class="card" id="ELET221"><div class="code">ELET 221</div><div class="name">Electrical Installations</div></div>
-          <div class="card" id="ELET222"><div class="code">ELET 222</div><div class="name">Electrical Machines II</div></div>
-        </div>
-      </div>
-      <div class="semester-row">
-        <div class="sem-indicator">SEM 4</div>
-        <div class="course-list">
-          <div class="card" id="GSIS101"><div class="code">GSIS 101</div><div class="name">Islamic Ideology</div></div>
-          <div class="card" id="ENG201"><div class="code">ENG 201</div><div class="name">Technical Report Writing</div></div>
-          <div class="card" id="ENGT202"><div class="code">ENGT 202</div><div class="name">Industrial Supervision</div></div>
-          <div class="card" id="ELET223"><div class="code">ELET 223</div><div class="name">Electrical Motor Control</div></div>
-          <div class="card" id="ELET224"><div class="code">ELET 224</div><div class="name">Electrical Power Systems</div></div>
-          <div class="card" id="ELET225"><div class="code">ELET 225</div><div class="name">Electrical Trbl Shtg & Maint</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="year-section">
-    <div class="year-sidebar"><span class="year-label" style="color:var(--accent-green);">CO-OP</span></div>
-    <div class="semesters-container">
-      <div class="semester-row">
-        <div class="sem-indicator">TRAINING</div>
-        <div class="course-list">
-          <div class="card" id="ELET320" style="width: 250px;">
-            <div class="code">ELET 320</div>
-            <div class="name">Co-op Training (14 Weeks)</div>
-            <div style="font-size: 0.5rem; color: var(--accent-yellow); margin-top: 4px;">Requires 67 Credit Hours</div>
+        <div class="semester-row">
+          <div class="sem-indicator">SEM 2</div>
+          <div class="course-list">
+            <div class="card" id="GSCH101"><div class="code">GSCH 101</div><div class="name">General Chemistry</div></div>
+            <div class="card" id="GSMA102"><div class="code">GSMA 102</div><div class="name">Calculus II</div></div>
+            <div class="card" id="ENG102"><div class="code">ENG 102</div><div class="name">English Composition</div></div>
+            <div class="card" id="ELET102"><div class="code">ELET 102</div><div class="name">Electrical Circuits II</div></div>
+            <div class="card" id="ELET103"><div class="code">ELET 103</div><div class="name">Electrical Machines I</div></div>
+            <div class="card" id="ELET105"><div class="code">ELET 105</div><div class="name">Electronics I</div></div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+
+    <div class="year-section">
+      <div class="year-sidebar"><span class="year-label" style="color:var(--accent-blue);">YEAR 2</span></div>
+      <div class="semesters-container">
+        <div class="semester-row">
+          <div class="sem-indicator">SEM 3</div>
+          <div class="course-list">
+            <div class="card" id="GSST201"><div class="code">GSST 201</div><div class="name">Applied Statistics</div></div>
+            <div class="card" id="ENGT201"><div class="code">ENGT 201</div><div class="name">Industrial Safety</div></div>
+            <div class="card" id="ELET201"><div class="code">ELET 201</div><div class="name">Basic Industrial Electronics</div></div>
+            <div class="card" id="ELET202"><div class="code">ELET 202</div><div class="name">Digital Electronics I</div></div>
+            <div class="card" id="ELET203"><div class="code">ELET 203</div><div class="name">Control System Components</div></div>
+            <div class="card" id="ELET221"><div class="code">ELET 221</div><div class="name">Electrical Installations</div></div>
+            <div class="card" id="ELET222"><div class="code">ELET 222</div><div class="name">Electrical Machines II</div></div>
+          </div>
+        </div>
+        <div class="semester-row">
+          <div class="sem-indicator">SEM 4</div>
+          <div class="course-list">
+            <div class="card" id="GSIS101"><div class="code">GSIS 101</div><div class="name">Islamic Ideology</div></div>
+            <div class="card" id="ENG201"><div class="code">ENG 201</div><div class="name">Technical Report Writing</div></div>
+            <div class="card" id="ENGT202"><div class="code">ENGT 202</div><div class="name">Industrial Supervision</div></div>
+            <div class="card" id="ELET223"><div class="code">ELET 223</div><div class="name">Electrical Motor Control</div></div>
+            <div class="card" id="ELET224"><div class="code">ELET 224</div><div class="name">Electrical Power Systems</div></div>
+            <div class="card" id="ELET225"><div class="code">ELET 225</div><div class="name">Electrical Trbl Shtg & Maint</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="year-section">
+      <div class="year-sidebar"><span class="year-label" style="color:var(--accent-green);">CO-OP</span></div>
+      <div class="semesters-container">
+        <div class="semester-row">
+          <div class="sem-indicator">TRAINING</div>
+          <div class="course-list">
+            <div class="card" id="ELET320" style="width: clamp(180px, 20vw, 250px);">
+              <div class="code">ELET 320</div>
+              <div class="name">Co-op Training (14 Weeks)</div>
+              <div style="font-size: 0.5rem; color: var(--accent-yellow); margin-top: 4px;">Requires 67 Credit Hours</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 </div>
@@ -341,6 +330,7 @@
 const wrapper = document.getElementById('main-wrapper');
 const viewport = document.getElementById('viewport');
 const svg = document.getElementById('svg-canvas');
+const header = document.getElementById('main-header');
 
 let scale = 0.7;
 let translateX = 0;
@@ -350,65 +340,57 @@ let startX, startY;
 let initialPinchDist = null;
 
 const connections = [
-  // --- الفصل الدراسي الأول إلى الثاني ---
-  { from: 'GSMA101', to: 'GSMA102', type: 'pre' }, // Calculus I -> II
-  { from: 'ENG101',  to: 'ENG102',  type: 'pre' }, // English Comm -> Comp
-  { from: 'GSPH101', to: 'ELET101', type: 'co'  }, // Physics & Circuits I
-  { from: 'ELET101', to: 'ELET102', type: 'pre' }, // Circuits I -> II
-  { from: 'ELET101', to: 'ELET103', type: 'pre' }, // Circuits I -> Machines I
-  { from: 'ELET102', to: 'ELET103', type: 'co'  }, // Circuits II & Machines I
-  { from: 'ELET101', to: 'ELET105', type: 'pre' }, // Circuits I -> Electronics I
-  { from: 'ELET102', to: 'ELET105', type: 'co'  }, // Circuits II & Electronics I
-
-  // --- الفصل الثاني إلى الثالث ---
-  { from: 'GSMA102', to: 'GSST201', type: 'pre' }, // Calculus II -> Stats
-  { from: 'ENG102',  to: 'ENGT201', type: 'pre' }, // English Comp -> Safety
-  { from: 'ELET105', to: 'ELET201', type: 'pre' }, // Electronics I -> Basic Ind Electronics
-  { from: 'ELET105', to: 'ELET202', type: 'pre' }, // Electronics I -> Digital I
-  { from: 'GSMA102', to: 'ELET203', type: 'pre' }, // Calculus II -> Control Systems
-  { from: 'ELET102', to: 'ELET221', type: 'pre' }, // Circuits II -> Installations
-  { from: 'ELET103', to: 'ELET222', type: 'pre' }, // Machines I -> II
-
-  // --- الفصل الثالث إلى الرابع ---
-  { from: 'ENG102',  to: 'ENG201',  type: 'pre' }, // English Comp -> Technical Report
-  { from: 'ENG102',  to: 'ENGT202', type: 'pre' }, // English Comp -> Supervision
-  { from: 'ELET201', to: 'ELET223', type: 'pre' }, // Ind Electronics -> Motor Control
-  { from: 'ELET203', to: 'ELET223', type: 'pre' }, // Control Systems -> Motor Control
-  { from: 'ELET222', to: 'ELET223', type: 'pre' }, // Machines II -> Motor Control
-  { from: 'ELET222', to: 'ELET224', type: 'pre' }, // Machines II -> Power Systems
-  { from: 'ELET222', to: 'ELET225', type: 'pre' }, // Machines II -> Troubleshooting
-  { from: 'ELET223', to: 'ELET225', type: 'co'  }, // Motor Control & Troubleshooting
-  { from: 'ELET224', to: 'ELET225', type: 'co'  }  // Power Systems & Troubleshooting
+  { from: 'GSMA101', to: 'GSMA102', type: 'pre' },
+  { from: 'ENG101',  to: 'ENG102',  type: 'pre' },
+  { from: 'GSPH101', to: 'ELET101', type: 'co'  },
+  { from: 'ELET101', to: 'ELET102', type: 'pre' },
+  { from: 'ELET101', to: 'ELET103', type: 'pre' },
+  { from: 'ELET102', to: 'ELET103', type: 'co'  },
+  { from: 'ELET101', to: 'ELET105', type: 'pre' },
+  { from: 'ELET102', to: 'ELET105', type: 'co'  },
+  { from: 'GSMA102', to: 'GSST201', type: 'pre' },
+  { from: 'ENG102',  to: 'ENGT201', type: 'pre' },
+  { from: 'ELET105', to: 'ELET201', type: 'pre' },
+  { from: 'ELET105', to: 'ELET202', type: 'pre' },
+  { from: 'GSMA102', to: 'ELET203', type: 'pre' },
+  { from: 'ELET102', to: 'ELET221', type: 'pre' },
+  { from: 'ELET103', to: 'ELET222', type: 'pre' },
+  { from: 'ENG102',  to: 'ENG201',  type: 'pre' },
+  { from: 'ENG102',  to: 'ENGT202', type: 'pre' },
+  { from: 'ELET201', to: 'ELET223', type: 'pre' },
+  { from: 'ELET203', to: 'ELET223', type: 'pre' },
+  { from: 'ELET222', to: 'ELET223', type: 'pre' },
+  { from: 'ELET222', to: 'ELET224', type: 'pre' },
+  { from: 'ELET222', to: 'ELET225', type: 'pre' },
+  { from: 'ELET223', to: 'ELET225', type: 'co'  },
+  { from: 'ELET224', to: 'ELET225', type: 'co'  }
 ];
-const MIN_SCALE = 0.4;
+
+const MIN_SCALE = 0.35;
 const MAX_SCALE = 2.0;
+
 function updateTransform() {
     const vWidth = viewport.clientWidth;
     const vHeight = viewport.clientHeight;
-    const headerHeight = document.querySelector('header').offsetHeight; // حساب ارتفاع الهيدر تلقائياً
+    const hHeight = header.offsetHeight;
 
-    // حساب الأبعاد الحقيقية للمحتوى بعد الزوم
     const rect = wrapper.getBoundingClientRect();
     const contentWidth = rect.width;
     const contentHeight = rect.height;
 
-    // قيود الحركة (Bounds)
-    // القيد العلوي: يمنع أول مادة من الصعود فوق حافة الهيدر
-    const topLimit = (contentHeight * 0.5 * scale) - (vHeight * 0.5) + headerHeight + 20; 
-    
-    // القيد الجانبي والسفلي
-    const maxX = (contentWidth / 2) + (vWidth / 2) - 100;
-    const maxY = (contentHeight / 2) + (vHeight / 2) - 100;
+    // قيود الحركة: تمنع الجدول من الخروج تماماً عن الشاشة
+    // القيد العلوي يمنع التداخل مع الهيدر
+    const topBound = (contentHeight / 2) - (vHeight / 2) + hHeight + 20;
+    const xBound = (contentWidth / 2) + (vWidth / 2) - 150;
+    const yBound = (contentHeight / 2) + (vHeight / 2) - 150;
 
-    // تطبيق القيود
-    translateX = Math.min(Math.max(translateX, -maxX), maxX);
-    // القيد الجديد لـ Y يضمن عدم الاختفاء خلف الهيدر
-    translateY = Math.max(translateY, -topLimit); 
-    translateY = Math.min(translateY, maxY);
+    translateX = Math.min(Math.max(translateX, -xBound), xBound);
+    translateY = Math.min(Math.max(translateY, -topBound), yBound);
 
     wrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
 }
-// السحب بالماوس
+
+// الماوس واللمس
 viewport.addEventListener('mousedown', (e) => {
   if (e.target.closest('.card')) return;
   isDragging = true;
@@ -425,7 +407,6 @@ window.addEventListener('mousemove', (e) => {
 
 window.addEventListener('mouseup', () => isDragging = false);
 
-// اللمس للجوال
 viewport.addEventListener('touchstart', (e) => {
   if (e.touches.length === 1) {
     if (e.target.closest('.card')) return;
@@ -433,10 +414,7 @@ viewport.addEventListener('touchstart', (e) => {
     startX = e.touches[0].clientX - translateX;
     startY = e.touches[0].clientY - translateY;
   } else if (e.touches.length === 2) {
-    initialPinchDist = Math.hypot(
-      e.touches[0].clientX - e.touches[1].clientX,
-      e.touches[0].clientY - e.touches[1].clientY
-    );
+    initialPinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
   }
 }, { passive: false });
 
@@ -445,62 +423,50 @@ viewport.addEventListener('touchmove', (e) => {
     translateX = e.touches[0].clientX - startX;
     translateY = e.touches[0].clientY - startY;
   } else if (e.touches.length === 2 && initialPinchDist) {
-    const currentDist = Math.hypot(
-      e.touches[0].clientX - e.touches[1].clientX,
-      e.touches[0].clientY - e.touches[1].clientY
-    );
+    const currentDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
     const delta = currentDist / initialPinchDist;
-    scale = Math.min(Math.max(0.2, scale * delta), 3);
+    scale = Math.min(Math.max(MIN_SCALE, scale * delta), MAX_SCALE);
     initialPinchDist = currentDist;
   }
   updateTransform();
   e.preventDefault();
 }, { passive: false });
 
-viewport.addEventListener('touchend', () => {
-  isDragging = false;
-  initialPinchDist = null;
-});
+viewport.addEventListener('touchend', () => { isDragging = false; initialPinchDist = null; });
 
-// الزوم
 viewport.addEventListener('wheel', (e) => {
   e.preventDefault();
   const delta = e.deltaY > 0 ? 0.9 : 1.1;
-  scale = Math.min(Math.max(0.2, scale * delta), 3);
+  const newScale = Math.min(Math.max(MIN_SCALE, scale * delta), MAX_SCALE);
+  scale = newScale;
   updateTransform();
 }, { passive: false });
 
-// تعديل دالة manualZoom لترتبط بالحدود الجديدة
 function manualZoom(factor) {
-    const newScale = scale * factor;
-    if (newScale >= MIN_SCALE && newScale <= MAX_SCALE) {
-        scale = newScale;
-        updateTransform();
-    }
-}
-
-// تعديل دالة resetView لتكون هي الـ "Safe Zone"
-function resetView() {
-    const vWidth = viewport.clientWidth;
-    const vHeight = viewport.clientHeight;
-    
-    // الأبعاد التقريبية لخطة EPTP بناءً على الكود الخاص بك
-    const contentWidth = 1400; 
-    const contentHeight = 1200;
-
-    // حساب الزوم الذي يجعل الخطة تملأ الشاشة تماماً مثل صورتك
-    const scaleX = vWidth / contentWidth;
-    const scaleY = vHeight / contentHeight;
-    
-    // نختار القيمة الأصغر لضمان عدم خروج أي جزء، مع ضربها في 0.8 لترك مسافة جمالية
-    scale = Math.min(Math.max(Math.min(scaleX, scaleY) * 0.85, MIN_SCALE), MAX_SCALE);
-
-    // التوسيط التام
-    translateX = 0;
-    translateY = 0;
-
+  const newScale = scale * factor;
+  if (newScale >= MIN_SCALE && newScale <= MAX_SCALE) {
+    scale = newScale;
     updateTransform();
+  }
 }
+
+function resetView() {
+  const vWidth = viewport.clientWidth;
+  const vHeight = viewport.clientHeight;
+  const hHeight = header.offsetHeight;
+  
+  // ضبط الحجم ليناسب الشاشة مع ترك هامش
+  scale = Math.min(vWidth / 1400, vHeight / 1200) * 0.9;
+  scale = Math.min(Math.max(scale, MIN_SCALE), MAX_SCALE);
+
+  translateX = 0;
+  // إزاحة البداية ليكون تحت الهيدر مباشرة
+  translateY = - (wrapper.offsetHeight * scale * 0.5) + (vHeight * 0.5) + hHeight + 20;
+
+  updateTransform();
+  drawConnections();
+}
+
 function drawConnections() {
   svg.innerHTML = `
     <defs>
@@ -513,9 +479,9 @@ function drawConnections() {
     </defs>
   `;
   
-  const wrapRect = wrapper.getBoundingClientRect();
   svg.setAttribute('width', wrapper.scrollWidth);
   svg.setAttribute('height', wrapper.scrollHeight);
+  const wrapRect = wrapper.getBoundingClientRect();
 
   connections.forEach((c) => {
     const f = document.getElementById(c.from);
@@ -538,7 +504,7 @@ function drawConnections() {
       const cy1 = (r1.top + r1.height/2 - wrapRect.top) / scale;
       const cx2 = (r2.left - wrapRect.left) / scale;
       const cy2 = (r2.top + r2.height/2 - wrapRect.top) / scale;
-      d = `M ${cx1} ${cy1} L ${cx1+20} ${cy1} L ${cx1+20} ${cy2} L ${cx2-5} ${cy2}`;
+      d = `M ${cx1} ${cy1} L ${cx1+15} ${cy1} L ${cx1+15} ${cy2} L ${cx2-5} ${cy2}`;
       path.setAttribute('stroke', '#fbbf24');
       path.setAttribute('marker-end', 'url(#arrow-co)');
     } else {
@@ -558,18 +524,15 @@ function drawConnections() {
   });
 }
 
-// دالة حفظ الإنجاز في ذاكرة المتصفح
 function saveProgress() {
   const completedIds = Array.from(document.querySelectorAll('.card.completed')).map(c => c.id);
   localStorage.setItem('ee_completed_courses', JSON.stringify(completedIds));
 }
 
-// دالة تحميل الإنجاز المحفوظ
 function loadProgress() {
   const saved = localStorage.getItem('ee_completed_courses');
   if (saved) {
-    const ids = JSON.parse(saved);
-    ids.forEach(id => {
+    JSON.parse(saved).forEach(id => {
       const card = document.getElementById(id);
       if (card) card.classList.add('completed');
     });
@@ -581,41 +544,31 @@ function initInteractions() {
   const paths = document.querySelectorAll('path:not(defs path)');
 
   cards.forEach(card => {
-    
-    // --- (1) نظام اللابتوب: النقر المزدوج بالماوس ---
+    // لابتوب: Dbl Click
     card.addEventListener('dblclick', (e) => {
       e.stopPropagation();
       card.classList.toggle('completed');
       saveProgress();
-      console.log('تم التفعيل عبر اللابتوب (Double Click)');
     });
 
-    // --- (2) نظام الجوال والايباد: النقر المزدوج باللمس ---
+    // جوال: Double Tap
     let lastTap = 0;
     card.addEventListener('touchstart', (e) => {
-      const currentTime = new Date().getTime();
-      const tapLength = currentTime - lastTap;
-      
-      if (tapLength < 300 && tapLength > 0) {
-        // تم اكتشاف نقرتين باللمس
-        e.preventDefault(); // منع الزوم الافتراضي للجوال
+      const now = new Date().getTime();
+      const delta = now - lastTap;
+      if (delta < 300 && delta > 0) {
+        e.preventDefault();
         card.classList.toggle('completed');
         saveProgress();
-        if (navigator.vibrate) navigator.vibrate(50); 
+        if (navigator.vibrate) navigator.vibrate(40);
       }
-      lastTap = currentTime;
+      lastTap = now;
     });
 
-    // --- (3) نظام العرض (النقرة الواحدة): لجميع الأجهزة ---
+    // اختيار المادة لعرض المتطلبات
     card.addEventListener('click', (e) => {
       e.stopPropagation();
-      const cid = card.id;
-
-      if (card.classList.contains('selected')) {
-        clearSelection();
-        return;
-      }
-
+      if (card.classList.contains('selected')) { clearSelection(); return; }
       clearSelection();
       cards.forEach(c => c.classList.add('dimmed'));
       paths.forEach(p => p.classList.add('faded'));
@@ -623,20 +576,18 @@ function initInteractions() {
       card.classList.add('selected');
 
       paths.forEach(p => {
-        if (p.getAttribute('data-from') === cid || p.getAttribute('data-to') === cid) {
+        if (p.getAttribute('data-from') === card.id || p.getAttribute('data-to') === card.id) {
           p.classList.remove('faded');
           p.classList.add('active-path');
-          const fromNode = document.getElementById(p.getAttribute('data-from'));
-          const toNode = document.getElementById(p.getAttribute('data-to'));
-          if(fromNode) fromNode.classList.remove('dimmed');
-          if(toNode) toNode.classList.remove('dimmed');
+          document.getElementById(p.getAttribute('data-from'))?.classList.remove('dimmed');
+          document.getElementById(p.getAttribute('data-to'))?.classList.remove('dimmed');
         }
       });
     });
   });
-
   document.addEventListener('click', () => clearSelection());
 }
+
 function clearSelection() {
   document.querySelectorAll('.card').forEach(c => c.classList.remove('dimmed', 'selected'));
   document.querySelectorAll('path').forEach(p => p.classList.remove('faded', 'active-path'));
@@ -644,11 +595,20 @@ function clearSelection() {
 
 window.onload = () => {
   resetView();
-  drawConnections();
   initInteractions();
-  loadProgress(); // استعادة الإنجاز عند التشغيل
+  loadProgress();
+  // التأكد من رسم الأسهم بعد استقرار الواجهة
+  setTimeout(drawConnections, 500);
 };
-window.onresize = drawConnections;
+
+let resizeTimer;
+window.onresize = () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    drawConnections();
+    updateTransform();
+  }, 250);
+};
 </script>
 </body>
 </html>
