@@ -71,7 +71,35 @@
     }
 
     /* --- تعديل السنوات --- */
-    .year-section { display: flex; margin-bottom: 80px; }
+    .year-section {
+  display: flex;
+  margin-bottom: 80px; /* المسافة بين السنوات */
+  position: relative;
+  padding-bottom: 75px; /* مسافة لترك مساحة للخط في المنتصف */
+}
+
+/* رسم الخط الكامل باستخدام Pseudo-element */
+.year-section::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 80px;  /* يبدأ بعد السايدبار قليلاً */
+  right: 40px; /* ينتهي قبل الحافة اليمنى */
+  height: 2px; /* سمك الخط */
+  /* تدرج لوني: شفاف -> لون خفيف -> شفاف */
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.15) 20%, 
+    rgba(255, 255, 255, 0.15) 80%, 
+    transparent
+  );
+  border-radius: 2px;
+}
+
+/* إخفاء الخط بعد السنة الأخيرة (Senior) */
+.year-section:last-of-type::after {
+  display: none;
+}
     .year-sidebar {
       width: 60px;
       display: flex;
