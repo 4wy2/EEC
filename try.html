@@ -1,18 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>My Legendary To-Do</title>
+    <title>Task Manager</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
-    <h1>🔥 My Tasks</h1>
+<div class="app">
+    <header>
+        <h1>📋 مهامي</h1>
+        <button id="themeToggle">🌙</button>
+    </header>
 
     <div class="add-task">
-        <input type="text" id="taskInput" placeholder="Enter your task">
-        <button onclick="addTask()">Add</button>
+        <input type="text" id="taskInput" placeholder="اكتب مهمة جديدة...">
+        <button onclick="addTask()">إضافة</button>
+    </div>
+
+    <input type="text" id="search" placeholder="بحث..." oninput="renderTasks()">
+
+    <div class="filters">
+        <button onclick="setFilter('all')">الكل</button>
+        <button onclick="setFilter('done')">مكتملة</button>
+        <button onclick="setFilter('todo')">غير مكتملة</button>
     </div>
 
     <ul id="taskList"></ul>
