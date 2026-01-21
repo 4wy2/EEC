@@ -3,50 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة المهندس | نظام الإنجاز الأكاديمي</title>
-    
+    <title>Creators Engine v4.1</title>
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="antialiased min-h-screen relative">
 
-    <div class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
-        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/10 blur-[120px] rounded-full"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-purple-600/10 blur-[120px] rounded-full"></div>
-    </div>
+<body class="min-h-screen p-4 sm:p-6 md:p-12">
 
-    <div class="max-w-6xl mx-auto px-4 py-12 md:py-20 space-y-12">
-        
-        <header class="text-center space-y-4 animate-fade-in">
-            <div class="inline-block px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 mb-4">
-                <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.3em]">Engineering Portfolio v3.0</span>
-            </div>
-            <h1 class="text-5xl md:text-7xl font-black bg-gradient-to-b from-white via-white to-white/20 bg-clip-text text-transparent italic tracking-tighter">
-                بوابة الإنجاز
-            </h1>
-            <div class="flex justify-center items-center gap-4 text-white/20">
-                <div class="h-[1px] w-12 bg-current"></div>
-                <p class="text-[11px] font-bold uppercase tracking-widest">Master Your Grades</p>
-                <div class="h-[1px] w-12 bg-current"></div>
-            </div>
-        </header>
+<div class="max-w-6xl mx-auto space-y-12">
 
-        <main id="main-content" class="transition-opacity duration-300 ease-in-out">
-            <div class="flex flex-col items-center justify-center p-20 glass-card">
-                <div class="animate-pulse text-indigo-500/50">جاري تحميل النظام...</div>
-            </div>
-        </main>
+    <header class="text-center space-y-2">
+        <h1 class="text-3xl sm:text-4xl md:text-6xl font-black italic">
+            نظام إدارة الأداء الأكاديمي
+        </h1>
+        <p class="text-xs tracking-widest text-indigo-400 font-bold">
+            CREATORS ENGINE v4.1
+        </p>
+    </header>
 
-        <footer class="text-center pt-20 pb-10">
-            <p class="text-[9px] text-white/10 font-bold uppercase tracking-[0.5em]">
-                Designed for Engineering Excellence &copy; 2026
-            </p>
-        </footer>
-    </div>
+    <!-- HOME -->
+    <section id="homeView" class="space-y-6">
 
-    <script src="app.js"></script>
+        <div class="flex justify-between items-center">
+            <h2 class="font-black text-xl">الأترام</h2>
+            <button onclick="toggle('semForm')" class="btn-primary">
+                ترم جديد
+            </button>
+        </div>
+
+        <div id="semForm" class="hidden glass space-y-4">
+            <input id="semName" class="input" placeholder="اسم الترم">
+            <button onclick="addSemester()" class="btn-primary w-full">
+                حفظ
+            </button>
+        </div>
+
+        <div id="semesterList" class="space-y-6"></div>
+    </section>
+
+    <!-- COURSE -->
+    <section id="courseView" class="hidden space-y-8">
+
+        <button onclick="goHome()" class="text-sm text-indigo-400">← العودة</button>
+
+        <div class="glass text-center space-y-2">
+            <div id="finalScore" class="text-6xl font-black">0%</div>
+            <h2 id="courseTitle" class="text-2xl font-black"></h2>
+            <p id="weightInfo" class="text-xs text-indigo-400"></p>
+        </div>
+
+        <div class="glass space-y-4">
+            <h3 class="font-bold text-indigo-400">إضافة قسم</h3>
+            <input id="catName" class="input" placeholder="اسم القسم">
+            <input id="catWeight" type="number" class="input" placeholder="الوزن %">
+            <button onclick="addCategory()" class="btn-primary w-full">
+                إضافة
+            </button>
+        </div>
+
+        <div id="categoryList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
