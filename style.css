@@ -1,84 +1,53 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Space+Grotesk:wght@300;700&display=swap');
-
-:root {
-    --bg: #020202;
-    --card-bg: rgba(255, 255, 255, 0.02);
-    --brand: #3b82f6;
-    --text-dim: rgba(255, 255, 255, 0.4);
-}
-
 body {
-    background-color: var(--bg);
+    background: #0f172a;
     color: white;
-    font-family: 'Cairo', sans-serif;
-    margin: 0;
+    font-family: Arial;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+    justify-content: center;
+    margin-top: 60px;
 }
 
-.eng-font { font-family: 'Space Grotesk', sans-serif; }
-
-/* حاوية التخصصات */
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    width: 90%;
-    max-width: 1100px;
-    margin-top: 4rem;
+.container {
+    width: 400px;
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
 }
 
-/* بطاقة التخصص الصافية */
-.spec-card {
-    background: var(--card-bg);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 2.5rem;
-    border-radius: 1.5rem;
+h1 {
+    text-align: center;
+}
+
+.add-task {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+button {
+    padding: 10px;
+    background: #22c55e;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-    transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    position: relative;
-    overflow: hidden;
 }
 
-.spec-card:hover {
-    border-color: var(--brand);
-    background: rgba(59, 130, 246, 0.03);
-    transform: translateY(-8px);
+li {
+    margin-top: 10px;
+    padding: 10px;
+    background: #334155;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 5px;
 }
 
-.spec-card i {
-    font-size: 2rem;
-    color: var(--brand);
-    margin-bottom: 1.5rem;
-    display: block;
-}
-
-.spec-card h3 {
-    margin: 0 0 1rem 0;
-    font-size: 1.5rem;
-    letter-spacing: 1px;
-}
-
-.spec-card p {
-    color: var(--text-dim);
-    font-size: 0.9rem;
-    line-height: 1.6;
-}
-
-/* حركة بسيطة للسهم عند الهوفر */
-.spec-card .arrow {
-    position: absolute;
-    bottom: 1.5rem;
-    left: 1.5rem;
-    opacity: 0;
-    transition: 0.3s;
-    color: var(--brand);
-    font-size: 0.8rem;
-    font-weight: bold;
-}
-
-.spec-card:hover .arrow {
-    opacity: 1;
+.done {
+    text-decoration: line-through;
+    color: #94a3b8;
 }
