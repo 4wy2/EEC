@@ -1,82 +1,29 @@
-:root {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --text: #fff;
-    --accent: #22c55e;
-}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة المهندس الذكية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="p-6 md:p-12">
 
-.light {
-    --bg: #f1f5f9;
-    --card: #ffffff;
-    --text: #0f172a;
-}
+    <div id="app" class="max-w-5xl mx-auto space-y-12">
+        <header class="text-center animate-fade-in">
+            <h1 class="text-6xl font-black italic mb-4 bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent">بوابة الإنجاز</h1>
+            <p class="text-indigo-400 font-bold tracking-[0.4em] text-xs uppercase">System Ready for Development</p>
+        </header>
 
-body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: Arial;
-    display: flex;
-    justify-content: center;
-    padding: 40px;
-}
+        <main id="main-content" class="animate-fade-in">
+            <div class="glass-card p-20 text-center border-dashed border-2 border-white/5">
+                <p class="text-white/20 font-bold italic text-xl">جاهز لبدء الخطوة القادمة: تطوير محرك الأترام والمواد...</p>
+            </div>
+        </main>
+    </div>
 
-.app {
-    width: 420px;
-    background: var(--card);
-    padding: 20px;
-    border-radius: 15px;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.add-task {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-}
-
-button {
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    background: var(--accent);
-    color: black;
-}
-
-.filters {
-    display: flex;
-    justify-content: space-between;
-    margin: 15px 0;
-}
-
-li {
-    background: var(--bg);
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: grab;
-}
-
-.done span {
-    text-decoration: line-through;
-    opacity: 0.6;
-}
-
-.task-actions button {
-    margin-left: 5px;
-}
+    <script src="app.js"></script>
+</body>
+</html>
