@@ -2,77 +2,35 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creators Engine v4.1</title>
-
-    <!-- Tailwind -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>بوابة المبدعين | Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-
-    <!-- Custom CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
 </head>
+<body>
+    <div class="aurora"></div>
 
-<body class="min-h-screen p-4 sm:p-6 md:p-12">
+    <div class="max-w-5xl mx-auto p-6 md:p-12 min-h-screen">
+        <header class="text-center mb-12 animate-in">
+            <h1 class="text-4xl md:text-6xl font-black italic bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent">بوابة المبدعين</h1>
+            <p class="text-[9px] tracking-[0.5em] text-indigo-400 mt-2">V4.0 PROFESSIONAL EDITION</p>
+        </header>
 
-<div class="max-w-6xl mx-auto space-y-12">
+        <main id="app-content"></main>
+    </div>
 
-    <header class="text-center space-y-2">
-        <h1 class="text-3xl sm:text-4xl md:text-6xl font-black italic">
-            نظام إدارة الأداء الأكاديمي
-        </h1>
-        <p class="text-xs tracking-widest text-indigo-400 font-bold">
-            CREATORS ENGINE v4.1
-        </p>
-    </header>
-
-    <!-- HOME -->
-    <section id="homeView" class="space-y-6">
-
-        <div class="flex justify-between items-center">
-            <h2 class="font-black text-xl">الأترام</h2>
-            <button onclick="toggle('semForm')" class="btn-primary">
-                ترم جديد
-            </button>
+    <div id="modal" class="modal-overlay">
+        <div class="glass-card modal-content animate-in">
+            <h3 id="modal-title" class="text-xl font-bold mb-4">إضافة جديد</h3>
+            <div id="modal-body"></div>
+            <div class="flex gap-2">
+                <button id="modal-confirm" class="btn-grad flex-1">تأكيد</button>
+                <button onclick="closeModal()" class="flex-1 text-white/40 text-xs font-bold">إلغاء</button>
+            </div>
         </div>
-
-        <div id="semForm" class="hidden glass space-y-4">
-            <input id="semName" class="input" placeholder="اسم الترم">
-            <button onclick="addSemester()" class="btn-primary w-full">
-                حفظ
-            </button>
-        </div>
-
-        <div id="semesterList" class="space-y-6"></div>
-    </section>
-
-    <!-- COURSE -->
-    <section id="courseView" class="hidden space-y-8">
-
-        <button onclick="goHome()" class="text-sm text-indigo-400">← العودة</button>
-
-        <div class="glass text-center space-y-2">
-            <div id="finalScore" class="text-6xl font-black">0%</div>
-            <h2 id="courseTitle" class="text-2xl font-black"></h2>
-            <p id="weightInfo" class="text-xs text-indigo-400"></p>
-        </div>
-
-        <div class="glass space-y-4">
-            <h3 class="font-bold text-indigo-400">إضافة قسم</h3>
-            <input id="catName" class="input" placeholder="اسم القسم">
-            <input id="catWeight" type="number" class="input" placeholder="الوزن %">
-            <button onclick="addCategory()" class="btn-primary w-full">
-                إضافة
-            </button>
-        </div>
-
-        <div id="categoryList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    </section>
-
-</div>
-
-<script src="app.js"></script>
+    </div>
 </body>
 </html>
