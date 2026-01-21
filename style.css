@@ -1,48 +1,79 @@
+:root {
+    --bg: #03040b;
+    --p: #6366f1;
+    --s: #a855f7;
+    --glass: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.1);
+}
+
 body {
+    background: var(--bg);
+    color: white;
     font-family: 'Cairo', sans-serif;
-    background: #060714;
+    margin: 0;
+    -webkit-tap-highlight-color: transparent; /* تحسين اللمس للجوال */
+}
+
+/* تأثيرات الخلفية */
+.aurora {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
+    background: radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.15), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(168, 85, 247, 0.15), transparent 40%);
+}
+
+.glass-card {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 2rem;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+
+.btn-grad {
+    background: linear-gradient(90deg, var(--p), var(--s));
     color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 1rem;
+    font-weight: 800;
+    transition: 0.3s;
 }
 
-/* Glass Card */
-.glass {
-    background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 1.5rem;
-    padding: 1.5rem;
-}
+.btn-grad:active { transform: scale(0.95); }
 
-/* Inputs */
-.input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border-radius: 0.75rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-}
-
-.input:focus {
-    outline: none;
-    border-color: #6366f1;
-}
-
-/* Buttons */
-.btn-primary {
-    background: #6366f1;
-    padding: 0.6rem 1.2rem;
-    border-radius: 0.75rem;
-    font-size: 0.875rem;
-    font-weight: 700;
-    transition: 0.2s;
-}
-
-.btn-primary:hover {
-    background: #4f46e5;
-}
-
-/* Utilities */
-.hidden {
+/* مودال زجاجي (Modal) */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
     display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
 }
+
+.modal-content {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+}
+
+input {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 1rem;
+    color: white;
+    width: 100%;
+    margin-bottom: 1rem;
+    outline: none;
+}
+
+input:focus { border-color: var(--p); }
+
+.animate-in { animation: slideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
