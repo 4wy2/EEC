@@ -1,82 +1,108 @@
-:root {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --text: #fff;
-    --accent: #22c55e;
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let filter = "all";
+
+const list = document.getElementById("taskList");
+
+function save() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-.light {
-    --bg: #f1f5f9;
-    --card: #ffffff;
-    --text: #0f172a;
+function setFilter(f) {
+    filter = f;
+    renderTasks();
 }
 
-body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: Arial;
-    display: flex;
-    justify-content: center;
-    padding: 40px;
+function addTask() {
+    const input = document.getElementById("taskInput");
+    if (!input.value.trim()) return;
+
+    tasks.push({
+        text: input.value,
+        done: false,
+        id: Date.now()
+    });
+
+    input.value = "";
+    save();
+    renderTasks();
 }
 
-.app {
-    width: 420px;
-    background: var(--card);
-    padding: 20px;
-    border-radius: 15px;
+function deleteTask(id) {
+    tasks = tasks.filter(t => t.id !== id);
+    save();
+    renderTasks();
 }
 
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+function toggleDone(id) {
+    const task = tasks.find(t => t.id === id);
+    task.done = !task.done;
+    save();
+    renderTasks();
 }
 
-.add-task {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
+function editTask(id) {
+    const task = tasks.find(t => t.id === id);
+    const newText = prompt("عدل المهمة:", task.text);
+    if (newText) {
+        task.text = newText;
+        save();
+        renderTasks();
+    }
 }
 
-input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
+function renderTasks() {
+    const search = document.getElementById("search").value.toLowerCase();
+    list.innerHTML = "";
+
+    tasks
+        .filter(t =>
+            (filter === "all") ||
+            (filter === "done" && t.done) ||
+            (filter === "todo" && !t.done)
+        )
+        .filter(t => t.text.toLowerCase().includes(search))
+        .forEach(task => {
+            const li = document.createElement("li");
+            li.draggable = true;
+            li.dataset.id = task.id;
+            li.className = task.done ? "done" : "";
+
+            li.innerHTML = `
+                <span>${task.text}</span>
+                <div class="task-actions">
+                    <button onclick="toggleDone(${task.id})">✔</button>
+                    <button onclick="editTask(${task.id})">✏</button>
+                    <button onclick="deleteTask(${task.id})">🗑</button>
+                </div>
+            `;
+            list.appendChild(li);
+        });
 }
 
-button {
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    background: var(--accent);
-    color: black;
-}
+document.getElementById("themeToggle").onclick = () => {
+    document.body.classList.toggle("light");
+};
 
-.filters {
-    display: flex;
-    justify-content: space-between;
-    margin: 15px 0;
-}
+let dragged;
 
-li {
-    background: var(--bg);
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: grab;
-}
+list.addEventListener("dragstart", e => {
+    dragged = e.target;
+});
 
-.done span {
-    text-decoration: line-through;
-    opacity: 0.6;
-}
+list.addEventListener("dragover", e => e.preventDefault());
 
-.task-actions button {
-    margin-left: 5px;
-}
+list.addEventListener("drop", e => {
+    if (e.target.tagName === "LI") {
+        const from = dragged.dataset.id;
+        const to = e.target.dataset.id;
+
+        const fromIndex = tasks.findIndex(t => t.id == from);
+        const toIndex = tasks.findIndex(t => t.id == to);
+
+        tasks.splice(toIndex, 0, tasks.splice(fromIndex, 1)[0]);
+        save();
+        renderTasks();
+    }
+});
+
+renderTasks();
