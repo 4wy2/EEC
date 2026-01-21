@@ -1,230 +1,247 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة المهندس - نظام الإدخال التفاعلي</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: 'Cairo', sans-serif; background: #060714; color: white; overflow-x: hidden; }
-        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
-        .input-field { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s ease; color: white; }
-        .input-field:focus { border-color: #6366f1; background: rgba(99, 102, 241, 0.05); outline: none; box-shadow: 0 0 20px rgba(99, 102, 241, 0.1); }
-        .animate-fade { animation: fadeInUp 0.4s ease-out forwards; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .hidden { display: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام الدرجات الذكي</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+body {
+    font-family: 'Cairo', sans-serif;
+    background:#060714;
+    color:white;
+}
+.glass {
+    background: rgba(15,23,42,.6);
+    backdrop-filter: blur(12px);
+    border:1px solid rgba(255,255,255,.05);
+}
+.input {
+    background: rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.1);
+    color:white;
+}
+.input:focus {
+    outline:none;
+    border-color:#6366f1;
+}
+.hidden { display:none; }
+</style>
 </head>
-<body class="p-4 md:p-12 min-h-screen flex justify-center items-start">
 
-    <div class="max-w-4xl w-full space-y-8 animate-fade">
-        
-        <div class="text-center space-y-4">
-            <h1 class="text-4xl md:text-6xl font-black bg-gradient-to-r from-white via-indigo-200 to-white/30 bg-clip-text text-transparent italic tracking-tight">نظام الدرجات الذكي</h1>
-            <p class="text-[10px] text-indigo-400 font-bold uppercase tracking-[0.4em]">Interactive Academic Engineering</p>
-        </div>
+<body class="p-4 sm:p-6 md:p-12 min-h-screen">
 
-        <div id="mainView" class="space-y-6">
-            <div class="flex justify-between items-center px-2">
-                <h2 class="text-xl font-bold flex items-center gap-3"><span class="w-1.5 h-8 bg-indigo-500 rounded-full"></span> سجل الأترام</h2>
-                <button onclick="toggleElement('semInput')" class="px-5 py-2 rounded-full bg-white/5 border border-white/10 text-xs hover:bg-white/10 transition-all font-bold">
-                    <i class="fa-solid fa-plus ml-2"></i>ترم جديد
+<div class="max-w-5xl mx-auto space-y-10">
+
+<!-- العنوان -->
+<header class="text-center space-y-3">
+    <h1 class="text-3xl sm:text-4xl md:text-6xl font-black italic">
+        نظام الدرجات الذكي
+    </h1>
+    <p class="text-xs tracking-widest text-indigo-400 font-bold">
+        SMART ACADEMIC SYSTEM
+    </p>
+</header>
+
+<!-- الصفحة الرئيسية -->
+<section id="mainView" class="space-y-6">
+
+<div class="flex justify-between items-center">
+    <h2 class="font-black text-xl">الأترام</h2>
+    <button onclick="toggle('semesterForm')" class="px-4 py-2 rounded-full bg-indigo-600 text-sm font-bold">
+        ترم جديد
+    </button>
+</div>
+
+<!-- إضافة ترم -->
+<div id="semesterForm" class="hidden glass p-6 rounded-3xl space-y-4">
+    <input id="semesterName" class="input w-full rounded-xl px-4 py-3"
+           placeholder="اسم الترم">
+    <button onclick="addSemester()" class="w-full py-3 rounded-xl bg-indigo-600 font-black">
+        حفظ
+    </button>
+</div>
+
+<div id="semesterList" class="space-y-6"></div>
+
+</section>
+
+<!-- صفحة المادة -->
+<section id="courseView" class="hidden space-y-6">
+
+<button onclick="back()" class="text-sm text-indigo-400">← رجوع</button>
+
+<div class="glass rounded-3xl p-8 text-center space-y-3">
+    <div id="totalScore" class="text-6xl font-black">0%</div>
+    <h2 id="courseTitle" class="text-2xl font-black"></h2>
+    <p id="weightInfo" class="text-xs text-indigo-400"></p>
+</div>
+
+<!-- إضافة قسم -->
+<div class="glass p-6 rounded-3xl space-y-4">
+    <h3 class="font-bold text-indigo-400">إضافة قسم</h3>
+    <input id="catName" class="input w-full rounded-xl px-4 py-3" placeholder="اسم القسم">
+    <input id="catWeight" type="number" class="input w-full rounded-xl px-4 py-3" placeholder="الوزن %">
+    <button onclick="addCategory()" class="w-full py-3 rounded-xl bg-indigo-600 font-black">
+        إضافة
+    </button>
+</div>
+
+<div id="categoryList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+
+</section>
+
+</div>
+
+<script>
+/* ================== DATABASE ================== */
+let db = [];
+try {
+    db = JSON.parse(localStorage.getItem("grades_db")) || [];
+} catch { db = []; }
+
+let currentSemester = null;
+let currentCourse = null;
+
+const save = () => localStorage.setItem("grades_db", JSON.stringify(db));
+const toggle = id => document.getElementById(id).classList.toggle("hidden");
+
+/* ================== SEMESTERS ================== */
+function addSemester() {
+    const name = semesterName.value.trim();
+    if (!name) return alert("أدخل اسم الترم");
+    db.push({ name, courses: [] });
+    semesterName.value = "";
+    toggle("semesterForm");
+    save(); renderSemesters();
+}
+
+function renderSemesters() {
+    semesterList.innerHTML = "";
+    db.forEach((s, i) => {
+        semesterList.innerHTML += `
+        <div class="glass p-6 rounded-3xl space-y-4">
+            <div class="flex justify-between">
+                <h3 class="font-black text-xl">${s.name}</h3>
+                <button onclick="addCourse(${i})" class="text-sm text-indigo-400">
+                    + مادة
                 </button>
             </div>
-
-            <div id="semInput" class="hidden glass-card p-8 rounded-[2.5rem] space-y-4 shadow-2xl border-indigo-500/20">
-                <label class="text-[10px] font-bold text-white/30 uppercase tracking-widest mr-2">اسم الترم الدراسي</label>
-                <input type="text" id="newSemName" class="input-field w-full rounded-2xl px-6 py-4 text-sm" placeholder="مثلاً: الفصل الدراسي الأول 2026">
-                <div class="flex gap-3 pt-2">
-                    <button onclick="addSemester()" class="flex-1 py-4 rounded-2xl bg-indigo-600 font-black text-sm hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-600/20">حفظ البيانات</button>
-                    <button onclick="toggleElement('semInput')" class="px-8 py-4 rounded-2xl bg-white/5 text-sm font-bold">إلغاء</button>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                ${s.courses.map((c, j) => `
+                <div onclick="openCourse(${i},${j})"
+                     class="p-4 rounded-2xl bg-white/5 cursor-pointer hover:bg-indigo-500/10">
+                    ${c.name}
                 </div>
+                `).join("")}
             </div>
+        </div>`;
+    });
+}
 
-            <div id="semesterList" class="grid gap-8"></div>
-        </div>
+/* ================== COURSES ================== */
+function addCourse(i) {
+    const name = prompt("اسم المادة");
+    if (!name) return;
+    db[i].courses.push({ name, categories: [] });
+    save(); renderSemesters();
+}
 
-        <div id="courseView" class="hidden space-y-6">
-            <button onclick="closeCourse()" class="px-5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-white/50 hover:text-white transition-all">
-                <i class="fa-solid fa-arrow-right ml-2"></i> العودة للرئيسية
+function openCourse(s, c) {
+    currentSemester = s;
+    currentCourse = c;
+    mainView.classList.add("hidden");
+    courseView.classList.remove("hidden");
+    renderCourse();
+}
+
+function back() {
+    courseView.classList.add("hidden");
+    mainView.classList.remove("hidden");
+    renderSemesters();
+}
+
+/* ================== CATEGORIES ================== */
+function addCategory() {
+    const name = catName.value.trim();
+    const weight = Number(catWeight.value);
+
+    if (!name || weight <= 0) return alert("بيانات غير صحيحة");
+
+    const course = db[currentSemester].courses[currentCourse];
+    const used = course.categories.reduce((a,c)=>a+c.weight,0);
+
+    if (used + weight > 100)
+        return alert("مجموع الأوزان لا يتجاوز 100%");
+
+    course.categories.push({ name, weight, items: [] });
+    catName.value = ""; catWeight.value = "";
+    save(); renderCourse();
+}
+
+/* ================== RENDER COURSE ================== */
+function renderCourse() {
+    const course = db[currentSemester].courses[currentCourse];
+    courseTitle.innerText = course.name;
+
+    let total = 0;
+    let used = 0;
+    categoryList.innerHTML = "";
+
+    course.categories.forEach((cat, i) => {
+        used += cat.weight;
+
+        let score = 0, max = 0;
+        cat.items.forEach(it => {
+            score += it.score;
+            max += it.max;
+        });
+
+        const avg = max ? (score / max) * cat.weight : 0;
+        total += avg;
+
+        categoryList.innerHTML += `
+        <div class="glass p-6 rounded-3xl space-y-3">
+            <div class="flex justify-between">
+                <h4 class="font-black">${cat.name}</h4>
+                <span class="text-xs text-indigo-400">${cat.weight}%</span>
+            </div>
+            <button onclick="addItem(${i})"
+                    class="w-full py-2 rounded-xl bg-indigo-500/20 text-indigo-300">
+                إضافة درجة
             </button>
-            
-            <div class="glass-card rounded-[3rem] p-10 text-center relative overflow-hidden border-indigo-500/10">
-                <div id="scoreCircle" class="text-7xl md:text-9xl font-black italic text-white drop-shadow-2xl">0%</div>
-                <h2 id="currentCourseName" class="text-2xl md:text-3xl font-black mt-4">اسم المادة</h2>
-                <div class="mt-6 flex justify-center gap-4">
-                    <span id="weightStatus" class="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-indigo-400 uppercase tracking-widest"></span>
+            ${cat.items.map(it=>`
+                <div class="flex justify-between text-sm bg-white/5 p-3 rounded-xl">
+                    <span>${it.name}</span>
+                    <span>${it.score}/${it.max}</span>
                 </div>
-                <div class="absolute -top-20 -left-20 w-64 h-64 bg-indigo-600/10 blur-[100px] rounded-full"></div>
-            </div>
+            `).join("")}
+        </div>`;
+    });
 
-            <div id="catInput" class="hidden glass-card p-8 rounded-[2.5rem] space-y-6 border-indigo-500/20">
-                <h3 class="font-bold text-indigo-400 text-sm italic underline underline-offset-8">تحديد وزن القسم الجديد</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-bold text-white/30 uppercase tracking-widest mr-2">اسم القسم</label>
-                        <input type="text" id="newCatName" class="input-field w-full rounded-2xl px-6 py-4 text-sm" placeholder="مثلاً: الاختبارات القصيرة">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-bold text-white/30 uppercase tracking-widest mr-2">الوزن من 100</label>
-                        <input type="number" id="newCatWeight" class="input-field w-full rounded-2xl px-6 py-4 text-sm" placeholder="مثلاً: 15">
-                    </div>
-                </div>
-                <button onclick="addCategory()" class="w-full py-5 rounded-2xl bg-indigo-600 font-black text-sm shadow-xl shadow-indigo-600/20">تأكيد الإضافة للسيلبس</button>
-            </div>
+    totalScore.innerText = total.toFixed(1) + "%";
+    weightInfo.innerText = `المستخدم ${used}% من السيلبس`;
+}
 
-            <div id="categoriesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+/* ================== ITEMS ================== */
+function addItem(i) {
+    const name = prompt("اسم المهمة");
+    const score = Number(prompt("درجتك"));
+    const max = Number(prompt("من كم"));
 
-            <button onclick="toggleElement('catInput')" class="w-full py-8 rounded-[2.5rem] border-2 border-dashed border-white/5 text-white/20 hover:border-indigo-500/40 hover:text-indigo-400 transition-all font-black text-sm uppercase tracking-widest bg-white/[0.01]">
-                <i class="fa-solid fa-plus-circle mb-2 block text-2xl"></i> إضافة قسم جديد للسيلبس
-            </button>
-        </div>
-    </div>
+    if (!name || isNaN(score) || isNaN(max)) return;
 
-    <script>
-        let db = JSON.parse(localStorage.getItem('eng_ultimate_db')) || [];
-        let curSIdx, curCIdx;
+    db[currentSemester].courses[currentCourse]
+      .categories[i].items.push({ name, score, max });
 
-        function save() { localStorage.setItem('eng_ultimate_db', JSON.stringify(db)); }
-        function toggleElement(id) { 
-            const el = document.getElementById(id);
-            el.classList.toggle('hidden');
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+    save(); renderCourse();
+}
 
-        // --- الأترام ---
-        function addSemester() {
-            const input = document.getElementById('newSemName');
-            if (input.value.trim()) {
-                db.push({ name: input.value, courses: [] });
-                input.value = '';
-                toggleElement('semInput');
-                save(); render();
-            }
-        }
+renderSemesters();
+</script>
 
-        // --- المواد ---
-        function addCourse(sIdx) {
-            const name = prompt("اسم المادة الجديدة:"); // للإيجاز، تبيها حقل انلاين بنفس الطريقة؟
-            if (name) { db[sIdx].courses.push({ name, categories: [] }); save(); render(); }
-        }
-
-        function openCourse(sIdx, cIdx) {
-            curSIdx = sIdx; curCIdx = cIdx;
-            document.getElementById('mainView').classList.add('hidden');
-            document.getElementById('courseView').classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            renderSyllabus();
-        }
-
-        function closeCourse() {
-            document.getElementById('courseView').classList.add('hidden');
-            document.getElementById('mainView').classList.remove('hidden');
-            render();
-        }
-
-        // --- السيلبس (الأقسام) ---
-        function addCategory() {
-            const name = document.getElementById('newCatName').value;
-            const weight = parseFloat(document.getElementById('newCatWeight').value);
-            if (name && weight) {
-                db[curSIdx].courses[curCIdx].categories.push({ name, weight, items: [] });
-                document.getElementById('newCatName').value = '';
-                document.getElementById('newCatWeight').value = '';
-                toggleElement('catInput');
-                save(); renderSyllabus();
-            }
-        }
-
-        // --- المهام والدرجات ---
-        function addItem(catIdx) {
-            const name = prompt("اسم المهمة (مثلاً كويز 1):");
-            const score = parseFloat(prompt("درجتك:"));
-            const max = parseFloat(prompt("من كم؟:", "10"));
-            if (name && !isNaN(score)) {
-                db[curSIdx].courses[curCIdx].categories[catIdx].items.push({ name, score, max });
-                save(); renderSyllabus();
-            }
-        }
-
-        // --- الرسم والعرض ---
-        function render() {
-            const list = document.getElementById('semesterList');
-            list.innerHTML = '';
-            db.forEach((sem, sIdx) => {
-                list.innerHTML += `
-                    <div class="glass-card rounded-[3rem] p-8 space-y-6 animate-fade">
-                        <div class="flex justify-between items-center border-b border-white/5 pb-4">
-                            <h3 class="text-2xl font-black italic tracking-tight">${sem.name}</h3>
-                            <button onclick="addCourse(${sIdx})" class="text-[10px] font-bold text-indigo-400 bg-indigo-400/5 px-4 py-1.5 rounded-full hover:bg-indigo-400 hover:text-white transition-all">+ مادة</button>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            ${sem.courses.map((c, cIdx) => `
-                                <div onclick="openCourse(${sIdx}, ${cIdx})" class="group relative p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:border-indigo-500/50 hover:bg-indigo-500/5 cursor-pointer transition-all">
-                                    <div class="flex justify-between items-center">
-                                        <span class="font-bold text-lg text-white/80 group-hover:text-white">${c.name}</span>
-                                        <i class="fa-solid fa-chevron-left text-indigo-500 transform group-hover:-translate-x-2 transition-all"></i>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function renderSyllabus() {
-            const course = db[curSIdx].courses[curCIdx];
-            document.getElementById('currentCourseName').innerText = course.name;
-            const container = document.getElementById('categoriesContainer');
-            container.innerHTML = '';
-            
-            let totalGrade = 0;
-            let usedWeight = 0;
-
-            course.categories.forEach((cat, idx) => {
-                usedWeight += cat.weight;
-                let catAvg = 0;
-                if (cat.items.length > 0) {
-                    let avg = cat.items.reduce((a, b) => a + (b.score/b.max), 0) / cat.items.length;
-                    catAvg = avg * cat.weight;
-                }
-                totalGrade += catAvg;
-
-                container.innerHTML += `
-                    <div class="glass-card rounded-[2.5rem] p-8 space-y-5 animate-fade relative group">
-                        <div class="flex justify-between items-start">
-                            <div class="space-y-1">
-                                <h4 class="font-black text-xl text-white/90">${cat.name}</h4>
-                                <div class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
-                                    <span class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">${cat.weight}% من المجموع</span>
-                                </div>
-                            </div>
-                            <button onclick="addItem(${idx})" class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all shadow-inner">
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
-                        </div>
-                        <div class="space-y-3">
-                            ${cat.items.map(item => `
-                                <div class="flex justify-between items-center p-4 rounded-2xl bg-white/[0.03] border border-white/5 text-sm">
-                                    <span class="text-white/50">${item.name}</span>
-                                    <span class="font-black text-indigo-400 italic">${item.score} <span class="text-[10px] text-white/20">/ ${item.max}</span></span>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="text-[10px] font-bold text-indigo-400/40 pt-4 border-t border-white/5 italic">المساهمة الحالية في المعدل: ${catAvg.toFixed(2)}%</div>
-                    </div>
-                `;
-            });
-
-            document.getElementById('scoreCircle').innerText = totalGrade.toFixed(1) + "%";
-            document.getElementById('weightStatus').innerText = `تم توزيع ${usedWeight}% من السيلبس`;
-        }
-
-        render();
-    </script>
 </body>
 </html>
