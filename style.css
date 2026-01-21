@@ -1,29 +1,48 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة المهندس الذكية</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body class="p-6 md:p-12">
+body {
+    font-family: 'Cairo', sans-serif;
+    background: #060714;
+    color: white;
+}
 
-    <div id="app" class="max-w-5xl mx-auto space-y-12">
-        <header class="text-center animate-fade-in">
-            <h1 class="text-6xl font-black italic mb-4 bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent">بوابة الإنجاز</h1>
-            <p class="text-indigo-400 font-bold tracking-[0.4em] text-xs uppercase">System Ready for Development</p>
-        </header>
+/* Glass Card */
+.glass {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+}
 
-        <main id="main-content" class="animate-fade-in">
-            <div class="glass-card p-20 text-center border-dashed border-2 border-white/5">
-                <p class="text-white/20 font-bold italic text-xl">جاهز لبدء الخطوة القادمة: تطوير محرك الأترام والمواد...</p>
-            </div>
-        </main>
-    </div>
+/* Inputs */
+.input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
 
-    <script src="app.js"></script>
-</body>
-</html>
+.input:focus {
+    outline: none;
+    border-color: #6366f1;
+}
+
+/* Buttons */
+.btn-primary {
+    background: #6366f1;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.btn-primary:hover {
+    background: #4f46e5;
+}
+
+/* Utilities */
+.hidden {
+    display: none;
+}
