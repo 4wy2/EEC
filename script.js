@@ -1,48 +1,82 @@
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
-function saveTasks() {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+:root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #fff;
+    --accent: #22c55e;
 }
 
-function renderTasks() {
-    const list = document.getElementById("taskList");
-    list.innerHTML = "";
-
-    tasks.forEach((task, index) => {
-        const li = document.createElement("li");
-        li.className = task.done ? "done" : "";
-
-        li.innerHTML = `
-            ${task.text}
-            <div>
-                <button onclick="toggleDone(${index})">✔</button>
-                <button onclick="deleteTask(${index})">🗑</button>
-            </div>
-        `;
-        list.appendChild(li);
-    });
+.light {
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #0f172a;
 }
 
-function addTask() {
-    const input = document.getElementById("taskInput");
-    if (input.value === "") return;
-
-    tasks.push({ text: input.value, done: false });
-    input.value = "";
-    saveTasks();
-    renderTasks();
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial;
+    display: flex;
+    justify-content: center;
+    padding: 40px;
 }
 
-function deleteTask(index) {
-    tasks.splice(index, 1);
-    saveTasks();
-    renderTasks();
+.app {
+    width: 420px;
+    background: var(--card);
+    padding: 20px;
+    border-radius: 15px;
 }
 
-function toggleDone(index) {
-    tasks[index].done = !tasks[index].done;
-    saveTasks();
-    renderTasks();
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-renderTasks();
+.add-task {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+}
+
+button {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: var(--accent);
+    color: black;
+}
+
+.filters {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+}
+
+li {
+    background: var(--bg);
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: grab;
+}
+
+.done span {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.task-actions button {
+    margin-left: 5px;
+}
